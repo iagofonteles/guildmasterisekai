@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.menu",
+  "version": "0.0.1",
+  "displayName": "Drafts - Menu",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

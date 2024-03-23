@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.turnbased",
+  "version": "0.0.1",
+  "displayName": "Drafts - Turn Based",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

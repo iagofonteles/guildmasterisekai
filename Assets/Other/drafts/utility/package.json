@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.utility",
+  "version": "0.5.0",
+  "displayName": "Drafts - Utility",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

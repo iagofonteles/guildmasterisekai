@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.trigger",
+  "version": "0.0.1",
+  "displayName": "Drafts - Trigger",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

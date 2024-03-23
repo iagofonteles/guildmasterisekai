@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.dataview",
+  "version": "0.0.1",
+  "displayName": "Drafts - Data View",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

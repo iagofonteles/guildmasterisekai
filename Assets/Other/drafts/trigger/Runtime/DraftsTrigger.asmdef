@@ -1,0 +1,28 @@
+{
+    "name": "DraftsTrigger",
+    "rootNamespace": "",
+    "references": [
+        "Unity.InputSystem",
+        "DraftsUtility"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.drafts.utility",
+            "expression": "0",
+            "define": "DRAFTS_UTILITY"
+        },
+        {
+            "name": "com.drafts.all",
+            "expression": "0",
+            "define": "DRAFTS_UTILITY"
+        }
+    ],
+    "noEngineReferences": false
+}

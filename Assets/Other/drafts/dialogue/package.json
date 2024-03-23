@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.dialogue",
+  "version": "0.0.1",
+  "displayName": "Drafts - Dialogue",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

@@ -1,0 +1,13 @@
+{
+  "name": "com.drafts.attribute",
+  "version": "0.0.1",
+  "displayName": "Drafts - Attribute",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false,
+  "dependencies": {
+    "com.drafts.utility": "0.0.1"
+  }
+}

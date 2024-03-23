@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.interactable",
+  "version": "0.0.1",
+  "displayName": "Drafts - Interactable",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}

@@ -1,0 +1,40 @@
+{
+    "name": "DraftsDataView",
+    "rootNamespace": "",
+    "references": [
+        "Unity.TextMeshPro",
+        "DraftsAttribute",
+        "DraftsUtility",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.drafts.attribute",
+            "expression": "0",
+            "define": "DRAFTS_ATTRIBUTE"
+        },
+        {
+            "name": "com.drafts.utility",
+            "expression": "0",
+            "define": "DRAFTS_UTILITY"
+        },
+        {
+            "name": "com.drafts.all",
+            "expression": "0",
+            "define": "DRAFTS_ATTRIBUTE"
+        },
+        {
+            "name": "com.drafts.all",
+            "expression": "0",
+            "define": "DRAFTS_UTILITY"
+        }
+    ],
+    "noEngineReferences": false
+}

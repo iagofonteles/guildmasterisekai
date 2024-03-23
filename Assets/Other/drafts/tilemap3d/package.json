@@ -1,0 +1,14 @@
+{
+  "name": "com.drafts.tilemap3d",
+  "version": "0.0.1",
+  "displayName": "Drafts - Tilemap 3D",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false,
+  "dependencies": {
+    "com.drafts.editing": "0.0.1",
+    "com.drafts.utility": "0.0.1"
+  }
+}

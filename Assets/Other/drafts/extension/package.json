@@ -1,0 +1,10 @@
+{
+  "name": "com.drafts.extension",
+  "version": "0.0.1",
+  "displayName": "Drafts - Extension",
+  "author": {
+    "name": "Drafts",
+    "email": "iagofonteles1@gmail.com"
+  },
+  "hideInEditor": false
+}
