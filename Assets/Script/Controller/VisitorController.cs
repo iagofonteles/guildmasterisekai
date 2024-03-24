@@ -1,34 +1,45 @@
 using Drafts;
+using System;
 using UnityEngine;
 
 namespace GuildMasterIsekai {
 
+	[Serializable]
+	public class GuildSpots {
+		public Transform entrance;
+		public Transform exit;
+		public Transform counter;
+		public Transform board;
+		public Transform table;
+	}
+
 	public class VisitorController : MonoBehaviour {
 		[SerializeField] TimerComponent timer;
-		[SerializeField] Transform entrance;
-		[SerializeField] Transform balcon;
+		[SerializeField] GuildSpots spots;
 		[SerializeField, Prefab] VisitorAI visitorAiPrefab;
 
 		Guild guild;
-		GuildHall guildHall;
+		GuildHall hall;
 
 		void Start() {
 			guild = Game.Save.Get<Guild>();
-			guildHall = Game.Save.Get<GuildHall>();
+			hall = Game.Save.Get<GuildHall>();
 			timer.OnTrigger.AddListener(OnTrigger);
+
+			guild.QuestBoard.Add(new());
 		}
 
-		// Update is called once per frame
 		void OnTrigger() {
 			var visitor = guild.Generate.Adventurer();
-			guildHall.Freelancers.BinaryInsert(visitor);
-			SpawnVisitor(visitor);
+			hall.Freelancers.BinaryInsert(visitor);
+			SpawnVisitor(visitor, visitor);
 		}
 
-		public void SpawnVisitor(IVisitor visitor) {
-			var ai = Instantiate(visitorAiPrefab, entrance.position, entrance.rotation);
-			var model = Instantiate(visitor.Prefab, entrance.position, entrance.rotation, ai.transform);
-			ai.SetVisitor(visitor, balcon);
+		public void SpawnVisitor(Adventurer adventurer, IVisitor visitor) {
+			var controller = Instantiate(visitorAiPrefab, spots.entrance.position, spots.entrance.rotation);
+			Instantiate(visitor.Prefab, spots.entrance.position, spots.entrance.rotation, controller.transform);
+			var ai = new FreelancerVisitorAI(adventurer, controller.Agent, spots);
+			controller.SetVisitor(ai);
 		}
 	}
 }

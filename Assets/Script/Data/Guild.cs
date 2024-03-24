@@ -1,4 +1,5 @@
 ﻿using Drafts;
+using Drafts.Patterns;
 using System;
 using System.Collections.Generic;
 
@@ -16,5 +17,6 @@ namespace GuildMasterIsekai {
 	public class GuildHall : IJsonGameSave {
 		public List<Costumer> Costumers = new();
 		public List<Adventurer> Freelancers = new();
+		public SimpleListWatcher<QuestRequest> Requests = new();
 	}
 }

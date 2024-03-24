@@ -2,23 +2,30 @@
 using UnityEngine.AI;
 
 namespace GuildMasterIsekai {
+
+	public interface IVisitorAI {
+		void Act();
+		bool DestinationReached { get; }
+	}
+
 	public class VisitorAI : MonoBehaviour {
 		[SerializeField] NavMeshAgent agent;
-		IVisitor visitor;
+		public NavMeshAgent Agent => agent;
+
+		IVisitorAI ai;
 
 		private void Awake() {
 			enabled = false;
 		}
 
-		public void SetVisitor(IVisitor visitor, Transform balcon) {
-			enabled = true;
-			this.visitor = visitor;
-			agent.SetDestination(balcon.position);
+		private void Update() {
+			if(ai.DestinationReached) ai.Act();
 		}
 
-		//private void Update() {
-
-		//}
+		public void SetVisitor(IVisitorAI ai) {
+			enabled = true;
+			this.ai = ai;
+		}
 	}
 }
 

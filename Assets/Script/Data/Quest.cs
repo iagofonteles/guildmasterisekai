@@ -6,8 +6,9 @@ namespace GuildMasterIsekai {
 	public class Quest : IGuid {
 		[SerializeField] string guid;
 		public string Guid => guid;
-		public Quest() {
 
+		public Quest() {
+			guid = System.Guid.NewGuid().ToString();
 		}
 	}
 }
