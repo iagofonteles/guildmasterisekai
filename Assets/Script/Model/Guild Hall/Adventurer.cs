@@ -1,6 +1,7 @@
 using Drafts;
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace GuildMasterIsekai {
 
@@ -32,6 +33,9 @@ namespace GuildMasterIsekai {
 		public string DisplayName { get => displayName; set { displayName = value; OnChanged?.Invoke(); } }
 		public string Description => "...";
 		public Sprite Icon => _portrait ??= Resources.Load<Sprite>($"Portrait/{portrait}");
+
+		public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
+			=> new FreelancerVisitorAI(this, agent, spots);
 	}
 
 }

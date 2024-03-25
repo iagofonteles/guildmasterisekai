@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace GuildMasterIsekai {
 
-	public interface IVisitorAI {
+	public interface IVisitorAI : IDisposable {
 		void Act();
-		bool DestinationReached { get; }
+		bool ReadyToAct { get; }
 	}
 
 	public class VisitorAI : MonoBehaviour {
@@ -19,12 +20,16 @@ namespace GuildMasterIsekai {
 		}
 
 		private void Update() {
-			if(ai.DestinationReached) ai.Act();
+			if(ai.ReadyToAct) ai.Act();
 		}
 
 		public void SetVisitor(IVisitorAI ai) {
 			enabled = true;
 			this.ai = ai;
+		}
+
+		private void OnDestroy() {
+			ai?.Dispose();
 		}
 	}
 }

@@ -1,22 +1,26 @@
 ﻿using Drafts;
 using System;
+using UnityEngine;
 
 namespace GuildMasterIsekai {
 	[Serializable]
 	public class Assignement {
 		public enum TaskType { Quest, Training, Scout }
 
-		TaskType taskType;
-		string taskGuid;
+		[SerializeField] TaskType taskType;
+		[SerializeField] string taskGuid;
+		[SerializeField] long departTime;
+		[SerializeField] float duration;
+
 		object _task;
 
 		public object Task => _task ??= GetTask();
 
 		private object GetTask() {
-			var guild = Game.Save.Get<Guild>();
+			var hall = Game.Save.Get<GuildHall>();
 
 			return taskType switch {
-				TaskType.Quest => guild.QuestBoard.BinaryFind(taskGuid),
+				TaskType.Quest => hall.QuestBoard.BinaryFind(taskGuid),
 				TaskType.Training => throw new NotImplementedException(),
 				TaskType.Scout => throw new NotImplementedException(),
 				_ => throw new NotImplementedException(),
@@ -24,7 +28,8 @@ namespace GuildMasterIsekai {
 		}
 
 		public Assignement(Quest quest) {
-			taskGuid = Guid.NewGuid().ToString();
+			taskGuid = quest.Guid;
+			taskType = TaskType.Quest;
 		}
 	}
 }

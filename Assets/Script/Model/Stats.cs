@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace GuildMasterIsekai {
 
 	[Serializable]
@@ -13,4 +14,5 @@ namespace GuildMasterIsekai {
 
 		public event Action OnChanged;
 	}
+
 }

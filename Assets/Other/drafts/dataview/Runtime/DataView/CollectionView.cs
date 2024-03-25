@@ -24,18 +24,22 @@ namespace Drafts.UI {
 		protected virtual void Awake() => template.TrySetActive(false);
 
 		protected override void Subscribe() {
-			Add(0, Data);
+			countText.TrySetValue(Data.Count());
+			if(template) Add(0, Data);
 			if(Data is INotifyCollectionChanged c)
 				c.CollectionChanged += CollectionChanged;
 		}
 
 		protected override void Unsubscribe() {
-			RemoveAll();
+			countText.TrySetValue(0);
+			if(template) RemoveAll();
 			if(Data is INotifyCollectionChanged c)
 				c.CollectionChanged -= CollectionChanged;
 		}
 
 		private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+			countText.TrySetValue(Data.Count());
+			if(!template) return;
 			switch(e.Action) {
 				case NotifyCollectionChangedAction.Add: Add(e.NewStartingIndex, e.NewItems); break;
 				case NotifyCollectionChangedAction.Move: throw new NotImplementedException("Move");
@@ -44,7 +48,6 @@ namespace Drafts.UI {
 				case NotifyCollectionChangedAction.Reset: RemoveAll(); break;
 				default: break;
 			}
-			countText.TrySetValue(Data.Count());
 		}
 
 		private void RemoveAll() {

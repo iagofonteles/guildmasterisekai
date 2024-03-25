@@ -19,14 +19,14 @@ namespace Drafts {
 		/// <summary>Get a random value from the collection</summary>
 		public static T Random<T>(this T[] v) => v[URand.Range(0, v.Length)];
 		/// <summary>Get a random value from the collection</summary>
-		public static T RandomOrDefault<T>(this List<T> array) => array.Count == 0 ? default : array[URand.Range(0, array.Count)];
+		public static T RandomOrDefault<T>(this IReadOnlyList<T> array) => array.Count == 0 ? default : array[URand.Range(0, array.Count)];
 		/// <summary>Get a random value from the collection</summary>
 		public static T RandomOrDefault<T>(this T[] array) => array.Length == 0 ? default : array[URand.Range(0, array.Length)];
 		/// <summary>Get a random value from the collection</summary>
 		public static T Random<T>(this IEnumerable<T> v) => v.Skip(URand.Range(0, v.Count())).FirstOrDefault();
 
 		/// <summary>Get random _values from the array. They are still ordered though.</summary>
-		public static List<T> Random<T>(this List<T> list, int num) {
+		public static IReadOnlyList<T> Random<T>(this List<T> list, int num) {
 			num = Math.Min(num, list.Count);
 			var ret = new List<T>();
 			for(var i = 0; i < list.Count; i++)
