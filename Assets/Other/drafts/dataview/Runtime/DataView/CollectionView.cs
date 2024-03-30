@@ -16,6 +16,7 @@ namespace Drafts.UI {
 		[SerializeField] protected UnityEvent onEmptySelection;
 		[SerializeField] protected bool pooling;
 		[SerializeField] protected FormattedText countText;
+		public UnityEvent<int> onCountChanged;
 
 		[SerializeField] protected List<DataHolder> views = new();
 		protected Stack<DataHolder> pool = new();
@@ -24,7 +25,10 @@ namespace Drafts.UI {
 		protected virtual void Awake() => template.TrySetActive(false);
 
 		protected override void Subscribe() {
-			countText.TrySetValue(Data.Count());
+			var count = Data.Count();
+			countText.TrySetValue(count);
+			onCountChanged.Invoke(count);
+
 			if(template) Add(0, Data);
 			if(Data is INotifyCollectionChanged c)
 				c.CollectionChanged += CollectionChanged;
@@ -32,13 +36,18 @@ namespace Drafts.UI {
 
 		protected override void Unsubscribe() {
 			countText.TrySetValue(0);
+			onCountChanged.Invoke(0);
+
 			if(template) RemoveAll();
 			if(Data is INotifyCollectionChanged c)
 				c.CollectionChanged -= CollectionChanged;
 		}
 
 		private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
-			countText.TrySetValue(Data.Count());
+			var count = Data.Count();
+			countText.TrySetValue(count);
+			onCountChanged.Invoke(count);
+
 			if(!template) return;
 			switch(e.Action) {
 				case NotifyCollectionChangedAction.Add: Add(e.NewStartingIndex, e.NewItems); break;
