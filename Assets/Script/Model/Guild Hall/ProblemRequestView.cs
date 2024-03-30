@@ -6,9 +6,11 @@ namespace GuildMasterIsekai {
 	public class ProblemRequestView : DataView<ProblemRequest> {
 		//[SerializeField] CostumerView costumer;
 		[SerializeField] ProblemView problem;
+		[SerializeField] Costumer costumer;
 
 		protected override void Subscribe() {
 			problem.TrySetData(Data.Problem);
+			costumer.TrySetData(Data.Costumer);
 		}
 
 		public void Accept(DataHolder outcomeHolder) => Data.Reply(

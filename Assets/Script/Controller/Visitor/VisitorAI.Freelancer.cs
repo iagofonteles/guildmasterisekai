@@ -46,13 +46,18 @@ namespace GuildMasterIsekai {
 			var request = new QuestRequest(adventurer, quest);
 			request.OnReplied += Reply;
 			hall.QuestRequests.Add(request);
+			hall.QuestBoard.OnRemoved += CancelIfRemoved;
 
 			Wait(20, () => request.Reply(null));
+			void CancelIfRemoved(Quest q) {
+				if(q == quest) Reply(request, null);
+				hall.QuestBoard.OnRemoved -= CancelIfRemoved;
+			}
 		}
 
 		public void Reply(QuestRequest request, Quest quest) {
 			hall.QuestRequests.Remove(request);
-			if(quest == request.Quest) { Leave(); return; }
+			if(quest == request.Quest) { CompleteQuest(quest); return; }
 
 			var spot = Spots.Table.GetFreeSpot();
 			if(spot != null) { WalkTo(spot, Rest); return; }
@@ -61,5 +66,11 @@ namespace GuildMasterIsekai {
 		}
 
 		void Rest() => Wait(12, CheckActions);
+
+		void CompleteQuest(Quest quest) {
+			hall.QuestBoard.Remove(quest);
+			guild.Gold.Value += quest.Reward.Gold;
+			Leave();
+		}
 	}
 }
