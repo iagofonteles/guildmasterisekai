@@ -17,11 +17,6 @@ namespace GuildMasterIsekai {
 			CheckQueue();
 		}
 
-		protected override void Destroy() {
-			base.Destroy();
-			hall.Costumers.Remove(costumer);
-		}
-
 		void CheckQueue() {
 			if(Spots.Office.IsFull) Leave();
 			else WaitInQueue(Spots.Office, WaitReply);
@@ -33,16 +28,16 @@ namespace GuildMasterIsekai {
 			request.OnReplied += Reply;
 			hall.ProblemRequests.Add(request);
 
-			Wait(20, () => request.Reply(-1));
+			Wait(20, Leave);
 		}
 
 		public void Reply(ProblemRequest request, int reply) {
 			hall.ProblemRequests.Remove(request);
-			Leave();
-			if(reply < 0) return;
+			if(reply >= 0)
+				foreach(var quest in request.Problem.Outcomes[reply])
+					hall.QuestBoard.Add(quest);
 
-			foreach(var quest in request.Problem.Outcomes[reply])
-				hall.QuestBoard.Add(quest);
+			if(Agent) Leave();
 		}
 	}
 }
