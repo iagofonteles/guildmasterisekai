@@ -1,18 +1,19 @@
 ﻿using System;
+using TMPro;
+using UnityEngine;
 
 namespace GuildMasterIsekai {
 
 	[Serializable]
 	public class Stats {
-		private int power;
-		private int resistance;
-		private int knoledge;
+		[SerializeField] int power;
+		[SerializeField] int knoledge;
+		[SerializeField] int vigor;
 
 		public int Knoledge { get => knoledge; set { knoledge = value; OnChanged?.Invoke(); } }
-		public int Resistance { get => resistance; set { resistance = value; OnChanged?.Invoke(); } }
+		public int Vigor { get => vigor; set { vigor = value; OnChanged?.Invoke(); } }
 		public int Power { get => power; set { power = value; OnChanged?.Invoke(); } }
 
 		public event Action OnChanged;
 	}
-
 }

@@ -12,6 +12,7 @@ namespace GuildMasterIsekai {
 		[SerializeField] TextMeshProUGUI description;
 		//[SerializeField] string rank;
 		[SerializeField] Image icon;
+		[SerializeField] StatsView requisite;
 		[SerializeField] FormattedText fee;
 		//[SerializeField] Reward reward;
 
@@ -21,6 +22,7 @@ namespace GuildMasterIsekai {
 			description.TrySetText(Data.Description);
 			//rank = rank.name;
 			icon.TrySetSprite(Data.Icon);
+			requisite.TrySetData(Data.Requisite);
 			fee.TrySetValue(Data.Fee);
 			//reward = reward;
 		}
