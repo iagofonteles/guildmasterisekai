@@ -1,4 +1,5 @@
-﻿using UnityEngine.AI;
+﻿using Drafts;
+using UnityEngine.AI;
 
 namespace GuildMasterIsekai {
 
@@ -6,6 +7,9 @@ namespace GuildMasterIsekai {
 		Costumer costumer;
 		Guild guild;
 		GuildHall hall;
+
+		static VisitorAIConfig.CostumerConf _config;
+		static VisitorAIConfig.CostumerConf Config => _config ??= ResourceUtil.Load<VisitorAIConfig>().Costumer;
 
 		public CostumerVisitorAI(Costumer costumer, NavMeshAgent agent, HallSpots spots)
 			: base(agent, spots) {
@@ -28,7 +32,7 @@ namespace GuildMasterIsekai {
 			request.OnReplied += Reply;
 			hall.ProblemRequests.Add(request);
 
-			Wait(20, Leave);
+			Wait(Config.sitTime, Leave);
 		}
 
 		public void Reply(ProblemRequest request, int reply) {

@@ -24,8 +24,11 @@ namespace Drafts {
 			return instance;
 		}
 
-		public static T Load<T>(string path) where T : Object 
+		public static T Load<T>(string path) where T : Object
 			=> Resources.Load<T>(path) ?? throw new ResourceNotFoundException<T>(path);
+
+		public static T Load<T>() where T : Object
+			=> Resources.Load<T>(typeof(T).Name) ?? throw new ResourceNotFoundException<T>(typeof(T).Name);
 
 		public static T LoadPrefab<T>(string path) where T : Component {
 			var res = Resources.Load<GameObject>(path ?? typeof(T).Name);
