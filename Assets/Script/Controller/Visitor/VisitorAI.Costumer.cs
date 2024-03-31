@@ -1,4 +1,5 @@
-﻿using UnityEngine.AI;
+﻿using Drafts;
+using UnityEngine.AI;
 
 namespace GuildMasterIsekai {
 
@@ -6,6 +7,9 @@ namespace GuildMasterIsekai {
 		Costumer costumer;
 		Guild guild;
 		GuildHall hall;
+
+		static VisitorAIConfig.CostumerConf _config;
+		static VisitorAIConfig.CostumerConf Config => _config ??= ResourceUtil.Load<VisitorAIConfig>().Costumer;
 
 		public CostumerVisitorAI(Costumer costumer, NavMeshAgent agent, HallSpots spots)
 			: base(agent, spots) {
@@ -15,11 +19,6 @@ namespace GuildMasterIsekai {
 			hall.Costumers.Add(costumer);
 
 			CheckQueue();
-		}
-
-		protected override void Destroy() {
-			base.Destroy();
-			hall.Costumers.Remove(costumer);
 		}
 
 		void CheckQueue() {
@@ -33,16 +32,16 @@ namespace GuildMasterIsekai {
 			request.OnReplied += Reply;
 			hall.ProblemRequests.Add(request);
 
-			Wait(20, () => request.Reply(-1));
+			Wait(Config.sitTime, Leave);
 		}
 
 		public void Reply(ProblemRequest request, int reply) {
 			hall.ProblemRequests.Remove(request);
-			Leave();
-			if(reply < 0) return;
+			if(reply >= 0)
+				foreach(var quest in request.Problem.Outcomes[reply])
+					hall.QuestBoard.Add(quest);
 
-			foreach(var quest in request.Problem.Outcomes[reply])
-				hall.QuestBoard.Add(quest);
+			if(Agent) Leave();
 		}
 	}
 }
