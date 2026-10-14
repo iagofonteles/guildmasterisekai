@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GuildMasterIsekai {
 	[Serializable]
-	public class Guild : IJsonGameSave {
+	public class Guild : Drafts.SaveData.JsonFileParser {
 		[SerializeField] string rank = "F";
 		[SerializeField] Watcher<int> gold;
 

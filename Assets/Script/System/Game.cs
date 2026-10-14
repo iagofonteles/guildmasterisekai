@@ -1,7 +1,4 @@
-﻿using Drafts;
-using Drafts.Databases;
-namespace GuildMasterIsekai {
-
+﻿namespace GuildMasterIsekai {
 	public static class Game {
 
 		public static Database<DatabaseEntrySO> Database { get; private set; }

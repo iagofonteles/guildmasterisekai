@@ -4,21 +4,21 @@ using UnityEngine;
 namespace GuildMasterIsekai {
 	[Serializable]
 	public class Quest : IDisplay, IGuid {
-		[SerializeField] string guid;
-		[SerializeField] string displayName;
-		[SerializeField] string description;
-		[SerializeField] string rank;
-		[SerializeField] string icon;
-		[SerializeField] int fee;
-		[SerializeField] Stats requisite;
-		[SerializeField] Reward reward;
+		[SerializeField] private uint guid;
+		[SerializeField] private string displayName;
+		[SerializeField] private string description;
+		[SerializeField] private int rank;
+		[SerializeField] private string icon;
+		[SerializeField] private int fee;
+		[SerializeField] private Stats requisite;
+		[SerializeField] private Reward reward;
 
-		Rank _rank;
-		Sprite _icon;
+		private Rank _rank;
+		private Sprite _icon;
 
 		public event Action OnChanged;
 
-		public string Guid => guid;
+		public string Guid => guid.ToString();
 		public string DisplayName => displayName;
 		public string Description => description;
 		public Rank Rank => _rank ??= Game.Database.Find<Rank>(rank);
