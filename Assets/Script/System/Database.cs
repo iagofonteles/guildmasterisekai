@@ -1,27 +1,28 @@
-using System;
-using Drafts.Database;
-using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
+using Drafts.SaveData;
 
 namespace GuildMasterIsekai
 {
-    public abstract class DatabaseItem : ScriptableObject, IDatabaseItemInternal
+    public class Database : Drafts.Database.DatabaseSO<DatabaseEntrySo> { }
+
+    public static class DatabaseExtensions
     {
-        [SerializeField] protected Sprite icon;
-        
-        [NonSerialized] protected uint _id;
-        [NonSerialized] protected locstr _displayName;
-        [NonSerialized] protected string _description;
+        public static void WriteItem<T>(this BinaryWriter w, T item)
+            where T : DatabaseEntrySo => w.Write(item?.Id ?? 0);
 
-        public virtual int Index { get; private set; }
-        public virtual object Id => _id ??= $"{GetType().Name} {name}".ToLower();
-        public virtual string DisplayName => _displayName ??= name;
-        public virtual string Description => _description ??= Id + "-desc";
-        public virtual Sprite Icon => icon;
-        
-        public virtual bool Discovered { get; set; }
+        public static T ReadItem<T>(this BinaryReader r)
+            where T : DatabaseEntrySo => Game.Database.Find<T>(r.ReadUInt32());
 
-        void IDatabaseItemInternal.SetIndex(int i) => Index = i;
+        public static void WriteItemCollection<T>(this BinaryWriter w, IReadOnlyCollection<T> col)
+            where T : DatabaseEntrySo => w.WriteCollection(WriteItem, col);
+
+        public static IEnumerable<T> ReadItemCollection<T>(this BinaryReader r)
+            where T : DatabaseEntrySo => r.ReadCollection(ReadItem<T>);
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Game/Refresh Database")]
+        public static void RefreshDatabase() => Game.Database.FetchItemsFromAssets();
+#endif
     }
-    
-    public class Database :Drafts.Database.DatabaseSO<> { }
 }

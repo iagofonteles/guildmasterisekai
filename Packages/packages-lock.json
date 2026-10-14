@@ -21,6 +21,13 @@
       "dependencies": {},
       "hash": "0362ccfa96cd86bd1215cdc7b5b5089e11dd4d9d"
     },
+    "com.drafts.localization": {
+      "version": "https://github.com/bydrafts/localization.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f7c684b5b18b45f32ece0cfbce4346fbb5798cfe"
+    },
     "com.drafts.observable": {
       "version": "https://github.com/bydrafts/observable.git#v1.0",
       "depth": 0,
@@ -36,11 +43,10 @@
       "hash": "d4d00ca1906b4f6839ff5980780f2f08cdc4a4cb"
     },
     "com.drafts.savedata": {
-      "version": "https://github.com/bydrafts/savedata.git",
+      "version": "file:E:/Work/drafts_unity_github/savedata",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "caf748cf7f62ccc449ec2ce01b9425c31e72d033"
+      "source": "local",
+      "dependencies": {}
     },
     "com.drafts.search": {
       "version": "https://github.com/bydrafts/searchattribute.git",
@@ -63,6 +69,33 @@
         "com.unity.modules.tilemap": "1.0.0",
         "com.unity.modules.uielements": "1.0.0"
       }
+    },
+    "com.unity.2d.tilemap.extras": {
+      "version": "8.0.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.2d.tilemap": "1.0.0",
+        "com.unity.modules.tilemap": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.addressables": {
+      "version": "2.9.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.profiling.core": "1.0.2",
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.scriptablebuildpipeline": "2.6.1",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.ai.assistant": {
       "version": "2.20.0-pre.2",
@@ -150,6 +183,16 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.localization": {
+      "version": "1.5.13",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.addressables": "1.25.0",
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.mathematics": {
       "version": "1.4.0",
       "depth": 1,
@@ -174,6 +217,13 @@
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.2.2",
       "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.profiling.core": {
+      "version": "1.0.3",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -206,6 +256,16 @@
       "dependencies": {
         "com.unity.render-pipelines.core": "17.5.0"
       }
+    },
+    "com.unity.scriptablebuildpipeline": {
+      "version": "2.6.1",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.modules.assetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
       "version": "4.9.5",

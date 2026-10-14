@@ -1,9 +1,9 @@
-﻿using Drafts;
+﻿using Drafts.DataView;
 using UnityEngine;
 
 namespace GuildMasterIsekai {
 	public class GameSaveData : MonoBehaviour {
-		enum Data {
+		private enum Data {
 			Guild,
 			GuildHall,
 			GuildRank,
@@ -15,12 +15,13 @@ namespace GuildMasterIsekai {
 			ProblemRequests,
 		}
 
-		[SerializeField] Data data;
-		void Start() {
+		[SerializeField] private Data data;
+		
+		private void Start() {
 			var guild = Game.Save.Get<Guild>();
 			var hall = Game.Save.Get<GuildHall>();
 			
-			GetComponent<IData>().Data = data switch {
+			GetComponent<DataView>().SetData(data switch {
 				Data.Guild => guild,
 				Data.GuildHall => hall,
 				Data.GuildRank => guild.Rank,
@@ -31,7 +32,7 @@ namespace GuildMasterIsekai {
 				Data.QuestRequests => hall.QuestRequests,
 				Data.ProblemRequests => hall.ProblemRequests,
 				_ => throw new System.NotImplementedException(),
-			};
+			});
 		}
 	}
 }

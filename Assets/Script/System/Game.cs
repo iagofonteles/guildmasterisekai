@@ -1,15 +1,30 @@
-﻿namespace GuildMasterIsekai {
-	public static class Game {
+﻿using Drafts.SaveData;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
-		public static Database<DatabaseEntrySO> Database { get; private set; }
-		public static GameSave Save { get; private set; }
+namespace GuildMasterIsekai
+{
+    public static class Game
+    {
+        private static Database _database;
+        private static UIntGenerator _id;
+        private static SaveManager _save;
 
-		static Game() => Reset();
+        public static Database Database => Load(ref _database);
+        public static UIntGenerator Id { get; } = new();
+        public static SaveManager Save { get; } = new("Save", "Default", new SaveFileParser());
 
-		public static void Reset() {
-			Database = new(new ResourcesEntryProvider<DatabaseEntrySO>("{0}"));
-			Save = new("../Save");
-			Save.Load("Test");
-		}
-	}
+        private static T Load<T>(ref T v, string path = null) where T : Object
+        {
+            if (v) return v;
+            return v = Resources.Load<T>(path ?? typeof(T).Name);
+        }
+
+        [RuntimeInitializeOnLoadMethod]
+        public static void Reset()
+        {
+            Save.Load("Default");
+        }
+
+    }
 }
