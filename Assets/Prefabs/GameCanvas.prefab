@@ -2300,10 +2300,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011daf20c9b17f6449ceaa38d348c7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnDataChanged:
+  onDataChanged:
     m_PersistentCalls:
       m_Calls: []
-  template: {fileID: 871572391607320165}
+  itemTemplate: {fileID: 871572391607320165}
   onEmptySelection:
     m_PersistentCalls:
       m_Calls: []
@@ -2314,7 +2314,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1740730219464744714}
-        m_TargetAssemblyTypeName: Drafts.Components.TriggerOnCondition, DraftsTrigger
+        m_TargetAssemblyTypeName: Drafts.Components.TriggerOnCondition, GuildMasterIsekai
         m_MethodName: CallNotEquals
         m_Mode: 0
         m_Arguments:
@@ -4978,10 +4978,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011daf20c9b17f6449ceaa38d348c7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnDataChanged:
+  onDataChanged:
     m_PersistentCalls:
       m_Calls: []
-  template: {fileID: 8070897777231525143}
+  itemTemplate: {fileID: 8070897777231525143}
   onEmptySelection:
     m_PersistentCalls:
       m_Calls: []
@@ -7642,10 +7642,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011daf20c9b17f6449ceaa38d348c7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnDataChanged:
+  onDataChanged:
     m_PersistentCalls:
       m_Calls: []
-  template: {fileID: 1865368633502420087}
+  itemTemplate: {fileID: 1865368633502420087}
   onEmptySelection:
     m_PersistentCalls:
       m_Calls: []
@@ -14143,10 +14143,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5614680922073887513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baf30cdebb3a6cf4f94fb2b5943f1b81, type: 3}
+  m_Script: {fileID: 11500000, guid: 716e5b9540724b65bc39e255580a195b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnDataChanged:
+  onDataChanged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &5663899337886612604
@@ -21497,10 +21497,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011daf20c9b17f6449ceaa38d348c7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnDataChanged:
+  onDataChanged:
     m_PersistentCalls:
       m_Calls: []
-  template: {fileID: 7460843506739606156}
+  itemTemplate: {fileID: 7460843506739606156}
   onEmptySelection:
     m_PersistentCalls:
       m_Calls: []
