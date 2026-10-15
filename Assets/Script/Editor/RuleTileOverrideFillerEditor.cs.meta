@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fb39483c3d3942e7a6cb73e430c410fd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_PreviewGrid: {instanceID: 0}
+  - wallIcon: {fileID: 2800000, guid: 0e70378b04d764e49b99a9da664f51f3, type: 3}
+  - notWallIcon: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

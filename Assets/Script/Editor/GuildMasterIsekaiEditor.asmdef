@@ -1,0 +1,17 @@
+{
+    "name": "GuildMasterIsekaiEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:544032516d468c0498fc0e1c22848f7a",
+        "GUID:cbdf09464b6b87745be748a67e5a21a0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
