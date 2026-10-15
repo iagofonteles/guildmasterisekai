@@ -1,6 +1,7 @@
 using System.IO;
 using Drafts.SaveData;
 using System;
+using Drafts;
 using UnityEngine;
 
 namespace GuildMasterIsekai
@@ -8,7 +9,7 @@ namespace GuildMasterIsekai
     [Serializable]
     public class Quest : IDisplay, IBinarySave
     {
-        [SerializeField] private uint id;
+        [SerializeField, ReadOnly] private uint id;
         [SerializeField] private string icon;
         [SerializeField] private string displayName;
         [SerializeField] private string description;
@@ -25,7 +26,7 @@ namespace GuildMasterIsekai
         public string Description => description;
         public Rank Rank => rank;
         public int Fee => fee;
-        public Stats Requisite => requisite;
+        public IStats Requisite => requisite;
         public Reward Reward => reward;
 
         public Quest()
@@ -35,11 +36,11 @@ namespace GuildMasterIsekai
         }
 
         public Quest(
-            Sprite icon, string displayName, string description,
+            string icon, string displayName, string description,
             Rank rank, int fee, Stats requisite, Reward reward)
         {
             id = Game.Id.Generate();
-            this.icon = icon.name;
+            this.icon = icon;
             this.displayName = displayName;
             this.description = description;
             this.rank = rank;

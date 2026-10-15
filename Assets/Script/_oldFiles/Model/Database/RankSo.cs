@@ -11,7 +11,7 @@ namespace GuildMasterIsekai
     {
         private static IReadOnlyList<RankSo> _ranks;
 
-        [SerializeField] int order;
+        [SerializeField] private int order;
         public int Order => order;
 
         public int CompareTo(RankSo other) => order.CompareTo(other.order);

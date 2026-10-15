@@ -25,7 +25,7 @@ namespace GuildMasterIsekai
 
             return taskType switch
             {
-                TaskType.Quest => hall.QuestBoard.BinaryFind(taskGuid),
+                TaskType.Quest => throw new NotImplementedException(),
                 TaskType.Training => throw new NotImplementedException(),
                 TaskType.Scout => throw new NotImplementedException(),
                 _ => throw new NotImplementedException(),
@@ -34,7 +34,7 @@ namespace GuildMasterIsekai
 
         public Assignment(Quest quest)
         {
-            taskGuid = quest.Guid;
+            taskId = quest.Id;
             taskType = TaskType.Quest;
         }
 
@@ -43,8 +43,7 @@ namespace GuildMasterIsekai
         public void Save(BinaryWriter writer)
         {
             writer.Write((int)taskType);
-            writer.Write(taskGuid != null);
-            if (taskGuid != null) writer.Write(taskGuid);
+            writer.Write(taskId);
             writer.Write(departTime);
             writer.Write(duration);
         }
@@ -52,7 +51,7 @@ namespace GuildMasterIsekai
         public void Load(BinaryReader reader)
         {
             taskType = (TaskType)reader.ReadInt32();
-            taskGuid = reader.ReadBoolean() ? reader.ReadString() : null;
+            taskId = reader.ReadUInt32();
             departTime = reader.ReadInt64();
             duration = reader.ReadSingle();
             _task = null;

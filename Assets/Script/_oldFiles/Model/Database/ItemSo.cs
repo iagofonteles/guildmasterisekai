@@ -2,7 +2,7 @@
 namespace GuildMasterIsekai {
 
 	[CreateAssetMenu(menuName = "Guild Master/Item")]
-	public class Item : DatabaseEntrySo {
+	public class ItemSo : DatabaseEntrySo {
 
 	}
 }

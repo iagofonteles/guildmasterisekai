@@ -1,22 +1,21 @@
-﻿using Drafts;
+﻿using Drafts.DataView;
 using UnityEngine;
 
-namespace GuildMasterIsekai {
+namespace GuildMasterIsekai
+{
+    public class ProblemRequestView : DataView<ProblemRequest>
+    {
+        [SerializeField] private CostumerView costumer;
+        [SerializeField] private ProblemView problem;
 
-	public class ProblemRequestView : DataView<ProblemRequest> {
-		//[SerializeField] CostumerView costumer;
-		[SerializeField] ProblemView problem;
-		[SerializeField] CostumerView costumer;
+        protected override void Subscribe()
+        {
+            problem.TrySetData(Data.Problem);
+            costumer.TrySetData(Data.Costumer);
+        }
 
-		protected override void Subscribe() {
-			problem.TrySetData(Data.Problem);
-			costumer.TrySetData(Data.Costumer);
-		}
-
-		public void Accept(DataHolder outcomeHolder) => Data.Reply(
-			Data.Problem.Outcomes.IndexOf(outcomeHolder.Data));
-
-		public void Accept(int index) => Data.Reply(index);
-		public void Refuse() => Data.Reply(-1);
-	}
+        public void Accept(Transform index) => Data.Reply(index.GetSiblingIndex() - 1);
+        public void Accept(int index) => Data.Reply(index);
+        public void Refuse() => Data.Reply(-1);
+    }
 }

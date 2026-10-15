@@ -3,30 +3,42 @@ using Drafts.SaveData;
 using System;
 using UnityEngine;
 
-namespace GuildMasterIsekai {
+namespace GuildMasterIsekai
+{
+    public interface IStats
+    {
+        int Knowledge { get; }
+        int Vigor { get; }
+        int Power { get; }
+    }
 
-	[Serializable]
-	public class Stats : IBinarySave {
-		[SerializeField] private int power;
-		[SerializeField] private int knowledge;
-		[SerializeField] private int vigor;
+    [Serializable]
+    public class Stats : IStats, IBinarySave
+    {
+        [SerializeField] private Watcher<int> power = new();
+        [SerializeField] private Watcher<int> knowledge = new();
+        [SerializeField] private Watcher<int> vigor = new();
 
-		public int Knowledge { get => knowledge; set { knowledge = value; OnChanged?.Invoke(); } }
-		public int Vigor { get => vigor; set { vigor = value; OnChanged?.Invoke(); } }
-		public int Power { get => power; set { power = value; OnChanged?.Invoke(); } }
+        public Watcher<int> Power => power;
+        public Watcher<int> Knowledge => knowledge;
+        public Watcher<int> Vigor => vigor;
 
-		public event Action OnChanged;
+        int IStats.Knowledge => knowledge.Value;
+        int IStats.Vigor => vigor.Value;
+        int IStats.Power => power.Value;
 
-		public void Save(BinaryWriter writer) {
-			writer.Write(power);
-			writer.Write(knowledge);
-			writer.Write(vigor);
-		}
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(power.Value);
+            writer.Write(knowledge.Value);
+            writer.Write(vigor.Value);
+        }
 
-		public void Load(BinaryReader reader) {
-			power = reader.ReadInt32();
-			knowledge = reader.ReadInt32();
-			vigor = reader.ReadInt32();
-		}
-	}
+        public void Load(BinaryReader reader)
+        {
+            power.Value = reader.ReadInt32();
+            knowledge.Value = reader.ReadInt32();
+            vigor.Value = reader.ReadInt32();
+        }
+    }
 }

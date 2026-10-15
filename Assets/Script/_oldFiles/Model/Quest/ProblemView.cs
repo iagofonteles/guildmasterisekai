@@ -1,16 +1,16 @@
-﻿using Drafts;
-using Drafts.Extensions;
-using Drafts.UI;
+﻿using Drafts.DataView;
 using TMPro;
 using UnityEngine;
 
 namespace GuildMasterIsekai {
 	public class ProblemView : DataView<Problem> {
-		[SerializeField] TextMeshProUGUI guid;
-		[SerializeField] CollectionView outcomes;
+		[SerializeField] private TMP_Text id;
+		[SerializeField] private CollectionView outcomes;
 
-		protected override void Repaint() {
-			guid.TrySetText(Data.Guid);
+		protected override void Subscribe()
+		{
+			base.Subscribe();
+			id.TrySetText(Data.Id);
 			outcomes.TrySetData(Data.Outcomes);
 		}
 	}

@@ -1,16 +1,19 @@
-﻿using Drafts;
+﻿using Drafts.DataView;
+using TMPro;
 using UnityEngine;
 
 namespace GuildMasterIsekai {
 	public class StatsView : DataView<Stats> {
-		[SerializeField] FormattedText power;
-		[SerializeField] FormattedText knoledge;
-		[SerializeField] FormattedText vigor;
+		[SerializeField] private TMP_Text power;
+		[SerializeField] private TMP_Text knowledge;
+		[SerializeField] private TMP_Text vigor;
 
-		protected override void Repaint() {
-			power.TrySetValue(Data.Power);
-			vigor.TrySetValue(Data.Vigor);
-			knoledge.TrySetValue(Data.Knoledge);
+		protected override void Subscribe()
+		{
+			base.Subscribe();
+			power.TrySetText(Data.Power);
+			vigor.TrySetText(Data.Vigor);
+			knowledge.TrySetText(Data.Knowledge);
 		}
 	}
 }

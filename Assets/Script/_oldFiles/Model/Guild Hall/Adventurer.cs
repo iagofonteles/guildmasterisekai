@@ -12,9 +12,9 @@ namespace GuildMasterIsekai
     {
         [SerializeField, ReadOnly] private uint id;
         [SerializeField] private string portrait;
-        [SerializeField] private Observable<string> displayName;
-        [SerializeField] private Observable<Rank> rank;
-        public Stats stats;
+        [SerializeField] private Watcher<string> displayName = new();
+        [SerializeField] private Watcher<Rank> rank = new();
+        [SerializeField] private Stats stats;
         public Assignment assignment;
         public event Action OnChanged;
 
@@ -22,32 +22,25 @@ namespace GuildMasterIsekai
         {
             stats = new();
         }
-        
-        public Adventurer(Rank rank, string nickname, string portrait, Stats stats)
+
+        public Adventurer(
+            string portrait, string nickname,
+            Rank rank, Stats stats)
         {
             id = Game.Id.Generate();
-            displayName = nickname;
+            displayName.Value = nickname;
             this.portrait = portrait;
-            this.rank = rank;
+            this.rank.Value = rank;
             this.stats = stats;
         }
 
-        public RankSo Rank => _rank ??= Game.Database.Find<RankSo>(rank);
-
         public uint Id => id;
+        public Watcher<Rank> Rank => rank;
         public string Name => nameof(Adventurer);
-
-        public string DisplayName
-        {
-            get => displayName;
-            set {
-                displayName = value;
-                OnChanged?.Invoke();
-            }
-        }
-
+        public string DisplayName => displayName.Value;
         public string Description => "...";
-        public Sprite Icon => _portrait ??= Resources.Load<Sprite>($"Portrait/{portrait}");
+        public Sprite Icon => Game.LoadSprite(portrait);
+        public Stats Stats => stats;
 
         public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
             => new FreelancerVisitorAI(this, agent, spots);
@@ -70,7 +63,7 @@ namespace GuildMasterIsekai
             displayName.Value = reader.ReadString();
             rank.Value = (Rank)reader.ReadInt32();
             assignment = reader.ReadSave<Assignment>();
-            
+
             stats?.Load(reader);
         }
     }

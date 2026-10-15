@@ -1,15 +1,16 @@
-﻿using Drafts;
-using Drafts.Extensions;
+﻿using Drafts.DataView;
 using TMPro;
 using UnityEngine;
 
 namespace GuildMasterIsekai {
 
 	public class QuestRequestView : DataView<QuestRequest> {
-		[SerializeField] TextMeshProUGUI text;
+		[SerializeField] private TMP_Text text;
 
-		protected override void Repaint() {
-			text.TrySetText(Data.Quest.Guid);
+		protected override void Subscribe()
+		{
+			base.Subscribe();
+			text.TrySetText(Data.Quest.Id);
 		}
 
 		public void Accept() => Data.Reply(Data.Quest);

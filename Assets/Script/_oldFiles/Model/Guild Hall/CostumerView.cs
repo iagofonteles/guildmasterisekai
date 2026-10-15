@@ -7,14 +7,14 @@ namespace GuildMasterIsekai
 {
     public class CostumerView : DataView<Costumer>
     {
-        [SerializeField] TextMeshProUGUI id;
-        [SerializeField] TextMeshProUGUI displayName;
-        [SerializeField] Image icon;
+        [SerializeField] private TMP_Text id;
+        [SerializeField] private TMP_Text displayName;
+        [SerializeField] private Image icon;
 
         protected override void Subscribe()
         {
             base.Subscribe();
-            id.TrySetText(Data.Guid);
+            id.TrySetText(Data.Id);
             displayName.TrySetText(Data.DisplayName);
             icon.TrySetSprite(Data.Icon);
         }

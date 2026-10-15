@@ -5,63 +5,55 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace GuildMasterIsekai {
+namespace GuildMasterIsekai
+{
+    [Serializable]
+    public class Costumer : IDisplay, IVisitor, IBinarySave
+    {
+        [SerializeField, ReadOnly] private uint id;
+        [SerializeField] private string displayName;
+        [SerializeField] private string portrait;
+        [SerializeField] private Rank rank;
+        [SerializeField] private Stat stat;
+        public event Action OnChanged;
 
-	[Serializable]
-	public class Costumer : IDisplay, IGuid, IVisitor, IBinarySave {
-		[SerializeField, ReadOnly] string guid;
-		[SerializeField] string displayName;
-		[SerializeField, Rank] string rank;
-		[SerializeField] eStat stat;
-		[SerializeField] string portrait;
-		public event Action OnChanged;
+        public uint Id => id;
+        public string Name => nameof(Adventurer);
+        public string DisplayName => displayName;
+        public string Description => "...";
+        public Sprite Icon => Game.LoadSprite(portrait);
+        public Rank Rank => rank;
+        public Stat Stat => stat;
 
-		RankSo _rank;
-		Sprite _portrait;
+        public Costumer() { }
+        public Costumer(Rank rank, string nickname, string portrait, Stat stat)
+        {
+            id = Game.Id.Generate();
+            displayName = nickname;
+            this.portrait = portrait;
+            this.rank = rank;
+            this.stat = stat;
+        }
 
-		public Costumer(RankSo rank, string nickname, string portrait, eStat stat) {
-			guid = System.Guid.NewGuid().ToString();
-			displayName = nickname;
-			this.portrait = portrait;
-			this.rank = rank.name;
-			this.stat = stat;
-			_rank = rank;
-		}
+        public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
+            => new CostumerVisitorAI(this, agent, spots);
 
-		public RankSo Rank => _rank ??= Game.Database.Find<RankSo>(rank);
-		public eStat Stat => stat;
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(id);
+            writer.Write(displayName ?? "");
+            writer.Write(portrait ?? "");
+            writer.Write((int)rank);
+            writer.Write((int)stat);
+        }
 
-		public string Guid => guid;
-		public string Name => nameof(Adventurer);
-		public string DisplayName => displayName;
-		public string Description => "...";
-		public Sprite Icon => _portrait ??= Resources.Load<Sprite>($"Portrait/{portrait}");
-
-		public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
-			=> new CostumerVisitorAI(this, agent, spots);
-
-		public Costumer() { }
-
-		public void Save(BinaryWriter writer) {
-			writer.Write(guid != null);
-			if (guid != null) writer.Write(guid);
-			writer.Write(displayName != null);
-			if (displayName != null) writer.Write(displayName);
-			writer.Write(rank != null);
-			if (rank != null) writer.Write(rank);
-			writer.Write((int)stat);
-			writer.Write(portrait != null);
-			if (portrait != null) writer.Write(portrait);
-		}
-
-		public void Load(BinaryReader reader) {
-			guid = reader.ReadBoolean() ? reader.ReadString() : null;
-			displayName = reader.ReadBoolean() ? reader.ReadString() : null;
-			rank = reader.ReadBoolean() ? reader.ReadString() : null;
-			stat = (eStat)reader.ReadInt32();
-			portrait = reader.ReadBoolean() ? reader.ReadString() : null;
-			_rank = null;
-			_portrait = null;
-		}
-	}
+        public void Load(BinaryReader reader)
+        {
+            id = reader.ReadUInt32();
+            displayName = reader.ReadString();
+            portrait = reader.ReadString();
+            rank = (Rank)reader.ReadInt32();
+            stat = (Stat)reader.ReadInt32();
+        }
+    }
 }
