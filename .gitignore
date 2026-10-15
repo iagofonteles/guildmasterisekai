@@ -91,3 +91,5 @@ crashlytics-build.properties
 # Log files can be ignored.
 fmod_editor.log
 **/.idea
+Assets/codex task.txt
+Assets/codex task.txt.meta
