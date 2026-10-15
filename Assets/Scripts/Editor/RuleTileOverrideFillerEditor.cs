@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Editor
 {
-    [CustomEditor(typeof(RuleTileOverrideFiller))]
+    [CustomEditor(typeof(WallRuleTile))]
     public class RuleTileOverrideFillerEditor : RuleTileEditor
     {
         [SerializeField] private Texture2D wallIcon;
