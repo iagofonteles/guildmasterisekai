@@ -3,9 +3,11 @@ using System.IO;
 using Drafts.Database;
 using Drafts.SaveData;
 using UnityEditor;
+using UnityEngine;
 
 namespace GuildMasterIsekai.System
 {
+    [CreateAssetMenu(menuName = "Game/Database")]
     public class Database : DatabaseSO<DatabaseEntrySo> { }
 
     public static class DatabaseExtensions

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2021bc5c8764f809c7bcf36083bb13d, type: 3}
+  m_Name: Database
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.System.Database
+  items:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 8e3e6c5f6e3fd1e46821b4750d33c6ff, type: 2}
+  - {fileID: 11400000, guid: 806d0044f2d58914bb8cf583274d078d, type: 2}
+  - {fileID: 11400000, guid: 2164f8be5679160418fafd87c9d4b615, type: 2}
+  - {fileID: 11400000, guid: 15edc877e83e14740960f60fb3ee2a28, type: 2}
+  - {fileID: 11400000, guid: 48ccc61ed094abf4085b79543e21b71d, type: 2}
+  - {fileID: 11400000, guid: e1fa0ad06d49f36489b4b2d4de47dba2, type: 2}
+  - {fileID: 11400000, guid: 5acde736144ab68448fc825aae55e5f0, type: 2}
