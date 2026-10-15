@@ -20,7 +20,7 @@ namespace GuildMasterIsekai
             new("Default", "Aventureiro " + RandomNo,
                 guild.Rank, Stats(guild.Rank));
 
-        public Costumer NewCostumer() =>
+        public Costomer NewCostumer() =>
             new(guild.Rank, "Consumidor " + RandomNo,
                 "Default", (Stat)Random.Range(0, 2));
 
@@ -31,8 +31,8 @@ namespace GuildMasterIsekai
             Vigor = { Value = Random.Range(1, 2) }
         };
 
-        public Problem NewProblem(Costumer costumer) =>
-            new(costumer.Rank, costumer.Stat, "Problema " + RandomNo, "---", "Default");
+        public Problem NewProblem(Costomer costomer) =>
+            new(costomer.Rank, costomer.Stat, "Problema " + RandomNo, "---", "Default");
 
         public Quest NewQuest(Rank rank, Stat mainStat)
         {

@@ -6,5 +6,5 @@ namespace GuildMasterIsekai.Database
     [CreateAssetMenu(menuName = "Guild Master/Stat")]
     public class StatSo : DatabaseEntrySo { }
 
-    public enum Stat { Power, Knowledge, Resistance }
+    public enum Stat { Power, Knowledge, Vigor }
 }

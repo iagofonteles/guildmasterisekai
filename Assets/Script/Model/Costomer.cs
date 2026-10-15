@@ -12,7 +12,7 @@ using UnityEngine.AI;
 namespace GuildMasterIsekai.Model
 {
     [Serializable]
-    public class Costumer : IDisplay, IVisitor, IBinarySave
+    public class Costomer : IDisplay, IVisitor, IBinarySave
     {
         [SerializeField, ReadOnly] private uint id;
         [SerializeField] private string displayName;
@@ -20,9 +20,9 @@ namespace GuildMasterIsekai.Model
         [SerializeField] private Rank rank;
         [SerializeField] private Stat stat;
 
-        public Costumer() { }
+        public Costomer() { }
 
-        public Costumer(Rank rank, string nickname, string portrait, Stat stat)
+        public Costomer(Rank rank, string nickname, string portrait, Stat stat)
         {
             id = Game.Id.Generate();
             displayName = nickname;
@@ -61,6 +61,6 @@ namespace GuildMasterIsekai.Model
         public Sprite Icon => Game.LoadSprite(portrait);
 
         public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
-            => new CostumerVisitorAI(this, agent, spots);
+            => new CostomerVisitorAI(this, agent, spots);
     }
 }

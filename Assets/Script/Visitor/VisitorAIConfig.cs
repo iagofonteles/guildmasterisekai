@@ -6,13 +6,13 @@ namespace GuildMasterIsekai.Visitor
     [CreateAssetMenu(menuName = "Guild Master/VisitorAIConfig")]
     public class VisitorAIConfig : ScriptableObject
     {
-        [SerializeField] private CostumerConf freelancer;
-        [SerializeField] private CostumerConf costumer;
+        [SerializeField] private CostomerConf freelancer;
+        [SerializeField] private CostomerConf costomer;
 
-        public CostumerConf Costumer => costumer;
+        public CostomerConf Costomer => costomer;
 
         [Serializable]
-        public class CostumerConf
+        public class CostomerConf
         {
             public float sitTime = 15;
         }

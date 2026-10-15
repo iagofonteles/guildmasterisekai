@@ -8,9 +8,9 @@ namespace GuildMasterIsekai.Model
 {
     public interface IStats
     {
+        int Power { get; }
         int Knowledge { get; }
         int Vigor { get; }
-        int Power { get; }
     }
 
     [Serializable]

@@ -12,7 +12,7 @@ namespace GuildMasterIsekai.ModelView
         protected override void Subscribe()
         {
             problem.TrySetData(Data.Problem);
-            costumer.TrySetData(Data.Costumer);
+            costumer.TrySetData(Data.Costomer);
         }
 
         public void Accept(Transform index) => Data.Reply(index.GetSiblingIndex() - 1);

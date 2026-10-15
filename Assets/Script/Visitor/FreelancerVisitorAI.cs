@@ -11,13 +11,13 @@ namespace GuildMasterIsekai.Visitor
     {
         private readonly Guild _guild;
         private readonly GuildHall _hall;
-        [SerializeField] private Adventurer adventurer;
-        private QuestRequest pendingRequest;
+        private readonly Adventurer _adventurer;
+        private QuestRequest _pendingRequest;
 
         public FreelancerVisitorAI(Adventurer adventurer, NavMeshAgent agent, HallSpots spots)
             : base(agent, spots)
         {
-            this.adventurer = adventurer;
+            _adventurer = adventurer;
             _guild = Game.Save.Get<Guild>();
             _hall = Game.Save.Get<GuildHall>();
             _hall.Freelancers.Add(adventurer);
@@ -28,7 +28,7 @@ namespace GuildMasterIsekai.Visitor
         public override void Dispose()
         {
             ClearRequest();
-            _hall.Freelancers.Remove(adventurer);
+            _hall.Freelancers.Remove(_adventurer);
             base.Dispose();
         }
 
@@ -76,8 +76,8 @@ namespace GuildMasterIsekai.Visitor
             }
 
             var quest = _hall.QuestBoard[Random.Range(0, _hall.QuestBoard.Count)];
-            var request = new QuestRequest(adventurer, quest);
-            pendingRequest = request;
+            var request = new QuestRequest(_adventurer, quest);
+            _pendingRequest = request;
             request.OnReplied += Reply;
             _hall.QuestRequests.Add(request);
             _hall.QuestBoard.OnChanged += CancelIfRemoved;
@@ -87,15 +87,15 @@ namespace GuildMasterIsekai.Visitor
 
         private void CancelIfRemoved(ListEvent action, int index, Quest quest)
         {
-            if (pendingRequest != null && !_hall.QuestBoard.Contains(pendingRequest.Quest))
-                Reply(pendingRequest, null);
+            if (_pendingRequest != null && !_hall.QuestBoard.Contains(_pendingRequest.Quest))
+                Reply(_pendingRequest, null);
         }
 
         private void ClearRequest()
         {
-            if (pendingRequest == null) return;
-            var request = pendingRequest;
-            pendingRequest = null;
+            if (_pendingRequest == null) return;
+            var request = _pendingRequest;
+            _pendingRequest = null;
             request.OnReplied -= Reply;
             _hall.QuestBoard.OnChanged -= CancelIfRemoved;
             _hall.QuestRequests.Remove(request);
@@ -103,7 +103,7 @@ namespace GuildMasterIsekai.Visitor
 
         public void Reply(QuestRequest request, Quest quest)
         {
-            if (request != pendingRequest) return;
+            if (request != _pendingRequest) return;
             ClearRequest();
 
             if (quest != null && quest == request.Quest && _hall.QuestBoard.Contains(quest))

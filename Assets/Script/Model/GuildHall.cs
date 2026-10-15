@@ -10,13 +10,13 @@ namespace GuildMasterIsekai.Model
     public class GuildHall : IBinarySave
     {
         [SerializeField] private ObservableList<Quest> questBoard = new();
-        [SerializeField] private ObservableList<Costumer> costumers = new();
+        [SerializeField] private ObservableList<Costomer> costomers = new();
         [SerializeField] private ObservableList<Adventurer> freelancers = new();
         [SerializeField] private ObservableList<QuestRequest> requests = new();
         [SerializeField] private ObservableList<ProblemRequest> problems = new();
 
         public ObservableList<Quest> QuestBoard => questBoard;
-        public ObservableList<Costumer> Costumers => costumers;
+        public ObservableList<Costomer> Costomers => costomers;
         public ObservableList<Adventurer> Freelancers => freelancers;
         public ObservableList<QuestRequest> QuestRequests => requests;
         public ObservableList<ProblemRequest> ProblemRequests => problems;
@@ -24,7 +24,7 @@ namespace GuildMasterIsekai.Model
         public void Save(BinaryWriter writer)
         {
             writer.WriteSaveCollection(questBoard);
-            writer.WriteSaveCollection(costumers);
+            writer.WriteSaveCollection(costomers);
             writer.WriteSaveCollection(freelancers);
             writer.WriteSaveCollection(requests);
             writer.WriteSaveCollection(problems);
@@ -33,7 +33,7 @@ namespace GuildMasterIsekai.Model
         public void Load(BinaryReader reader)
         {
             questBoard = new(reader.ReadSaveCollection<Quest>());
-            costumers = new(reader.ReadSaveCollection<Costumer>());
+            costomers = new(reader.ReadSaveCollection<Costomer>());
             freelancers = new(reader.ReadSaveCollection<Adventurer>());
             requests = new(reader.ReadSaveCollection<QuestRequest>());
             problems = new(reader.ReadSaveCollection<ProblemRequest>());

@@ -13,8 +13,8 @@ namespace GuildMasterIsekai.Visitor
     public class VisitorAI : MonoBehaviour
     {
         [SerializeField] private NavMeshAgent agent;
+        private IVisitorAI _ai;
 
-        private IVisitorAI ai;
         public NavMeshAgent Agent => agent;
 
         private void Awake()
@@ -24,19 +24,19 @@ namespace GuildMasterIsekai.Visitor
 
         private void Update()
         {
-            if (ai != null && ai.ReadyToAct) ai.Act();
+            if (_ai != null && _ai.ReadyToAct) _ai.Act();
         }
 
         private void OnDestroy()
         {
-            ai?.Dispose();
+            _ai?.Dispose();
         }
 
         public void SetVisitor(IVisitorAI ai)
         {
-            if (ReferenceEquals(this.ai, ai)) return;
-            this.ai?.Dispose();
-            this.ai = ai;
+            if (ReferenceEquals(_ai, ai)) return;
+            _ai?.Dispose();
+            _ai = ai;
             enabled = ai != null;
         }
     }

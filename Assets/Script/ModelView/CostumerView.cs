@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace GuildMasterIsekai.ModelView
 {
-    public class CostumerView : DataView<Costumer>
+    public class CostumerView : DataView<Costomer>
     {
         [SerializeField] private TMP_Text id;
         [SerializeField] private TMP_Text displayName;

@@ -9,12 +9,12 @@ namespace GuildMasterIsekai.Visitor
 {
     public abstract class BaseVisitorAI : IVisitorAI
     {
-        private readonly MonoBehaviour runner;
-        private bool disposed;
+        private readonly MonoBehaviour _runner;
+        private bool _disposed;
         protected Spot.Spot lastSpot;
-        private Action leaveQueue;
+        private Action _leaveQueue;
 
-        private Coroutine lookRoutine;
+        private Coroutine _lookRoutine;
         protected Func<bool> meta;
         protected Action nextAction;
         protected float timeout;
@@ -23,18 +23,18 @@ namespace GuildMasterIsekai.Visitor
         {
             Agent = agent;
             Spots = spots;
-            runner = agent.GetComponent<VisitorAI>();
+            _runner = agent.GetComponent<VisitorAI>();
             meta = None;
         }
 
         protected NavMeshAgent Agent { get; }
         protected HallSpots Spots { get; }
 
-        public bool ReadyToAct => !disposed && meta();
+        public bool ReadyToAct => !_disposed && meta();
 
         public void Act()
         {
-            if (disposed) return;
+            if (_disposed) return;
             var action = nextAction;
             Stop();
             action?.Invoke();
@@ -42,9 +42,9 @@ namespace GuildMasterIsekai.Visitor
 
         public virtual void Dispose()
         {
-            if (disposed) return;
-            disposed = true;
-            leaveQueue?.Invoke();
+            if (_disposed) return;
+            _disposed = true;
+            _leaveQueue?.Invoke();
             LeaveSpot();
             StopLooking();
         }
@@ -93,12 +93,12 @@ namespace GuildMasterIsekai.Visitor
 
         protected void WaitInQueue(VisitorQueue queue, Action next)
         {
-            leaveQueue?.Invoke();
+            _leaveQueue?.Invoke();
             queue.Enqueue(this);
-            leaveQueue = () =>
+            _leaveQueue = () =>
             {
                 queue.OnDequeue -= MoveOn;
-                leaveQueue = null;
+                _leaveQueue = null;
                 queue.Dequeue(this);
             };
             queue.OnDequeue += MoveOn;
@@ -106,14 +106,14 @@ namespace GuildMasterIsekai.Visitor
 
             void MoveOn()
             {
-                if (disposed) return;
+                if (_disposed) return;
                 var pos = queue.IndexOf(this);
                 var spot = pos == 0 ? queue.GetFreeSpot() : null;
 
-                if (spot != null)
+                if (spot)
                 {
                     queue.OnDequeue -= MoveOn;
-                    leaveQueue = null;
+                    _leaveQueue = null;
                     WalkTo(spot, next);
                     queue.Dequeue(this);
                 }
@@ -149,11 +149,11 @@ namespace GuildMasterIsekai.Visitor
 
         private void StopLooking()
         {
-            if (lookRoutine != null && runner) runner.StopCoroutine(lookRoutine);
-            lookRoutine = null;
+            if (_lookRoutine != null && _runner) _runner.StopCoroutine(_lookRoutine);
+            _lookRoutine = null;
         }
 
-        protected Coroutine LookAt(Vector3 point) => lookRoutine = runner.StartCoroutine(_LookAt(point, .3f));
+        protected Coroutine LookAt(Vector3 point) => _lookRoutine = _runner.StartCoroutine(_LookAt(point, .3f));
 
         private IEnumerator _LookAt(Vector3 point, float duration)
         {

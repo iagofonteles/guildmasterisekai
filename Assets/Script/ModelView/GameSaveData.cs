@@ -22,7 +22,7 @@ namespace GuildMasterIsekai.ModelView
                 Data.GuildRank => guild.Rank,
                 Data.Adventurers => guild.Adventurers,
                 Data.Freelancers => hall.Freelancers,
-                Data.Costumers => hall.Costumers,
+                Data.Costumers => hall.Costomers,
                 Data.QuestBoard => hall.QuestBoard,
                 Data.QuestRequests => hall.QuestRequests,
                 Data.ProblemRequests => hall.ProblemRequests,

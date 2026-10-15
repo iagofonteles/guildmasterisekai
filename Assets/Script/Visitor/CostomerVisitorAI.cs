@@ -6,27 +6,27 @@ using UnityEngine.AI;
 
 namespace GuildMasterIsekai.Visitor
 {
-    public class CostumerVisitorAI : BaseVisitorAI
+    public class CostomerVisitorAI : BaseVisitorAI
     {
-        private static VisitorAIConfig.CostumerConf _config;
-        private readonly Costumer costumer;
+        private static VisitorAIConfig.CostomerConf _config;
+        private readonly Costomer _costomer;
         private readonly Guild guild;
         private readonly GuildHall hall;
         private ProblemRequest pendingRequest;
 
-        public CostumerVisitorAI(Costumer costumer, NavMeshAgent agent, HallSpots spots)
+        public CostomerVisitorAI(Costomer costomer, NavMeshAgent agent, HallSpots spots)
             : base(agent, spots)
         {
-            this.costumer = costumer;
+            this._costomer = costomer;
             guild = Game.Save.Get<Guild>();
             hall = Game.Save.Get<GuildHall>();
-            hall.Costumers.Add(costumer);
+            hall.Costomers.Add(costomer);
 
             CheckQueue();
         }
 
-        private static VisitorAIConfig.CostumerConf Config =>
-            _config ??= Resources.Load<VisitorAIConfig>(nameof(VisitorAIConfig)).Costumer;
+        private static VisitorAIConfig.CostomerConf Config =>
+            _config ??= Resources.Load<VisitorAIConfig>(nameof(VisitorAIConfig)).Costomer;
 
         private void CheckQueue()
         {
@@ -36,8 +36,8 @@ namespace GuildMasterIsekai.Visitor
 
         private void WaitReply()
         {
-            var problem = guild.Generator.NewProblem(costumer);
-            var request = new ProblemRequest(costumer, problem);
+            var problem = guild.Generator.NewProblem(_costomer);
+            var request = new ProblemRequest(_costomer, problem);
             pendingRequest = request;
             request.OnReplied += Reply;
             hall.ProblemRequests.Add(request);
@@ -68,7 +68,7 @@ namespace GuildMasterIsekai.Visitor
         public override void Dispose()
         {
             ClearRequest();
-            hall.Costumers.Remove(costumer);
+            hall.Costomers.Remove(_costomer);
             base.Dispose();
         }
     }
