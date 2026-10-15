@@ -6,7 +6,7 @@
     "com.drafts.localization": "https://github.com/bydrafts/localization.git",
     "com.drafts.observable": "https://github.com/bydrafts/observable.git#v1.0",
     "com.drafts.rpgstats": "https://github.com/bydrafts/rpgstats.git#v1.0",
-    "com.drafts.savedata": "file:E:/Work/drafts_unity_github/savedata",
+    "com.drafts.savedata": "https://github.com/bydrafts/savedata.git",
     "com.drafts.search": "https://github.com/bydrafts/searchattribute.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
