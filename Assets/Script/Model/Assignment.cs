@@ -18,21 +18,6 @@ namespace GuildMasterIsekai.Model
 
         private object _task;
 
-        public object Task => _task ??= GetTask();
-
-        private object GetTask()
-        {
-            var hall = Game.Save.Get<GuildHall>();
-
-            return taskType switch
-            {
-                TaskType.Quest => throw new NotImplementedException(),
-                TaskType.Training => throw new NotImplementedException(),
-                TaskType.Scout => throw new NotImplementedException(),
-                _ => throw new NotImplementedException(),
-            };
-        }
-
         public Assignment(Quest quest)
         {
             taskId = quest.Id;
@@ -40,6 +25,8 @@ namespace GuildMasterIsekai.Model
         }
 
         public Assignment() { }
+
+        public object Task => _task ??= GetTask();
 
         public void Save(BinaryWriter writer)
         {
@@ -56,6 +43,19 @@ namespace GuildMasterIsekai.Model
             departTime = reader.ReadInt64();
             duration = reader.ReadSingle();
             _task = null;
+        }
+
+        private object GetTask()
+        {
+            var hall = Game.Save.Get<GuildHall>();
+
+            return taskType switch
+            {
+                TaskType.Quest => throw new NotImplementedException(),
+                TaskType.Training => throw new NotImplementedException(),
+                TaskType.Scout => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }

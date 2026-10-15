@@ -7,14 +7,14 @@ namespace GuildMasterIsekai
 {
     public class Generator
     {
-        private static int RandomNo => Random.Range(10, 99);
-
-        private Guild guild;
+        private readonly Guild guild;
 
         public Generator(Guild guild)
         {
             this.guild = guild;
         }
+
+        private static int RandomNo => Random.Range(10, 99);
 
         public Adventurer NewAdventurer() =>
             new("Default", "Aventureiro " + RandomNo,
@@ -24,20 +24,15 @@ namespace GuildMasterIsekai
             new(guild.Rank, "Consumidor " + RandomNo,
                 "Default", (Stat)Random.Range(0, 2));
 
-        private Stats Stats(Rank rank)
+        private Stats Stats(Rank rank) => new()
         {
-            return new Stats
-            {
-                Power = { Value = Random.Range(1, 2) },
-                Knowledge = { Value = Random.Range(1, 2) },
-                Vigor = { Value = Random.Range(1, 2) },
-            };
-        }
+            Power = { Value = Random.Range(1, 2) },
+            Knowledge = { Value = Random.Range(1, 2) },
+            Vigor = { Value = Random.Range(1, 2) }
+        };
 
-        public Problem NewProblem(Costumer costumer)
-        {
-            return new Problem(costumer.Rank, costumer.Stat, "Problema " + RandomNo, "---", "Default");
-        }
+        public Problem NewProblem(Costumer costumer) =>
+            new(costumer.Rank, costumer.Stat, "Problema " + RandomNo, "---", "Default");
 
         public Quest NewQuest(Rank rank, Stat mainStat)
         {
@@ -46,9 +41,9 @@ namespace GuildMasterIsekai
             {
                 Power = { Value = Random.Range(1, 4) },
                 Knowledge = { Value = Random.Range(1, 4) },
-                Vigor = { Value = Random.Range(1, 4) },
+                Vigor = { Value = Random.Range(1, 4) }
             };
-            
+
             var desc = "Missao description";
             return new Quest("Default", "Missão " + RandomNo, desc, rank, 10, stats, reward);
         }

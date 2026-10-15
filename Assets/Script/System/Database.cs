@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
+using Drafts.Database;
 using Drafts.SaveData;
+using UnityEditor;
 
 namespace GuildMasterIsekai.System
 {
-    public class Database : Drafts.Database.DatabaseSO<DatabaseEntrySo> { }
+    public class Database : DatabaseSO<DatabaseEntrySo> { }
 
     public static class DatabaseExtensions
     {
@@ -21,7 +23,7 @@ namespace GuildMasterIsekai.System
             where T : DatabaseEntrySo => r.ReadCollection(ReadItem<T>);
 
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Game/Refresh Database")]
+        [MenuItem("Game/Refresh Database")]
         public static void RefreshDatabase() => Game.Database.FetchItemsFromAssets();
 #endif
     }

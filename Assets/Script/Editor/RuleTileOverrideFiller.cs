@@ -39,7 +39,9 @@ namespace Editor
             Array.Sort(sprites, (a, b) =>
             {
                 var comparison = EditorUtility.NaturalCompare(a.name, b.name);
-                return comparison != 0 ? comparison : string.CompareOrdinal(AssetDatabase.GetAssetPath(a), AssetDatabase.GetAssetPath(b));
+                return comparison != 0
+                    ? comparison
+                    : string.CompareOrdinal(AssetDatabase.GetAssetPath(a), AssetDatabase.GetAssetPath(b));
             });
 
             const string undoName = "Assign Rule Tile Sprite Overrides";

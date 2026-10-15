@@ -20,7 +20,6 @@ namespace GuildMasterIsekai.Model
         [SerializeField] private Watcher<Rank> rank = new();
         [SerializeField] private Stats stats;
         public Assignment assignment;
-        public event Action OnChanged;
 
         public Adventurer()
         {
@@ -38,16 +37,9 @@ namespace GuildMasterIsekai.Model
             this.stats = stats;
         }
 
-        public uint Id => id;
         public Watcher<Rank> Rank => rank;
         public string Name => nameof(Adventurer);
-        public string DisplayName => displayName.Value;
-        public string Description => "...";
-        public Sprite Icon => Game.LoadSprite(portrait);
         public Stats Stats => stats;
-
-        public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
-            => new FreelancerVisitorAI(this, agent, spots);
 
         public void Save(BinaryWriter writer)
         {
@@ -70,5 +62,15 @@ namespace GuildMasterIsekai.Model
 
             stats?.Load(reader);
         }
+
+        public event Action OnChanged;
+
+        public uint Id => id;
+        public string DisplayName => displayName.Value;
+        public string Description => "...";
+        public Sprite Icon => Game.LoadSprite(portrait);
+
+        public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
+            => new FreelancerVisitorAI(this, agent, spots);
     }
 }

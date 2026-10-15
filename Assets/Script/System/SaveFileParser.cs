@@ -13,10 +13,13 @@ namespace GuildMasterIsekai.System
 
     public class SaveFileParser : FileParserBase
     {
+        public SaveFileParser(bool beautify = true)
+        {
+            Beautify = beautify;
+        }
+
         protected override string Extension => ".json";
         private bool Beautify { get; }
-
-        public SaveFileParser(bool beautify = true) => Beautify = beautify;
 
         public override void Save(string key, in object data)
         {

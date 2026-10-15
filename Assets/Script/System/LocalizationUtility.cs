@@ -16,7 +16,8 @@ namespace GuildMasterIsekai.System
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"String not found: {s.TableReference.TableCollectionName}.{s.TableEntryReference.Key}", ctx);
+                Debug.LogWarning(
+                    $"String not found: {s.TableReference.TableCollectionName}.{s.TableEntryReference.Key}", ctx);
                 Debug.LogWarning(e.Message, ctx);
                 return $"[{ctx.name}.{m}]";
             }

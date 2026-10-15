@@ -7,11 +7,6 @@ namespace GuildMasterIsekai.Model
     [Serializable]
     public class ProblemRequest : IBinarySave
     {
-        public Costumer Costumer { get; private set; }
-        public Problem Problem { get; private set; }
-        public event Action<ProblemRequest, int> OnReplied;
-        public void Reply(int reply) => OnReplied?.Invoke(this, reply);
-
         public ProblemRequest(Costumer costumer, Problem problem)
         {
             Costumer = costumer;
@@ -19,6 +14,8 @@ namespace GuildMasterIsekai.Model
         }
 
         public ProblemRequest() { }
+        public Costumer Costumer { get; private set; }
+        public Problem Problem { get; private set; }
 
         public void Save(BinaryWriter writer)
         {
@@ -35,5 +32,8 @@ namespace GuildMasterIsekai.Model
             Problem = reader.ReadBoolean() ? new Problem() : null;
             Problem?.Load(reader);
         }
+
+        public event Action<ProblemRequest, int> OnReplied;
+        public void Reply(int reply) => OnReplied?.Invoke(this, reply);
     }
 }

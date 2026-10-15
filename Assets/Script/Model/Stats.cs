@@ -24,10 +24,6 @@ namespace GuildMasterIsekai.Model
         public Watcher<int> Knowledge => knowledge;
         public Watcher<int> Vigor => vigor;
 
-        int IStats.Knowledge => knowledge.Value;
-        int IStats.Vigor => vigor.Value;
-        int IStats.Power => power.Value;
-
         public void Save(BinaryWriter writer)
         {
             writer.Write(power.Value);
@@ -41,5 +37,9 @@ namespace GuildMasterIsekai.Model
             knowledge.Value = reader.ReadInt32();
             vigor.Value = reader.ReadInt32();
         }
+
+        int IStats.Knowledge => knowledge.Value;
+        int IStats.Vigor => vigor.Value;
+        int IStats.Power => power.Value;
     }
 }

@@ -3,22 +3,21 @@ using System.Collections;
 using GuildMasterIsekai.Visitor.Spot;
 using UnityEngine;
 using UnityEngine.AI;
+using Object = UnityEngine.Object;
 
 namespace GuildMasterIsekai.Visitor
 {
     public abstract class BaseVisitorAI : IVisitorAI
     {
-        protected NavMeshAgent Agent { get; }
-        protected HallSpots Spots { get; }
-        protected Action nextAction;
-        protected Func<bool> meta;
-        protected float timeout;
+        private readonly MonoBehaviour runner;
+        private bool disposed;
         protected Spot.Spot lastSpot;
+        private Action leaveQueue;
 
         private Coroutine lookRoutine;
-        private readonly MonoBehaviour runner;
-        private Action leaveQueue;
-        private bool disposed;
+        protected Func<bool> meta;
+        protected Action nextAction;
+        protected float timeout;
 
         public BaseVisitorAI(NavMeshAgent agent, HallSpots spots)
         {
@@ -28,6 +27,9 @@ namespace GuildMasterIsekai.Visitor
             meta = None;
         }
 
+        protected NavMeshAgent Agent { get; }
+        protected HallSpots Spots { get; }
+
         public bool ReadyToAct => !disposed && meta();
 
         public void Act()
@@ -36,6 +38,15 @@ namespace GuildMasterIsekai.Visitor
             var action = nextAction;
             Stop();
             action?.Invoke();
+        }
+
+        public virtual void Dispose()
+        {
+            if (disposed) return;
+            disposed = true;
+            leaveQueue?.Invoke();
+            LeaveSpot();
+            StopLooking();
         }
 
         protected bool None() => false;
@@ -106,7 +117,10 @@ namespace GuildMasterIsekai.Visitor
                     WalkTo(spot, next);
                     queue.Dequeue(this);
                 }
-                else if (pos >= 0) WalkTo(queue.QueueSpot(pos), Stop);
+                else if (pos >= 0)
+                {
+                    WalkTo(queue.QueueSpot(pos), Stop);
+                }
             }
         }
 
@@ -115,16 +129,7 @@ namespace GuildMasterIsekai.Visitor
         protected virtual void Destroy()
         {
             Dispose();
-            UnityEngine.Object.Destroy(Agent.gameObject);
-        }
-
-        public virtual void Dispose()
-        {
-            if (disposed) return;
-            disposed = true;
-            leaveQueue?.Invoke();
-            LeaveSpot();
-            StopLooking();
+            Object.Destroy(Agent.gameObject);
         }
 
         protected void LeaveSpot()

@@ -8,19 +8,6 @@ namespace GuildMasterIsekai.ModelView
 {
     public class GameSaveData : MonoBehaviour
     {
-        private enum Data
-        {
-            Guild,
-            GuildHall,
-            GuildRank,
-            Adventurers,
-            Freelancers,
-            Costumers,
-            QuestBoard,
-            QuestRequests,
-            ProblemRequests,
-        }
-
         [SerializeField] private Data data;
 
         private void Start()
@@ -39,8 +26,21 @@ namespace GuildMasterIsekai.ModelView
                 Data.QuestBoard => hall.QuestBoard,
                 Data.QuestRequests => hall.QuestRequests,
                 Data.ProblemRequests => hall.ProblemRequests,
-                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
             });
+        }
+
+        private enum Data
+        {
+            Guild,
+            GuildHall,
+            GuildRank,
+            Adventurers,
+            Freelancers,
+            Costumers,
+            QuestBoard,
+            QuestRequests,
+            ProblemRequests
         }
     }
 }

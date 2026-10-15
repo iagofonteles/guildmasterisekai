@@ -27,6 +27,7 @@ namespace GuildMasterIsekai.System
             Save.Load("Default");
         }
 
-        public static Sprite LoadSprite(string path) => Addressables.LoadAssetAsync<Sprite>($"Sprites/{path}").WaitForCompletion();
+        public static Sprite LoadSprite(string path) =>
+            Addressables.LoadAssetAsync<Sprite>($"Sprites/{path}").WaitForCompletion();
     }
 }

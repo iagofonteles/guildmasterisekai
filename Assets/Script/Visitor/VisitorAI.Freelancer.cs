@@ -1,4 +1,5 @@
-﻿using GuildMasterIsekai.Model;
+﻿using Drafts;
+using GuildMasterIsekai.Model;
 using GuildMasterIsekai.System;
 using GuildMasterIsekai.Visitor.Spot;
 using UnityEngine;
@@ -8,10 +9,9 @@ namespace GuildMasterIsekai.Visitor
 {
     public class FreelancerVisitorAI : BaseVisitorAI
     {
-        [SerializeField] private Adventurer adventurer;
-
         private readonly Guild _guild;
         private readonly GuildHall _hall;
+        [SerializeField] private Adventurer adventurer;
         private QuestRequest pendingRequest;
 
         public FreelancerVisitorAI(Adventurer adventurer, NavMeshAgent agent, HallSpots spots)
@@ -69,7 +69,12 @@ namespace GuildMasterIsekai.Visitor
 
         private void WaitReply()
         {
-            if (_hall.QuestBoard.Count == 0) { CheckActions(); return; }
+            if (_hall.QuestBoard.Count == 0)
+            {
+                CheckActions();
+                return;
+            }
+
             var quest = _hall.QuestBoard[Random.Range(0, _hall.QuestBoard.Count)];
             var request = new QuestRequest(adventurer, quest);
             pendingRequest = request;
@@ -78,10 +83,9 @@ namespace GuildMasterIsekai.Visitor
             _hall.QuestBoard.OnChanged += CancelIfRemoved;
 
             Wait(20, () => request.Reply(null));
-
         }
 
-        private void CancelIfRemoved(Drafts.ListEvent action, int index, Quest quest)
+        private void CancelIfRemoved(ListEvent action, int index, Quest quest)
         {
             if (pendingRequest != null && !_hall.QuestBoard.Contains(pendingRequest.Quest))
                 Reply(pendingRequest, null);

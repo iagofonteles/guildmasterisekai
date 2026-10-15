@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace GuildMasterIsekai.Visitor.Spot {
+namespace GuildMasterIsekai.Visitor.Spot
+{
+    [Serializable]
+    public class VisitorSpot : MonoBehaviour
+    {
+        [SerializeField] protected List<Spot> spots = new();
 
-	[Serializable]
-	public class VisitorSpot : MonoBehaviour {
-		[SerializeField] protected List<Spot> spots = new();
+        public Vector3 Position => transform.position;
 
-		public Vector3 Position => transform.position;
-		public Spot GetFreeSpot() => spots.FirstOrDefault(
-			s => s.isActiveAndEnabled && s.Owner == null);
+        protected virtual void Start()
+        {
+            foreach (var spot in spots)
+                spot.lookTarget = Position;
+        }
 
-		protected virtual void Start() {
-			foreach(var spot in spots)
-				spot.lookTarget = Position;
-		}
-	}
+        public Spot GetFreeSpot() => spots.FirstOrDefault(s => s.isActiveAndEnabled && s.Owner == null);
+    }
 }
-

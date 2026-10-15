@@ -5,8 +5,17 @@ using UnityEngine;
 
 namespace GuildMasterIsekai.Database
 {
-    public enum Rank { F,E,D,C,B,A,S }
-    
+    public enum Rank
+    {
+        F,
+        E,
+        D,
+        C,
+        B,
+        A,
+        S
+    }
+
     [CreateAssetMenu(menuName = "Game/Rank")]
     public class RankSo : DatabaseEntrySo, IComparable<RankSo>
     {

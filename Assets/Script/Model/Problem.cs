@@ -18,14 +18,7 @@ namespace GuildMasterIsekai.Model
         [SerializeField] private string description;
         [SerializeField] private string icon;
         [SerializeField] private Rank rank;
-        [SerializeField] private List<Quest>[] outcomes; //TODO fix serialization
-        public event Action OnChanged;
-
-        public uint Id => id;
-        public string DisplayName => displayName;
-        public string Description => description;
-        public Sprite Icon => Game.LoadSprite(icon);
-        public Rank Rank => rank;
+        private List<Quest>[] outcomes; //TODO fix serialization
 
         public Problem(Rank rank, Stat mainStat, string displayName, string description, string icon)
         {
@@ -37,31 +30,10 @@ namespace GuildMasterIsekai.Model
             this.icon = icon;
         }
 
-        public IReadOnlyList<Quest>[] Outcomes => outcomes ??= GetOutcomes();
-
-        private List<Quest>[] GetOutcomes()
-        {
-            var generator = Game.Save.Get<Guild>().Generator;
-
-            var easy = new List<Quest>
-            {
-                generator.NewQuest(Rank, mainStat),
-                generator.NewQuest(Rank, mainStat),
-                generator.NewQuest(Rank, mainStat),
-            };
-            var med = new List<Quest>
-            {
-                generator.NewQuest(Rank, mainStat),
-                generator.NewQuest(Rank, mainStat),
-            };
-            var hard = new List<Quest>
-            {
-                generator.NewQuest(Rank, mainStat),
-            };
-            return new[] { easy, med, hard };
-        }
-
         public Problem() { }
+        public Rank Rank => rank;
+
+        public IReadOnlyList<Quest>[] Outcomes => outcomes ??= GetOutcomes();
 
         public void Save(BinaryWriter writer)
         {
@@ -83,6 +55,35 @@ namespace GuildMasterIsekai.Model
             icon = reader.ReadString();
             rank = (Rank)reader.ReadInt32();
             //TODO outcomes = reader.ReadArray(Quest);
+        }
+
+        public event Action OnChanged;
+
+        public uint Id => id;
+        public string DisplayName => displayName;
+        public string Description => description;
+        public Sprite Icon => Game.LoadSprite(icon);
+
+        private List<Quest>[] GetOutcomes()
+        {
+            var generator = Game.Save.Get<Guild>().Generator;
+
+            var easy = new List<Quest>
+            {
+                generator.NewQuest(Rank, mainStat),
+                generator.NewQuest(Rank, mainStat),
+                generator.NewQuest(Rank, mainStat)
+            };
+            var med = new List<Quest>
+            {
+                generator.NewQuest(Rank, mainStat),
+                generator.NewQuest(Rank, mainStat)
+            };
+            var hard = new List<Quest>
+            {
+                generator.NewQuest(Rank, mainStat)
+            };
+            return new[] { easy, med, hard };
         }
     }
 }

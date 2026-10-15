@@ -18,10 +18,15 @@ namespace GuildMasterIsekai.System
     public class Watcher<T> : IWatcher<T>
     {
         [SerializeField] private T value;
-        public event Action<object> OnChanged;
 
         public Watcher() { }
-        public Watcher(T value) => this.value = value;
+
+        public Watcher(T value)
+        {
+            this.value = value;
+        }
+
+        public event Action<object> OnChanged;
 
         public T Value
         {

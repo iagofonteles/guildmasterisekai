@@ -19,17 +19,9 @@ namespace GuildMasterIsekai.Model
         [SerializeField] private string portrait;
         [SerializeField] private Rank rank;
         [SerializeField] private Stat stat;
-        public event Action OnChanged;
-
-        public uint Id => id;
-        public string Name => nameof(Adventurer);
-        public string DisplayName => displayName;
-        public string Description => "...";
-        public Sprite Icon => Game.LoadSprite(portrait);
-        public Rank Rank => rank;
-        public Stat Stat => stat;
 
         public Costumer() { }
+
         public Costumer(Rank rank, string nickname, string portrait, Stat stat)
         {
             id = Game.Id.Generate();
@@ -39,8 +31,9 @@ namespace GuildMasterIsekai.Model
             this.stat = stat;
         }
 
-        public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
-            => new CostumerVisitorAI(this, agent, spots);
+        public string Name => nameof(Adventurer);
+        public Rank Rank => rank;
+        public Stat Stat => stat;
 
         public void Save(BinaryWriter writer)
         {
@@ -59,5 +52,15 @@ namespace GuildMasterIsekai.Model
             rank = (Rank)reader.ReadInt32();
             stat = (Stat)reader.ReadInt32();
         }
+
+        public event Action OnChanged;
+
+        public uint Id => id;
+        public string DisplayName => displayName;
+        public string Description => "...";
+        public Sprite Icon => Game.LoadSprite(portrait);
+
+        public IVisitorAI GetAI(NavMeshAgent agent, HallSpots spots)
+            => new CostumerVisitorAI(this, agent, spots);
     }
 }

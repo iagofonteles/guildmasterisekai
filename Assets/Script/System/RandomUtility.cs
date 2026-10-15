@@ -4,10 +4,7 @@ namespace GuildMasterIsekai.System
 {
     public static class RandomUtility
     {
-        public static T Random<T>(this IReadOnlyList<T> list)
-        {
-            return list[UnityEngine.Random.Range(0, list.Count)];
-        }
+        public static T Random<T>(this IReadOnlyList<T> list) => list[UnityEngine.Random.Range(0, list.Count)];
 
         public static List<T> Random<T>(this IReadOnlyList<T> list, int amount)
         {
