@@ -43,10 +43,11 @@
       "hash": "d4d00ca1906b4f6839ff5980780f2f08cdc4a4cb"
     },
     "com.drafts.savedata": {
-      "version": "file:E:/Work/drafts_unity_github/savedata",
+      "version": "https://github.com/bydrafts/savedata.git",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "d89a137d6a6aa988adf76184df4bb59ea04aefca"
     },
     "com.drafts.search": {
       "version": "https://github.com/bydrafts/searchattribute.git",

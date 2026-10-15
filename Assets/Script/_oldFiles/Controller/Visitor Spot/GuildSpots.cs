@@ -4,12 +4,12 @@ using UnityEngine;
 namespace GuildMasterIsekai {
 	[Serializable]
 	public class HallSpots {
-		[SerializeField] Transform entrance;
-		[SerializeField] Transform exit;
-		[SerializeField] VisitorQueue counter;
-		[SerializeField] VisitorQueue office;
-		[SerializeField] VisitorSpot board;
-		[SerializeField] VisitorSpot table;
+		[SerializeField] private Transform entrance;
+		[SerializeField] private Transform exit;
+		[SerializeField] private VisitorQueue counter;
+		[SerializeField] private VisitorQueue office;
+		[SerializeField] private VisitorSpot board;
+		[SerializeField] private VisitorSpot table;
 
 		public Vector3 Entrance => entrance.position;
 		public Vector3 Exit => exit.position;

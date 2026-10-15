@@ -3,10 +3,6 @@ using UnityEngine;
 
 namespace GuildMasterIsekai {
 
-	public class TimerComponent : MonoBehaviour
-	{
-		
-	}
 	public class VisitorController : MonoBehaviour {
 		[SerializeField] private TimerComponent adventurerTimer;
 		[SerializeField] private TimerComponent costumerTimer;
@@ -21,6 +17,11 @@ namespace GuildMasterIsekai {
 			hall = Game.Save.Get<GuildHall>();
 			adventurerTimer.OnTrigger.AddListener(OnTriggerAdventurer);
 			costumerTimer.OnTrigger.AddListener(OnTriggerCostumer);
+		}
+
+		private void OnDestroy() {
+			if(adventurerTimer) adventurerTimer.OnTrigger.RemoveListener(OnTriggerAdventurer);
+			if(costumerTimer) costumerTimer.OnTrigger.RemoveListener(OnTriggerCostumer);
 		}
 
 		private void OnTriggerAdventurer() => SpawnVisitor(guild.Generator.NewAdventurer());

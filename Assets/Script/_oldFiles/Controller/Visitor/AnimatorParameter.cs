@@ -7,10 +7,10 @@ namespace GuildMasterIsekai {
 		//static int? speed, horizontal, vertical;
 
 		public float walkSpeed = 3.5f;
-		Animator animator;
-		NavMeshAgent agent;
+		private Animator animator;
+		private NavMeshAgent agent;
 
-		void Start() {
+		private void Start() {
 			animator = GetComponent<Animator>();
 			agent = GetComponentInParent<NavMeshAgent>();
 
@@ -19,7 +19,7 @@ namespace GuildMasterIsekai {
 			//vertical ??= animator.parameters.IndexOf(p => p.name == "Vertical");
 		}
 
-		void FixedUpdate() {
+		private void FixedUpdate() {
 			var f = transform.forward;
 			animator.SetFloat("Speed", agent.velocity.magnitude / walkSpeed);
 			animator.SetFloat("Horizontal", f.x);

@@ -8,16 +8,19 @@ namespace GuildMasterIsekai {
 
 	[Serializable]
 	public class VisitorQueue : VisitorSpot {
-		[SerializeField] List<Spot> lineSpots;
-		[SerializeReference, ReadOnly] List<IVisitorAI> visitors = new();
+		[SerializeField] private List<Spot> lineSpots;
+		[SerializeReference, ReadOnly] private List<IVisitorAI> visitors = new();
 
 		public event Action OnDequeue;
-		public bool IsFree => visitors.Count == 0 && spots.Any(s => s.Owner == null);
-		public bool IsFull => visitors.Count == lineSpots.Count;
+		public bool IsFree => visitors.Count == 0 && GetFreeSpot() != null;
+		public bool IsFull => !IsFree && visitors.Count >= lineSpots.Count;
 		public int QueueLength => visitors.Count;
 		public Spot QueueSpot(int index) => lineSpots[index];
+		public int IndexOf(IVisitorAI visitor) => visitors.IndexOf(visitor);
 		public void Enqueue(IVisitorAI visitor) => visitors.Add(visitor);
-		public void Dequeue(IVisitorAI visitor) => visitors.Remove(visitor);
+		public void Dequeue(IVisitorAI visitor) {
+			if(visitors.Remove(visitor)) OnDequeue?.Invoke();
+		}
 
 		protected override void Start() {
 			base.Start();
@@ -27,7 +30,7 @@ namespace GuildMasterIsekai {
 			}
 		}
 
-		void MoveOn(Spot spot, IVisitorAI visitor) {
+		private void MoveOn(Spot spot, IVisitorAI visitor) {
 			if(visitor == null) OnDequeue?.Invoke();
 		}
 	}
