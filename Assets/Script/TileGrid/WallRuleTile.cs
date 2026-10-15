@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.TileGrid
 {
-    [CreateAssetMenu(menuName = "Tiles/Wall Rule Tile")]
+    [CreateAssetMenu(menuName = "Game/Wall Tile")]
     public class WallRuleTile : RuleTile<WallRuleTile.Neighbor>
     {
         public class Neighbor : RuleTile.TilingRule.Neighbor

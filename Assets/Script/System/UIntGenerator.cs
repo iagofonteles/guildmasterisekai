@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public class UIntGenerator : IDisposable
     {

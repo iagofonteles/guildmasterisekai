@@ -3,7 +3,7 @@ using System.IO;
 using Drafts.SaveData;
 using UnityEngine;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public interface ISaveData
     {

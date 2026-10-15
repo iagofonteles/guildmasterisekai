@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Drafts.SaveData;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public class Database : Drafts.Database.DatabaseSO<DatabaseEntrySo> { }
 

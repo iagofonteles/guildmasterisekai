@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public static class ObjectDB<T>
     {

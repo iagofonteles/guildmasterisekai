@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public interface IWatcher
     {

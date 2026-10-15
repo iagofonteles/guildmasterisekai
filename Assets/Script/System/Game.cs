@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public static class Game
     {

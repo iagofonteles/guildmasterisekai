@@ -1,10 +1,11 @@
 #if UNITY_EDITOR
+using GuildMasterIsekai.TileGrid;
 using UnityEditor;
 using UnityEngine;
 
-namespace GuildMasterIsekai.Editor
+namespace Editor
 {
-    [CustomEditor(typeof(TileGrid.RuleTileOverrideFiller))]
+    [CustomEditor(typeof(RuleTileOverrideFiller))]
     public class RuleTileOverrideFillerEditor : RuleTileEditor
     {
         [SerializeField] private Texture2D wallIcon;

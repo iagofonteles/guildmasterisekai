@@ -4,7 +4,7 @@ using Drafts.Localization;
 using UnityEngine;
 using UnityEngine.Localization;
 
-namespace GuildMasterIsekai
+namespace GuildMasterIsekai.System
 {
     public abstract class DatabaseEntrySo : ScriptableObject, IDatabaseItemInternal
     {
