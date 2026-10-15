@@ -1,5 +1,7 @@
-﻿using Drafts.SaveData;
+﻿using System.Collections.Generic;
+using Drafts.SaveData;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace GuildMasterIsekai
@@ -26,5 +28,14 @@ namespace GuildMasterIsekai
             Save.Load("Default");
         }
 
+        public static Sprite LoadSprite(string path) => Addressables.LoadAssetAsync<Sprite>($"Sprites/{path}").WaitForCompletion();
+    }
+
+    public static class ObjectDB<T>
+    {
+        private static readonly Dictionary<uint, T> _items = new();
+        public static T Get(uint id) => _items.GetValueOrDefault(id);
+        public static void Add(uint id, T item) => _items.Add(id, item);
+        public static bool Remove(uint id) => _items.Remove(id);
     }
 }

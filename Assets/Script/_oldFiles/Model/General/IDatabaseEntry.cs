@@ -16,6 +16,7 @@ namespace GuildMasterIsekai
 
     public interface IDisplay
     {
+        uint Id { get; }
         string DisplayName { get; }
         string Description => "";
         Sprite Icon { get; }

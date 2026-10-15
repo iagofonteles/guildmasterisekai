@@ -9,8 +9,8 @@ namespace GuildMasterIsekai
     [Serializable]
     public class Reward : IBinarySave
     {
-        [SerializeField] int gold;
-        [SerializeField] List<LootSo> items = new();
+        [SerializeField] private int gold;
+        [SerializeField] private List<LootSo> items = new();
         public int Gold => gold;
         public IReadOnlyList<LootSo> Items => items;
 
@@ -24,13 +24,13 @@ namespace GuildMasterIsekai
         public void Save(BinaryWriter writer)
         {
             writer.Write(gold);
-            writer.WriteSaveCollection(items);
+            writer.WriteItemCollection(items);
         }
 
         public void Load(BinaryReader reader)
         {
             gold = reader.ReadInt32();
-            items = new(reader.ReadCollection<LootSo>());
+            items = new(reader.ReadItemCollection<LootSo>());
         }
     }
 }

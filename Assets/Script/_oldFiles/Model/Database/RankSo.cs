@@ -1,15 +1,9 @@
-﻿using Drafts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace GuildMasterIsekai
 {
-    public class RankAttribute : SearchAttribute
-    {
-        public RankAttribute() : base(new AssetNameSearchSettings(typeof(RankSo), "Assets"), true) { }
-    }
-
     public enum Rank { F,E,D,C,B,A,S }
     
     [CreateAssetMenu(menuName = "Game/Rank")]

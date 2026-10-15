@@ -25,7 +25,7 @@ namespace GuildMasterIsekai {
 		public Stats Stats(RankSo rank) {
 			return new Stats {
 				Power = Random.Range(1, 2),
-				Knoledge = Random.Range(1, 2),
+				Knowledge = Random.Range(1, 2),
 				Vigor = Random.Range(1, 2),
 			};
 		}
@@ -38,7 +38,7 @@ namespace GuildMasterIsekai {
 			var reward = NewReward(rank, mainStat, 1);
 			var stats = new Stats {
 				Power = Random.Range(1, 4),
-				Knoledge = Random.Range(1, 4),
+				Knowledge = Random.Range(1, 4),
 				Vigor = Random.Range(1, 4),
 			};
 
