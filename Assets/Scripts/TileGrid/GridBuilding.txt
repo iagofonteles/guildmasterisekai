@@ -1,72 +1,105 @@
-Grid building system built over unity Tilemap
+Grid building system — implementation prompt
 
-create [x,y] matrix to store the data (50x20 to start with)
-map is tiny and limited and dont need chunk handling
-fill grid with a base tile (serialized variable) ex: grass
-all tools should have runtime Undo/Redo functionality
-grid should be serialized in a file using Drafts.SaveData.IBinarySave
-IBuildBag interface handles bulding costs and refund
+Status: specification only. Do not implement until explicitly instructed to execute this task.
 
-tools:
-- place
-- paint
-- remove
-- move
+Objective
+Build a small, bounded runtime building system using Unity Tilemap. Follow the project's Unity version, assembly definitions, namespaces, save conventions, and coding style. Reuse the existing types in Assets/Scripts/TileGrid rather than creating duplicate asset definitions. Do not add chunk handling.
 
-brushes:
-- pixel
-- rectangle
+Existing types and integration
+- Namespace: GuildMasterIsekai.TileGrid.
+- GuildTile provides Floor, Wall, and Roof tiles through DbAutoTile.
+- DbAutoTile identifies its GuildTile and AutoTileType (Floor, Wall, Roof).
+- GuildObject provides Tile, BuildOn, and ToppingSlots (local Vector2 positions).
+- GuildTopping provides a prefab. Use GuildTopping for toppings, not GuildObject.
+- BuildLayer defines Base, Furniture, and Topping.
+- GridBuilder must receive an IBuildBag dependency to handle building payments, item quantities, and refunds. Use Drafts.Inventory.ListInventory<T> API.
+- Create a InfiniteBuildBag:IBuildBag for testing purpose. Don't need Inventory for this one. Use Game.Database.GetAll<T> for available items.
+- Persist grid data using Drafts.SaveData.IBinarySave, following existing Save(BinaryWriter) and Load(BinaryReader) implementations and database-reference serialization conventions.
 
-layers
-- base (GuildTile - floor,wall,roof)
-- furniture (GuildObject - chair,table,workbench)
-- topping (GuildObject - plate, cup, vase)
+Grid and tools
+- GridBuilder receives an existing, preconfigured Tilemap as its initial terrain source. Derive the [x, y] matrix dimensions from that Tilemap's current cell bounds. Preserve the bounds origin when mapping Tilemap coordinates to matrix indices.
+- Snapshot the initial Tilemap's tile at each cell as that cell's DefaultTile, and initialize the runtime base layer from those values. DefaultTile is per-cell, not one shared tile; preserve empty cells as null defaults. A DefaultTile may count as Floor for furniture placement if it is a DbAutoTile of Floor type.
+- Hide the initial Tilemap's rendering after initialization. Keep it as the setup/restoration source; display edits through the runtime layer and preserve the original per-cell defaults.
+- Support Base, Furniture, and Topping layers independently within each cell.
+- Provide Place, Paint, Remove, and Move tools with pixel (single-cell) and rectangle brushes where applicable.
+- All supported editing operations must support runtime Undo/Redo, including affected inventory and costs.
+- Tool/layer support: Base supports Place, Paint, Remove; Furniture supports Place, Remove, Move; Topping supports Remove. Topping placement is an open requirement below.
 
-tiles:
-- GuildTile
-- GuildObject
-- GuildTopping
+Base layer: Place
+- Accept a GuildTile selection from IBuildBag.
+- Charge the same build cost per placed floor, regardless of GuildTile selection, through IBuildBag. Generated wall and roof cells belong to that floor placement.
+- Place the selected Floor at F and generate its matching Wall (W) and Roof (R) using this exact 3-column x 5-row pattern:
 
-place tool (base layer, GuildTile only):
-- placing any GuildTile cost the same amount per tile, GridBuilder should receive an IBuildBag that handles payment
-- when placing a GuildTile place the floor(F) tile and fill the surrondings with the matching wall(W) and roof(R) like this
+  RRR
+  RWR
+  RFR
+  RRR
+  WWW
 
-pattern (3x5):
-RRR
-RWR
-RFR
-RRR
-WWW
+- F is the placement anchor. With Unity +Y upward, the rows run from y + 2 to y - 2 and columns from x - 1 to x + 1.
+- Preserve surrounding cells that already have the required tile type. The original phrase "required tag" needs the compatibility decision listed below.
+- Reject placement when the required pattern cannot fit in available space. Define overlap rules before implementing this validation.
 
-- if the surrounding tile is already a GuildTile with the required tag, dont replace it.
-- placement fails if not enough space
+Base layer: Remove
+- Only a DbAutoTile with AutoTileType.Floor can be directly removed; walls and roofs cannot be directly removed.
+- Refund the removed built floor's build cost through IBuildBag.
+- Reject removal if any furniture or topping exists anywhere in the anchored 3 x 5 pattern area. This is a rectangular footprint, not a radius.
+- Remove surrounding walls/roofs generated for that floor and refresh neighboring floor patterns. Preserve cells still required by surviving floors.
+- Removing a built floor restores its cell to that cell's DefaultTile from the initial Tilemap. Any generated wall/roof cell cleared by removal also falls back to its own DefaultTile, unless a surviving floor pattern still requires it.
 
-remove tool (base layer):
-- removing a floor tiles refunds the build cost to the interface
-- removing fails if any furniture or topping exist in a 3x5 radius (pattern area)  
-- wall and roof tiles cannot be directly removed
-- only DbAutoTile of Floor type can be deleted and it removes sorounding wall/roofs placed by pattern
-- refresh neighbour floor tiles with the pattern above
+Base layer: Paint
+- Accept a GuildTile selection from IBuildBag and charge nothing.
+- Within the brush area, replace each eligible base tile with the selected GuildTile variant matching the cell's current Floor, Wall, or Roof type.
+- Dragging affects only cells covered by the brush; it must not repaint the surrounding placement pattern.
+- Cells displaying their initial DefaultTile cannot be painted. Painting built tiles must preserve the stored per-cell defaults for later restoration.
 
-paint tool (base layer only, GuildTile only)
-- paint costs nothing
-- dragging paint tool replaces tile with the corresponding floor/wall/roof tile being dragged
-- it does not paint souring pattern tiles, only the tiles over brush area
+Furniture layer: Place
+- Accept a GuildObject selection from IBuildBag and consume the corresponding furniture item through IBuildBag.
+- Require a base tile whose AutoTileType matches GuildObject.BuildOn, including DefaultTile if it is of floor type.
+- Define occupancy and footprint rules before implementation; the existing GuildObject has no footprint field.
 
-place tool (furniture layer, GuildObject only)
-- furniture cost the furniture item itself, the IBuildBag should handle the count of the item in its inventory
-- furniture can only be built over GuildObject.BuildOn base tile
-- PS: the tile grid has a default value of "grass" that is also a floor
+Furniture layer: Remove
+- Remove the furniture and every topping slotted into it.
+- Return the furniture item and each removed topping item through IBuildBag.
 
-remove tool (furniture layer)
-- remove the furniture and all slotted toppings 
-- return the furniture item and toppings to IBuildBag
+Topping layer: Remove
+- Remove one slotted topping at a time and return its item through IBuildBag.
+- When multiple toppings occupy a cell, remove the one closest to the pointer. Without pointer input, remove the first in a deterministic order.
 
-remove tool (topping layer)
-- remove the slotted toppings one by one
-- if more then one topping exist in that tile, remove the closest to mouse first (remove first if not using mouse)
-- return the topping to IBuildBag
+Furniture layer: Move
+- Move furniture to a valid empty destination and validate its BuildOn requirement there.
+- Move all attached toppings with it, preserving their slot assignments.
+- Define rectangle-brush behavior for Move before implementation.
 
-move tool (furniture layer only)
-- move furniture to another empty space
-- if toppings are slotted, drag them together
+Expected validation when implementation is authorized
+- Check initialization from the supplied Tilemap, including its size, nonzero bounds origin, mixed terrain, and empty cells. Check that the initial Tilemap is hidden and the runtime base layer displays its initial tiles.
+- Check grid boundaries, pattern placement, overlap, and neighboring pattern refresh after removal. Verify that each cleared cell restores its own original DefaultTile and that surviving patterns remain intact.
+- Check payments/refunds and insufficient funds/items without partial state changes.
+- Check paint type preservation and brush bounds.
+- Check furniture BuildOn, occupancy, attached toppings, and nearest-topping removal.
+- Check Undo/Redo restores grid, toppings, and inventory consistently across each supported tool.
+- Check save/load round trips preserve dimensions, bounds origin, per-cell defaults, asset references, cell state, and topping slots so removal still restores the original terrain after loading.
+- Report actual checks performed and any checks that could not run. Do not claim Editor validation without running it.
+
+Suggestions and decisions to resolve before implementation
+These are proposed improvements or open questions, not additional approved requirements.
+
+1. Pattern overlap: define precedence when a generated roof/wall meets an existing floor or another pattern. Specify whether compatibility means matching AutoTileType alone or also matching GuildTile. Preserve existing floors; consider rejecting incompatible overlaps.
+2. Pattern ownership: track placed floor anchors separately from generated tiles, or deterministically derive generated cells from anchors. This prevents removing a shared wall/roof while another floor still needs it. Specify which GuildTile wins when neighboring floors use different materials.
+3. Default terrain: distinguish initial per-cell terrain from paid floor placements, even when both use the same tile asset. Allow refunds only for paid placements. Painting must not create refundable floors for free. Restoration to each cell's initial DefaultTile is required above; decide how snapshots are persisted or verified against a changed setup Tilemap when loading.
+4. Topping placement: add an explicit specification for choosing furniture, choosing a free slot, consuming an item, rejecting full slots, and spawning GuildTopping.Prefab. Define the coordinate space for ToppingSlots and nearest-pointer selection, including tie-breaking.
+5. Atomic edits: validate an entire operation before changing cells or inventory. For rectangle brushes, choose between an all-or-nothing operation and per-cell acceptance; report the chosen policy clearly. Repeated drag visits to the same cell should not charge twice for the same placement.
+6. Undo/Redo: consider one command per drag gesture, recording exact before/after state and inventory deltas. Specify what happens if an undo requires an item/refund balance no longer available, whether history is bounded, and whether load clears history. Redo should be cleared after a new edit.
+7. Inventory contract: define IBuildBag operations for checking and applying currency/item changes atomically. Specify the uniform floor cost, how asset definitions map to inventory items, refund policy, and whether Move is free.
+8. Data and rendering: keep grid state authoritative and update Tilemaps/prefab instances from it. This makes validation, saves, and undo less dependent on scene objects. Keep input/brush handling separate from placement rules; avoid adding a UI framework without a UI requirement.
+9. Persistence: use stable database identifiers instead of Unity instance IDs. Consider a save-format version, input validation, missing-asset handling, and explicit ownership of the file path and save/load trigger. IBinarySave provides serialization methods; file management still needs an integration point.
+10. Brush semantics: specify inclusive rectangle endpoints, clipping versus rejection at grid boundaries, topping removal count per cell, and whether Move acts on one furniture item or a group. Define whether furniture remains single-cell or needs multi-cell footprints.
+
+Prompt review report
+Summary: Updated the implementation prompt without executing it.
+Completed work: Integrated the two introductory feature requests into the requirements and removed those introductory lines. Specified Tilemap-derived bounds, per-cell default terrain, hidden setup rendering, and restoration after base-layer removal. Updated related painting, validation, and persistence guidance.
+Validation: Reviewed the updated prompt for consistency with the requested initialization and restoration behavior. No runtime implementation or Unity tests performed.
+Limitations: Overlap rules, default-terrain behavior, topping placement, inventory transactions, and some brush semantics require decisions before their implementation.
+
+Modified assets / files:
+- Assets/Scripts/TileGrid/GridBuilding.txt (rewritten prompt and appended suggestions).

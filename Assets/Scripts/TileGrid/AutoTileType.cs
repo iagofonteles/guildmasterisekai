@@ -1,4 +1,11 @@
 namespace GuildMasterIsekai.TileGrid
 {
-    public enum AutoTileType { Floor, Wall, Roof }
+    public enum AutoTileType
+    {
+        Hole,
+        Water,
+        Floor,
+        Wall,
+        Roof
+    }
 }
