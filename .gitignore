@@ -93,3 +93,6 @@ fmod_editor.log
 **/.idea
 Assets/codex task.txt
 Assets/codex task.txt.meta
+/Assets/Script/CodexUnityPlugin/Reports/
+/Assets/Script/CodexUnityPlugin/Reports.meta
+/Assets/Script/CodexUnityPlugin/Validation~/
