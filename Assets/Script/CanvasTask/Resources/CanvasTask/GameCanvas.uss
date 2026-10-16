@@ -1,0 +1,55 @@
+.game-canvas {
+    flex-grow: 1;
+    -unity-font: url("project://database/Assets/Plugins/TextMesh Pro/Fonts/LiberationSans.ttf");
+    font-size: 20px;
+    color: rgb(245, 239, 222);
+}
+.header, .navigation, .panel-heading {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px;
+    background-color: rgb(38, 32, 29);
+}
+.header > Label { margin-right: 32px; }
+.title { font-size: 28px; -unity-font-style: bold; flex-grow: 1; }
+.subtitle { font-size: 23px; margin-top: 12px; margin-bottom: 8px; }
+.workspace { flex-grow: 1; }
+.navigation { flex-wrap: wrap; justify-content: center; }
+Button {
+    color: rgb(255, 247, 225);
+    background-color: rgb(88, 64, 42);
+    border-width: 1px;
+    border-color: rgb(161, 127, 79);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 4px;
+    -unity-text-align: middle-center;
+}
+Button:hover { background-color: rgb(122, 88, 49); }
+Button:active { background-color: rgb(65, 46, 31); }
+Button:disabled { opacity: 0.5; }
+.panel {
+    position: absolute;
+    top: 2%;
+    bottom: 2%;
+    left: 4%;
+    width: 65%;
+    padding: 16px;
+    background-color: rgb(48, 40, 33);
+    border-width: 2px;
+    border-color: rgb(158, 124, 77);
+    border-radius: 8px;
+}
+.details { left: 22%; width: 74%; }
+.list { flex-grow: 1; min-height: 50px; }
+.requests { max-height: 30%; min-height: 80px; }
+.card { padding: 12px; margin-bottom: 10px; background-color: rgb(66, 54, 42); }
+Label { white-space: normal; flex-shrink: 0; margin-bottom: 4px; }
+.portrait { width: 64px; height: 64px; }
+TextField { margin-bottom: 10px; flex-shrink: 0; }
+.unity-text-field__input { color: rgb(35, 27, 20); background-color: rgb(248, 238, 212); padding: 8px; }
+.unity-scroller--vertical { width: 18px; }
+.unity-scroller--horizontal { height: 18px; }
+.unity-base-slider__tracker { background-color: rgb(35, 28, 23); }
+.unity-base-slider__dragger { background-color: rgb(172, 136, 83); min-width: 12px; min-height: 12px; }
+.hidden { display: none; }

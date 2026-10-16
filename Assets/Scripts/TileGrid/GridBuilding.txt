@@ -1,0 +1,72 @@
+Grid building system built over unity Tilemap
+
+create [x,y] matrix to store the data (50x20 to start with)
+map is tiny and limited and dont need chunk handling
+fill grid with a base tile (serialized variable) ex: grass
+all tools should have runtime Undo/Redo functionality
+grid should be serialized in a file using Drafts.SaveData.IBinarySave
+IBuildBag interface handles bulding costs and refund
+
+tools:
+- place
+- paint
+- remove
+- move
+
+brushes:
+- pixel
+- rectangle
+
+layers
+- base (GuildTile - floor,wall,roof)
+- furniture (GuildObject - chair,table,workbench)
+- topping (GuildObject - plate, cup, vase)
+
+tiles:
+- GuildTile
+- GuildObject
+- GuildTopping
+
+place tool (base layer, GuildTile only):
+- placing any GuildTile cost the same amount per tile, GridBuilder should receive an IBuildBag that handles payment
+- when placing a GuildTile place the floor(F) tile and fill the surrondings with the matching wall(W) and roof(R) like this
+
+pattern (3x5):
+RRR
+RWR
+RFR
+RRR
+WWW
+
+- if the surrounding tile is already a GuildTile with the required tag, dont replace it.
+- placement fails if not enough space
+
+remove tool (base layer):
+- removing a floor tiles refunds the build cost to the interface
+- removing fails if any furniture or topping exist in a 3x5 radius (pattern area)  
+- wall and roof tiles cannot be directly removed
+- only DbAutoTile of Floor type can be deleted and it removes sorounding wall/roofs placed by pattern
+- refresh neighbour floor tiles with the pattern above
+
+paint tool (base layer only, GuildTile only)
+- paint costs nothing
+- dragging paint tool replaces tile with the corresponding floor/wall/roof tile being dragged
+- it does not paint souring pattern tiles, only the tiles over brush area
+
+place tool (furniture layer, GuildObject only)
+- furniture cost the furniture item itself, the IBuildBag should handle the count of the item in its inventory
+- furniture can only be built over GuildObject.BuildOn base tile
+- PS: the tile grid has a default value of "grass" that is also a floor
+
+remove tool (furniture layer)
+- remove the furniture and all slotted toppings 
+- return the furniture item and toppings to IBuildBag
+
+remove tool (topping layer)
+- remove the slotted toppings one by one
+- if more then one topping exist in that tile, remove the closest to mouse first (remove first if not using mouse)
+- return the topping to IBuildBag
+
+move tool (furniture layer only)
+- move furniture to another empty space
+- if toppings are slotted, drag them together

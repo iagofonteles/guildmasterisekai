@@ -1,0 +1,32 @@
+Implemented Codex Tasks editor integration from Unity Codex Editor Tool Prompt.txt.
+
+Output-folder override: all plugin implementation and temporary report files live under Assets/Script/CodexUnityPlugin. AGENTS.md and .gitignore remain at their required project/repository roots. The original prompt is preserved.
+
+Modified assets / files:
+- AGENTS.md: added managed Unity Codex Tasks Workflow section, preserving existing instructions.
+- .gitignore: ignored plugin Reports, Reports.meta, and local Validation~ artifacts.
+- Assets/Script/CodexUnityPlugin/Editor/CodexUnityPlugin.Editor.asmdef: independent Editor-only assembly.
+- Assets/Script/CodexUnityPlugin/Editor/CodexTasksWindow.cs: UI Toolkit window, serialized input/reference state, asynchronous operation polling, object resolution, reports and cancellation.
+- Assets/Script/CodexUnityPlugin/Editor/CodexTasksWindow.uss: window layout.
+- Assets/Script/CodexUnityPlugin/Editor/CodexProcess.cs: noninteractive subprocess execution, concurrent stdout/stderr reads, cancellation and process disposal.
+- Assets/Script/CodexUnityPlugin/Editor/CodexWorkflow.cs: initialization, executable/auth/help validation, managed instructions, repository ignore setup, unique Windows report names.
+- Assets/Script/CodexUnityPlugin/README.md: setup, behavior, limitations and validation.
+- Assets/Script/CodexUnityPlugin/Implementation Report.txt: this report.
+- Corresponding Unity .meta files for the plugin folder, Editor folder, prompt, and added assets.
+- Local ignored Validation~/ files: compiler response files, compiled validation assemblies, workflow-check harness and fixture output; none are Unity-imported assets.
+
+Validation:
+- Compiled the plugin C# successfully with Roslyn against this project's Unity 6000.5.9f1 assembly references.
+- Ran standalone workflow checks using Unity's Mono: PASS for preserving AGENTS.md, idempotent updates, malformed-section rejection, sanitized Windows filenames, sequential unique report paths.
+- Inspected installed codex exec --help and codex --help for supported sandbox, stdin and color options.
+- git diff --check passed (line-ending normalization warnings only).
+
+Problems / limitations:
+- The shell could not resolve a home directory for codex login status. Authenticated requests were not tested.
+- Windows .NET Framework could not execute the Unity-targeted validation harness; Unity's bundled Mono executed it successfully.
+- Actual Unity window rendering, drag/drop, process cancellation/reload and imports require Editor validation.
+- Task change lists are explicitly agent-reported, not independently verified snapshots. Existing unrelated modifications were preserved.
+- Compilation/reload or cancellation can leave partial task edits. No automatic commits or rollback.
+- Quick answers use the CLI read-only filesystem sandbox. External/MCP integrations retain their separately configured permissions.
+
+Open Tools > Codex Tasks. Run codex login externally, configure an absolute codex.exe path if PATH resolution fails, then press Start Codex.

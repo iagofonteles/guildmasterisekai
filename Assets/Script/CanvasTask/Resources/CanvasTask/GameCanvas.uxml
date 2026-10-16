@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:Style src="GameCanvas.uss" />
+  <ui:VisualElement name="gameCanvas" class="game-canvas" picking-mode="Ignore">
+    <ui:VisualElement class="header"><ui:Label text="Guild Master" class="title" /><ui:Label name="rank" /><ui:Label name="gold" /></ui:VisualElement>
+    <ui:VisualElement class="workspace" picking-mode="Ignore">
+      <ui:VisualElement name="guildPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Guild" class="title" /><ui:Button name="guildClose" text="Close" /></ui:VisualElement><ui:Label text="Guild overview" class="subtitle" /><ui:Label text="Rank and treasury are shown in the header." /><ui:Label text="Fame and progression are currently unavailable." /></ui:VisualElement>
+      <ui:VisualElement name="clientsPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Clients" class="title" /><ui:Button name="clientsClose" text="Close" /></ui:VisualElement><ui:ScrollView name="clientsList" class="list" /></ui:VisualElement>
+      <ui:VisualElement name="problemsPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Problems" class="title" /><ui:Button name="problemsClose" text="Close" /></ui:VisualElement><ui:ScrollView name="problemsList" class="list" /></ui:VisualElement>
+      <ui:VisualElement name="questsPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Mission Board" class="title" /><ui:Button name="questsClose" text="Close" /></ui:VisualElement><ui:TextField name="questSearch" label="Search quests" /><ui:Label text="Quest requests" class="subtitle" /><ui:ScrollView name="questRequestsList" class="requests" /><ui:Label text="Available quests" class="subtitle" /><ui:ScrollView name="questsList" class="list" /></ui:VisualElement>
+      <ui:VisualElement name="adventurersPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Adventurers" class="title" /><ui:Button name="adventurersClose" text="Close" /></ui:VisualElement><ui:TextField name="adventurerSearch" label="Search by name" /><ui:Label text="Guild adventurers" class="subtitle" /><ui:ScrollView name="adventurersList" class="list" /><ui:Label text="Freelancers" class="subtitle" /><ui:ScrollView name="freelancersList" class="list" /></ui:VisualElement>
+      <ui:VisualElement name="partyPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Party" class="title" /><ui:Button name="partyClose" text="Close" /></ui:VisualElement><ui:ScrollView name="partyList" class="list" /><ui:Label name="partyTotals" /><ui:Label text="Party selection is temporary. Dispatch is currently unavailable." /><ui:Button text="Send adventurers (unavailable)" enabled="false" /></ui:VisualElement>
+      <ui:VisualElement name="mapPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Map" class="title" /><ui:Button name="mapClose" text="Close" /></ui:VisualElement><ui:Label text="Map is currently unavailable." /></ui:VisualElement>
+      <ui:VisualElement name="optionsPanel" class="panel hidden"><ui:VisualElement class="panel-heading"><ui:Label text="Options" class="title" /><ui:Button name="optionsClose" text="Close" /></ui:VisualElement><ui:Label text="No options are currently available." /></ui:VisualElement>
+      <ui:VisualElement name="problemPanel" class="panel details hidden"><ui:VisualElement class="panel-heading"><ui:Label name="problemTitle" class="title" /><ui:Button name="problemClose" text="Close" /></ui:VisualElement><ui:Label name="problemClient" /><ui:Label name="problemDescription" /><ui:Label text="Possible solutions" class="subtitle" /><ui:ScrollView name="solutionsList" class="list" /><ui:Button name="refuseProblem" text="Refuse request" /></ui:VisualElement>
+      <ui:VisualElement name="questPanel" class="panel details hidden"><ui:VisualElement class="panel-heading"><ui:Label name="questTitle" class="title" /><ui:Button name="questClose" text="Close" /></ui:VisualElement><ui:ScrollView class="list"><ui:Label name="questDescription" /><ui:Label name="questSummary" /></ui:ScrollView></ui:VisualElement>
+    </ui:VisualElement><ui:VisualElement class="navigation">
+      <ui:Button name="guildButton" text="Guild" />
+      <ui:Button name="clientsButton" text="Clients" />
+      <ui:Button name="problemsButton" text="Problems" />
+      <ui:Button name="questsButton" text="Mission Board" />
+      <ui:Button name="adventurersButton" text="Adventurers" />
+      <ui:Button name="partyButton" text="Party" />
+      <ui:Button name="mapButton" text="Map" />
+      <ui:Button name="optionsButton" text="Options" />
+    </ui:VisualElement></ui:VisualElement></ui:UXML>
