@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
-  m_Name: wood tile roof
+  m_Name: so wood tile roof
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
   m_DefaultSprite: {fileID: -350968697, guid: 8b04612301f651140ab72353553de75b, type: 3}
   m_DefaultGameObject: {fileID: 0}
