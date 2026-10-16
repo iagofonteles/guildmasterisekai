@@ -1,7 +1,0 @@
-{
-    "name": "CodexUnityPlugin.Editor",
-    "rootNamespace": "CodexUnityPlugin.Editor",
-    "references": [],
-    "includePlatforms": ["Editor"],
-    "autoReferenced": true
-}

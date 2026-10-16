@@ -1,5 +1,0 @@
-.question { min-height: 100px; }
-.references { max-height: 150px; }
-.row { flex-direction: row; }
-.object { flex-grow: 1; }
-.output { flex-grow: 1; }

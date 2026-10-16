@@ -7,7 +7,7 @@ namespace UnityEditor.Tilemaps
     /// <summary>
     /// Editor for AutoTile.
     /// </summary>
-    [CustomEditor(typeof(AutoTile))]
+    [CustomEditor(typeof(AutoTile), true)]
     public class AutoTileEditor : Editor
     {
         private AutoTile autoTile => target as AutoTile;
