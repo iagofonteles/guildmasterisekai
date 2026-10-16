@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GuildMasterIsekai.System
+namespace GuildMasterIsekai.Systems
 {
     public interface IDisplay
     {

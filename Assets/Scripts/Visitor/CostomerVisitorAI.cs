@@ -1,5 +1,5 @@
 ﻿using GuildMasterIsekai.Model;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using GuildMasterIsekai.Visitor.Spot;
 using UnityEngine;
 using UnityEngine.AI;

@@ -4,7 +4,7 @@ using System.IO;
 using Drafts;
 using Drafts.SaveData;
 using GuildMasterIsekai.Database;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.Model

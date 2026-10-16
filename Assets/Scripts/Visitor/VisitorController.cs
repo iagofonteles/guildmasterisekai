@@ -1,6 +1,6 @@
 using Drafts;
 using GuildMasterIsekai.Model;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using GuildMasterIsekai.Visitor.Spot;
 using UnityEngine;
 
@@ -26,8 +26,8 @@ namespace GuildMasterIsekai.Visitor
 
         private void OnDestroy()
         {
-            if (adventurerTimer) adventurerTimer.OnTrigger.RemoveListener(OnTriggerAdventurer);
-            if (costumerTimer) costumerTimer.OnTrigger.RemoveListener(OnTriggerCostumer);
+            adventurerTimer.OnTrigger.RemoveListener(OnTriggerAdventurer);
+            costumerTimer.OnTrigger.RemoveListener(OnTriggerCostumer);
         }
 
         private void OnTriggerAdventurer() => SpawnVisitor(guild.Generator.NewAdventurer());
@@ -35,8 +35,8 @@ namespace GuildMasterIsekai.Visitor
 
         public void SpawnVisitor(IVisitor visitor)
         {
-            var controller = Instantiate(visitorAiPrefab, spots.Entrance, visitorAiPrefab.transform.rotation,
-                transform);
+            var (pos, rot) = spots.Entrance;
+            var controller = Instantiate(visitorAiPrefab, pos, rot, transform);
             Instantiate(visitor.Prefab, controller.transform);
             controller.SetVisitor(visitor.GetAI(controller.Agent, spots));
         }

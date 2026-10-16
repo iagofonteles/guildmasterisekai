@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GuildMasterIsekai.System
+namespace GuildMasterIsekai.Systems
 {
     public static class RandomUtility
     {

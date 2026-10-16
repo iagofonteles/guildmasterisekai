@@ -1,4 +1,4 @@
-﻿using GuildMasterIsekai.System;
+﻿using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.Database

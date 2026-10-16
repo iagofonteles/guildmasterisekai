@@ -3,7 +3,7 @@ using System.IO;
 using Drafts;
 using Drafts.SaveData;
 using GuildMasterIsekai.Database;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using GuildMasterIsekai.Visitor;
 using GuildMasterIsekai.Visitor.Spot;
 using UnityEngine;

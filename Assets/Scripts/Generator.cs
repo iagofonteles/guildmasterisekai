@@ -1,6 +1,6 @@
 ﻿using GuildMasterIsekai.Database;
 using GuildMasterIsekai.Model;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai

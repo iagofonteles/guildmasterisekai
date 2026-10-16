@@ -7,17 +7,17 @@ namespace GuildMasterIsekai.Visitor
     {
         [SerializeField, Min(.01f)] private float interval = 10f;
         [SerializeField] private UnityEvent onTrigger = new();
-        private float remaining;
         public UnityEvent OnTrigger => onTrigger;
+        private float _remaining;
 
         private void Update()
         {
-            remaining -= Time.deltaTime;
-            if (remaining > 0) return;
-            remaining = Mathf.Max(.01f, interval);
+            _remaining -= Time.deltaTime;
+            if (_remaining > 0) return;
+            _remaining = Mathf.Max(.01f, interval);
             onTrigger.Invoke();
         }
 
-        private void OnEnable() => remaining = Mathf.Max(.01f, interval);
+        private void OnEnable() => _remaining = Mathf.Max(.01f, interval);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Drafts.SaveData;
 using GuildMasterIsekai.Database;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.Model

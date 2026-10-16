@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using Drafts.SaveData;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.Model

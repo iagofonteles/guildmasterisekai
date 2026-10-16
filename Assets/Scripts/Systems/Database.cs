@@ -5,7 +5,7 @@ using Drafts.SaveData;
 using UnityEditor;
 using UnityEngine;
 
-namespace GuildMasterIsekai.System
+namespace GuildMasterIsekai.Systems
 {
     [CreateAssetMenu(menuName = "Game/Database")]
     public class Database : DatabaseSO<DatabaseEntrySo> { }

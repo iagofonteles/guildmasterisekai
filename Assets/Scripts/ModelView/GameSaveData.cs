@@ -1,7 +1,7 @@
 ﻿using System;
 using Drafts.DataView;
 using GuildMasterIsekai.Model;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.ModelView

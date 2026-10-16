@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using GuildMasterIsekai.System;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.Database

@@ -13,7 +13,7 @@ namespace GuildMasterIsekai.Visitor.Spot
         [SerializeField] private VisitorSpot board;
         [SerializeField] private VisitorSpot table;
 
-        public Vector3 Entrance => entrance.position;
+        public (Vector3, Quaternion) Entrance => (entrance.position, entrance.rotation);
         public Vector3 Exit => exit.position;
         public VisitorQueue Counter => counter;
         public VisitorQueue Office => office;

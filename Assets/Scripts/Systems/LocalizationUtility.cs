@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using Object = UnityEngine.Object;
 
-namespace GuildMasterIsekai.System
+namespace GuildMasterIsekai.Systems
 {
     public static class LocalizationUtility
     {

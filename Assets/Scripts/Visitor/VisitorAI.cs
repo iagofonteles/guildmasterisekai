@@ -24,7 +24,7 @@ namespace GuildMasterIsekai.Visitor
 
         private void Update()
         {
-            if (_ai != null && _ai.ReadyToAct) _ai.Act();
+            if (_ai is { ReadyToAct: true }) _ai.Act();
         }
 
         private void OnDestroy()
