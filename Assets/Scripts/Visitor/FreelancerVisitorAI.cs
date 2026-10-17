@@ -18,8 +18,8 @@ namespace GuildMasterIsekai.Visitor
             : base(agent, spots)
         {
             _adventurer = adventurer;
-            _guild = Game.Save.Get<Guild>();
-            _hall = Game.Save.Get<GuildHall>();
+            _guild = Game.SaveMngr.Get<Guild>();
+            _hall = Game.SaveMngr.Get<GuildHall>();
             _hall.Freelancers.Add(adventurer);
 
             CheckActions();

@@ -12,8 +12,8 @@ namespace GuildMasterIsekai.ModelView
 
         private void Start()
         {
-            var guild = Game.Save.Get<Guild>();
-            var hall = Game.Save.Get<GuildHall>();
+            var guild = Game.SaveMngr.Get<Guild>();
+            var hall = Game.SaveMngr.Get<GuildHall>();
 
             GetComponent<DataView>().SetData(data switch
             {

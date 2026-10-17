@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Drafts.Database;
 
-
 namespace GuildMasterIsekai.Systems
 {
     public interface ITileEntry : IDatabaseItemInternal
@@ -11,7 +10,7 @@ namespace GuildMasterIsekai.Systems
         void IDatabaseItemInternal.SetIndex(int i) => throw new InvalidOperationException();
     }
 
-    public interface ITileSo
+    public interface ITileSo : IDatabaseItem
     {
         IEnumerable<ITileEntry> GetEntries();
     }

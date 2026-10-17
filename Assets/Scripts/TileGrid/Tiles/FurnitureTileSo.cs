@@ -1,20 +1,26 @@
 using System.Collections.Generic;
+using Drafts;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace GuildMasterIsekai.TileGrid
 {
-    [CreateAssetMenu(menuName = "Tiles/GuildObject")]
-    public class GuildObject : DatabaseEntrySo
+    [CreateAssetMenu(menuName = "Tiles/FurnitureTile")]
+    public class FurnitureTileSo : DatabaseEntrySo, ITileSo
     {
-        [SerializeField] private TileBase tile;
+        [SerializeField, SO] private DbTile tile;
         [SerializeField] private AutoTileType buildOn;
         [SerializeField] private Vector2[] toppingSlots;
 
         public int Layer => 1;
-        public TileBase Tile => tile;
+        public DbTile Tile => tile;
         public AutoTileType BuildOn => buildOn;
         public IReadOnlyList<Vector2> ToppingSlots => toppingSlots;
+
+        public IEnumerable<ITileEntry> GetEntries()
+        {
+            if (!tile) Debug.LogError("missing tile", this);
+            yield return tile;
+        }
     }
 }

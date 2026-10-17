@@ -18,8 +18,8 @@ namespace GuildMasterIsekai.Visitor
 
         private void Start()
         {
-            guild = Game.Save.Get<Guild>();
-            hall = Game.Save.Get<GuildHall>();
+            guild = Game.SaveMngr.Get<Guild>();
+            hall = Game.SaveMngr.Get<GuildHall>();
             adventurerTimer.OnTrigger.AddListener(OnTriggerAdventurer);
             costumerTimer.OnTrigger.AddListener(OnTriggerCostumer);
         }

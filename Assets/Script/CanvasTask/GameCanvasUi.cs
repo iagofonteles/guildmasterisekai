@@ -90,8 +90,8 @@ namespace GuildMasterIsekai.CanvasTask
             _root.Clear();
             _document.visualTreeAsset.CloneTree(_root);
             _root.pickingMode = PickingMode.Ignore;
-            _guild = Game.Save.Get<Guild>();
-            _hall = Game.Save.Get<GuildHall>();
+            _guild = Game.SaveMngr.Get<Guild>();
+            _hall = Game.SaveMngr.Get<GuildHall>();
             if (_guild == null || _hall == null)
             {
                 Debug.LogError("GameCanvas requires Guild and GuildHall save data.", this);
@@ -180,8 +180,8 @@ namespace GuildMasterIsekai.CanvasTask
         private void Update()
         {
             if (_root == null || _guild == null || _hall == null) return;
-            if (!ReferenceEquals(_guild, Game.Save.Get<Guild>()) ||
-                !ReferenceEquals(_hall, Game.Save.Get<GuildHall>()) || SourcesChanged())
+            if (!ReferenceEquals(_guild, Game.SaveMngr.Get<Guild>()) ||
+                !ReferenceEquals(_hall, Game.SaveMngr.Get<GuildHall>()) || SourcesChanged())
             {
                 Build();
                 return;

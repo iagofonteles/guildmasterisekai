@@ -5,37 +5,40 @@ using UnityEngine;
 
 namespace GuildMasterIsekai.Systems
 {
-    public interface ISaveData
-    {
-        void BeforeSave();
-        void AfterLoad();
-    }
-
     public class SaveFileParser : FileParserBase
     {
-        public SaveFileParser(bool beautify = true)
-        {
-            Beautify = beautify;
-        }
-
-        protected override string Extension => ".json";
-        private bool Beautify { get; }
+        protected override string Extension => ".binsav";
 
         public override void Save(string key, in object data)
         {
-            if (data is ISaveData sd) sd.BeforeSave();
-            var json = JsonUtility.ToJson(data, Beautify);
+            if (data is not IBinarySave sd) throw new Exception($"{data?.GetType().Name} is not ISaveData");
             AssurePath(key);
-            File.WriteAllText(key, json);
+            using var file = File.Create(key);
+            using var writer = new BinaryWriter(file);
+            sd.Save(writer);
         }
 
-        public override object Load(string key, Type type)
+        public override object Load(string key, Type type) => Load(key, type, null);
+
+        public object Load(string key, Type type, params object[] args)
         {
-            var data = File.Exists(key)
-                ? JsonUtility.FromJson(File.ReadAllText(key), type)
-                : Activator.CreateInstance(type);
-            if (data is ISaveData sd) sd.AfterLoad();
-            return data;
+            var obj = Activator.CreateInstance(type, args);
+            if (obj is not IBinarySave sd) throw new Exception($"{type.Name} is not ISaveData");
+            if (!File.Exists(key)) return obj;
+
+            try
+            {
+                using var file = File.OpenRead(key);
+                using var reader = new BinaryReader(file);
+                sd.Load(reader);
+                return obj;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error loading {key} {type.Name}");
+                Debug.LogException(e);
+                return Activator.CreateInstance(type);
+            }
         }
     }
 }

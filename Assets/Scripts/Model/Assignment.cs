@@ -47,7 +47,7 @@ namespace GuildMasterIsekai.Model
 
         private object GetTask()
         {
-            var hall = Game.Save.Get<GuildHall>();
+            var hall = Game.SaveMngr.Get<GuildHall>();
 
             return taskType switch
             {

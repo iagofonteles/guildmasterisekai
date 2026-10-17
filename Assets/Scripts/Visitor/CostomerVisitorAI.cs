@@ -18,8 +18,8 @@ namespace GuildMasterIsekai.Visitor
             : base(agent, spots)
         {
             this._costomer = costomer;
-            guild = Game.Save.Get<Guild>();
-            hall = Game.Save.Get<GuildHall>();
+            guild = Game.SaveMngr.Get<Guild>();
+            hall = Game.SaveMngr.Get<GuildHall>();
             hall.Costomers.Add(costomer);
 
             CheckQueue();

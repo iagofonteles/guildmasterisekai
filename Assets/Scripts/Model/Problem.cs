@@ -66,7 +66,7 @@ namespace GuildMasterIsekai.Model
 
         private List<Quest>[] GetOutcomes()
         {
-            var generator = Game.Save.Get<Guild>().Generator;
+            var generator = Game.SaveMngr.Get<Guild>().Generator;
 
             var easy = new List<Quest>
             {

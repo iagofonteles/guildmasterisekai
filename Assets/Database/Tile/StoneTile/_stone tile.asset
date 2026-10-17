@@ -33,8 +33,8 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: 0}
   floor: {fileID: 11400000, guid: 567e4f0cacbcc2e408ddddc605df9e7c, type: 2}
-  wall: {fileID: 11400000, guid: f2a48040f09430b43b2c294560f7fbad, type: 2}
-  roof: {fileID: 11400000, guid: 8632925c9f2c4504e90a7a3843295b61, type: 2}
+  wall: {fileID: 11400000, guid: daf085270be1b854c9acc1fee35ecabe, type: 2}
+  roof: {fileID: 11400000, guid: 8f0a3cdc23e43e843ba828dd16b3fb7b, type: 2}
   references:
     version: 2
     RefIds: []

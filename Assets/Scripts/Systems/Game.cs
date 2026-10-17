@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Drafts.Database;
+﻿using Drafts.Database;
 using Drafts.SaveData;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,13 +9,14 @@ namespace GuildMasterIsekai.Systems
     public static class Game
     {
         private static Database _database;
-        private static RuntimeDatabase<ITileEntry> _tiles;
+        private static TileDatabase _tiles;
         private static UIntGenerator _id;
         private static SaveManager _save;
 
         public static Database Database => Load(ref _database);
-        public static RuntimeDatabase<ITileEntry> Tiles => _tiles ??= new(GetTileEntries());
-        public static SaveManager Save { get; } = new("Save", "Default", new SaveFileParser());
+        public static TileDatabase Tiles => _tiles ??= new(Database);
+        public static SaveManager SaveMngr { get; } = new("Save", "Default", new SaveFileParser());
+        public static SaveFileParser SaveParser { get; } = new();
         public static UIntGenerator Id { get; } = new();
 
         private static T Load<T>(ref T v, string path = null) where T : Object
@@ -28,17 +28,10 @@ namespace GuildMasterIsekai.Systems
         [RuntimeInitializeOnLoadMethod]
         public static void Reset()
         {
-            Save.Load("Default");
+            SaveMngr.Load("Default");
         }
 
         public static Sprite LoadSprite(string path) =>
             Addressables.LoadAssetAsync<Sprite>($"Sprites/{path}").WaitForCompletion();
-
-        private static IEnumerable<ITileEntry> GetTileEntries()
-        {
-            foreach (var tileSo in Database.GetAll<ITileSo>())
-            foreach (var entry in tileSo.GetEntries())
-                yield return entry;
-        }
     }
 }
