@@ -12,34 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
   m_Name: so wood tile wall
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
-  m_DefaultSprite: {fileID: 659106679, guid: c2b6d404cd9734c419557f76efed2a04, type: 3}
+  m_DefaultSprite: {fileID: -6471187932270448383, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 2
   m_MaskType: 1
   m_Random: 0
   m_PhysicsShapeCheck: 0
   m_AutoTileDictionary:
-    keyData: 18000000300000001000000038000000
+    keyData: 18000000100000003000000038000000
     valueData:
     - spriteList:
-      - {fileID: 1363454493, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: 1363454493, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
       textureList:
-      - {fileID: 2800000, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
     - spriteList:
-      - {fileID: 317893972, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: -6471187932270448383, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
       textureList:
-      - {fileID: 2800000, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
     - spriteList:
-      - {fileID: -6471187932270448383, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: 317893972, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
       textureList:
-      - {fileID: 2800000, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
     - spriteList:
-      - {fileID: -2123532113, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: -2123532113, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
       textureList:
-      - {fileID: 2800000, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
   m_TextureList:
-  - {fileID: 2800000, guid: be07c8cb8c5540d44bc6995fdf5a1c0c, type: 3}
+  - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
   m_TextureScaleList:
-  - 2.45
-  guildTile: {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
+  - 1
+  item: {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
   type: 3

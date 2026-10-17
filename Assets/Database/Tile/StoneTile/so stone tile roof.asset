@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b08ceb78e3b2495b8d808a5860e66794, type: 3}
-  m_Name: Stone Auto Tile 1
-  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AutoTile
-  m_DefaultSprite: {fileID: -1655427436, guid: c2b6d404cd9734c419557f76efed2a04, type: 3}
+  m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
+  m_Name: so stone tile roof
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
+  m_DefaultSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_DefaultGameObject: {fileID: 0}
-  m_DefaultColliderType: 1
+  m_DefaultColliderType: 2
   m_MaskType: 1
   m_Random: 0
   m_PhysicsShapeCheck: 0
@@ -213,3 +213,5 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
   m_TextureScaleList:
   - 1
+  item: {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
+  type: 2

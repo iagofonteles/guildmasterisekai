@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Drafts.Database;
 using Drafts.SaveData;
 using UnityEditor;
@@ -26,7 +27,12 @@ namespace GuildMasterIsekai.Systems
 
 #if UNITY_EDITOR
         [MenuItem("Game/Refresh Database")]
-        public static void RefreshDatabase() => Game.Database.FetchItemsFromAssets();
+        public static void RefreshDatabase()
+        {
+            Game.Database.FetchItemsFromAssets();
+            var field = typeof(Game).GetField("_tiles", BindingFlags.Static | BindingFlags.NonPublic);
+            field!.SetValue(null, null);
+        }
 #endif
     }
 }

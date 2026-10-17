@@ -213,5 +213,5 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 8b04612301f651140ab72353553de75b, type: 3}
   m_TextureScaleList:
   - 1
-  guildTile: {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
+  item: {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
   type: 4
