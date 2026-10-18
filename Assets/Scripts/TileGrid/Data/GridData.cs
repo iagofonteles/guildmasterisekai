@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -29,7 +30,7 @@ namespace GuildMasterIsekai.TileGrid
 
             foreach (var p in b.allPositionsWithin)
             {
-                var tile = source.GetTile(p);
+                var tile = (ITileEntry)source.GetTile(p);
                 var key = new Vector2Int(p.x - b.x, p.y - b.y);
                 var cell = new GridCell
                 {

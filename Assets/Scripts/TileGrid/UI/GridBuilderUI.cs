@@ -76,6 +76,7 @@ namespace GuildMasterIsekai.TileGrid
             if (_root == null) return;
             _root.Clear();
             document.visualTreeAsset.CloneTree(_root);
+            _root.AddToClassList("build-document");
             _root.pickingMode = PickingMode.Ignore;
             _tiles = _root.Q<ScrollView>("tiles");
             if (_tiles == null) return;
@@ -191,7 +192,7 @@ namespace GuildMasterIsekai.TileGrid
                     image.pickingMode = PickingMode.Ignore;
                     button.Add(image);
                 }
-                button.Add(new Label(item is BaseTileSo floor ? $"{item.name}  ({floor.Cost})" : item.name));
+                button.Add(new Label(item is BaseTileSo floor ? $"{item.name}" : item.name));
                 _tiles.Add(button);
             }
         }

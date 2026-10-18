@@ -14,6 +14,7 @@ namespace GuildMasterIsekai.TileGrid
 
         public uint Id => id;
         public DatabaseEntrySo Item => item;
+        TileBase ITileEntry.Tile => this;
         
         [ContextMenu("Reroll Id")]
         private void RerollId()

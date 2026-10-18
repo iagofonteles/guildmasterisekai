@@ -1,5 +1,4 @@
 using System.IO;
-using Drafts.Database;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,9 +7,9 @@ namespace GuildMasterIsekai.TileGrid
 {
     public interface IGridSerializer
     {
-        void WriteTile(BinaryWriter writer, TileBase tile);
+        void WriteTile(BinaryWriter writer, ITileEntry tile);
         void WriteItem(BinaryWriter writer, ITileSo item);
-        TileBase ReadTile(BinaryReader reader);
+        ITileEntry ReadTile(BinaryReader reader);
         T ReadItem<T>(BinaryReader reader);
         BinaryWriter GetWriter(string key);
         BinaryReader GetReader(string key);
@@ -18,22 +17,9 @@ namespace GuildMasterIsekai.TileGrid
 
     public class GameGridSerializer : IGridSerializer
     {
-        public void WriteTile(BinaryWriter writer, TileBase tile)
+        public void WriteTile(BinaryWriter writer, ITileEntry tile)
         {
-            if (tile == null)
-            {
-                writer.Write(0);
-                return;
-            }
-
-            if (tile is not ITileEntry e)
-            {
-                Debug.LogError("Not ITileEntry " + tile.name, tile);
-                writer.Write(0);
-                return;
-            }
-
-            writer.Write(e.Id);
+            writer.Write(tile?.Id ?? 0);
         }
 
         public void WriteItem(BinaryWriter writer, ITileSo item)
@@ -41,9 +27,9 @@ namespace GuildMasterIsekai.TileGrid
             writer.Write(item?.Id ?? 0);
         }
 
-        public TileBase ReadTile(BinaryReader reader)
+        public ITileEntry ReadTile(BinaryReader reader)
         {
-            return Game.Tiles.Find<TileBase>(reader.ReadUInt32());
+            return Game.Tiles.Find(reader.ReadUInt32());
         }
 
         public T ReadItem<T>(BinaryReader reader)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
   m_Name: so stone tile floor
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
-  m_DefaultSprite: {fileID: -530083234, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
+  m_DefaultSprite: {fileID: 817518289, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 2
   m_MaskType: 0
@@ -23,5 +23,6 @@ MonoBehaviour:
     valueData: []
   m_TextureList: []
   m_TextureScaleList: []
+  id: 0
   item: {fileID: 11400000, guid: e7185ce0e40581f418babb8e6fe9c9c3, type: 2}
   type: 2

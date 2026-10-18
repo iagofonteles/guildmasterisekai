@@ -142,9 +142,9 @@ namespace GuildMasterIsekai.TileGrid
                 var command = tool.CreateCommand(args, out var error);
                 if (command == null) return Fail(error);
                 if (!command.Do()) return Fail("The command could not be applied.");
+                _redo.Clear();
                 _undo.Add(command);
                 if (_undo.Count > Mathf.Max(1, historyLimit)) _undo.RemoveAt(0);
-                _redo.Clear();
                 LastError = null;
                 Render();
             }
@@ -257,10 +257,10 @@ namespace GuildMasterIsekai.TileGrid
             _furnitureRefresh.Clear();
         }
 
-        private static void SetChangedTile(Tilemap map, Vector3Int at, TileBase tile, HashSet<Vector3Int> refresh)
+        private static void SetChangedTile(Tilemap map, Vector3Int at, ITileEntry tile, HashSet<Vector3Int> refresh)
         {
-            if (map.GetTile(at) == tile) return;
-            map.SetTile(at, tile);
+            if (map.GetTile(at) == tile.Tile) return;
+            map.SetTile(at, tile.Tile);
             for (var y = -1; y <= 1; y++)
             for (var x = -1; x <= 1; x++)
                 refresh.Add(at + new Vector3Int(x, y, 0));

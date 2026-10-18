@@ -1,3 +1,10 @@
+.build-document {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
 .build-screen {
     flex-grow: 1;
     -unity-font: url("project://database/Assets/Plugins/TextMesh Pro/Fonts/LiberationSans.ttf");
@@ -67,3 +74,9 @@
 .build-toolbar .unity-scroller--vertical { width: 12px; }
 .build-toolbar .unity-base-slider__tracker { background-color: rgb(17, 22, 30); }
 .build-toolbar .unity-base-slider__dragger { background-color: rgb(110, 135, 166); min-width: 8px; min-height: 8px; }
+
+.build-toolbar .tool-tabs {
+    width: 400px;
+    height: 40px;
+    min-height: 40px;
+}

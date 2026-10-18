@@ -1,4 +1,4 @@
-using GuildMasterIsekai.Systems;
+using System;
 using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
@@ -12,6 +12,14 @@ namespace GuildMasterIsekai.TileGrid
         public object item;
         public int slot = -1;
         public Vector2Int delta;
-        public System.Func<Vector2Int, int> nearestSlot;
+        public Func<Vector2Int, int> nearestSlot;
+
+        public void Validate()
+        {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (grid == null) throw new NullReferenceException(nameof(grid));
+            if (bag == null) throw new NullReferenceException(nameof(bag));
+            if (!builder.Material) throw new NullReferenceException(nameof(builder.Material));
+        }
     }
 }

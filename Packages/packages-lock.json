@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fe48ff13152513723b1fc61afeeebd6b56fc43de"
+      "hash": "2e1de3c28e3c4effed756c71a866b159542c315e"
     },
     "com.drafts.dataview": {
       "version": "https://github.com/bydrafts/dataview.git#v1.0",

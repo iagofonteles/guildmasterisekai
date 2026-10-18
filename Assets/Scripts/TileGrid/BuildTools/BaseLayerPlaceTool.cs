@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +10,7 @@ namespace GuildMasterIsekai.TileGrid
 
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
-            if (e.builder == null) throw new ArgumentNullException(nameof(e.builder));
-            if (e.grid == null) throw new NullReferenceException(nameof(e.grid));
-            if (e.bag == null) throw new NullReferenceException(nameof(e.bag));
-            if (!e.builder.Material)
-            {
-                error = "Assign a building material to GridBuilder.";
-                return null;
-            }
+            e.Validate();
 
             if (e.item is not BaseTileSo tile)
             {
@@ -27,28 +18,13 @@ namespace GuildMasterIsekai.TileGrid
                 return null;
             }
 
-            if (!GridEditing.CheckArea(e.grid, e.area, out error)) return null;
-            if (!tile || !tile.Floor || !tile.Wall || !tile.Roof ||
-                tile.Floor.Type != AutoTileType.Floor || tile.Wall.Type != AutoTileType.Wall ||
-                tile.Roof.Type != AutoTileType.Roof)
-            {
-                error = "Select a base tile with valid floor, wall and roof variants.";
-                return null;
-            }
-
-            var count = 0;
-            foreach (var p in e.area.allPositionsWithin)
-                if (!e.grid[p.x, p.y].Floor)
-                    count++;
-
-            if (count == 0)
-            {
-                error = "no change";
-                return null;
-            }
-
             var cmd = new CellCommand(e.builder);
-            cmd.cost.AddItem(e.builder.Material, count);
+
+            if (tile is FloorTileSo f)
+                PopulateFloor(cmd, e, f);
+
+            if (tile is WallTileSo w)
+                PopulateWall(cmd, e, w);
 
             if (!e.bag.CanPay(cmd.cost))
             {
@@ -57,61 +33,63 @@ namespace GuildMasterIsekai.TileGrid
             }
 
             error = null;
-            PopulateCmd(e.grid, e.area, tile, cmd);
             return cmd;
         }
 
-        private static void PopulateCmd(GridData grid, RectInt area, BaseTileSo tile, CellCommand cmd)
+        // floor can only override other floor or null 
+        private static void PopulateFloor(CellCommand cmd, OperationArgs e, FloorTileSo tile)
         {
-            var patterns = new Dictionary<Vector2Int, AutoTileType>();
-            var anchors = new HashSet<Vector2Int>();
+            var cost = 0;
 
-            foreach (var anchor in area.allPositionsWithin)
+            foreach (var p in e.area.allPositionsWithin)
             {
-                if (!grid.Contains(anchor) || grid[anchor.x, anchor.y].Floor) continue;
-                anchors.Add(anchor);
+                //TODO brush area should be trimmed before used
+                //if (!grid.Contains(p)) continue;
 
-                for (var y = -2; y <= 2; y++)
-                for (var x = -1; x <= 1; x++)
-                {
-                    var p = anchor + new Vector2Int(x, y);
-                    if (!grid.Contains(p)) continue;
-                    var type = x == 0 && y == 0 ? AutoTileType.Floor :
-                        y == -2 || (x == 0 && y == 1) ? AutoTileType.Wall : AutoTileType.Roof;
-                    if (patterns.TryGetValue(p, out var previous) && Priority(previous) >= Priority(type))
-                        continue;
-                    patterns[p] = type;
-                }
-            }
-
-            foreach (var pair in patterns)
-            {
-                var p = pair.Key;
-                var cell = grid[p.x, p.y];
-                // Existing anchors keep their material; only newly selected anchors are added.
-                if (cell.Floor) continue;
-                var type = pair.Value;
-                if (cell.BaseTile is DbAutoTile current && Priority(current.Type) > Priority(type))
-                    continue;
-
-                var expectedTile = tile[type];
-                var expectedFloor = anchors.Contains(p) ? tile : cell.Floor;
-                if (cell.BaseTile == expectedTile && cell.Floor == expectedFloor) continue;
+                var cell = e.grid[p.x, p.y];
+                if (cell.Floor == tile) continue;
+                if (cell.Floor && cell.Floor is not FloorTileSo) continue;
 
                 var after = (GridCell)cell.Clone();
-                after.BaseTile = expectedTile;
-                after.Floor = expectedFloor;
-                cmd.before.Add(cell.Clone());
+                after.BaseTile = tile.Floor;
+                after.Floor = tile;
                 cmd.after.Add(after);
+                cmd.before.Add(cell.Clone());
+
+                if (!cell.Floor) cost++;
             }
+
+            cmd.cost.AddItem(e.builder.Material, cost);
         }
 
-        private static int Priority(AutoTileType type) => type switch
+        // wall can override floor, other wall or null 
+        private static void PopulateWall(CellCommand cmd, OperationArgs e, WallTileSo tile)
         {
-            AutoTileType.Floor => 3,
-            AutoTileType.Wall => 2,
-            AutoTileType.Roof => 1,
-            _ => 0
-        };
+            var cost = 0;
+
+            foreach (var p in e.area.allPositionsWithin)
+            {
+                var p1 = p + Vector2Int.up;
+                var p2 = p + Vector2Int.down;
+                if (!e.grid.Contains(p1)) continue; // no space for the roof
+                
+                var cell = e.grid[p.x, p.y];
+             
+                //TODO
+                // wall need a roof direct above (y+)
+                // if p1.cell.Floor is null or wall, p1.cell.BaseTile become wall
+                // if p1.cell.Floor is floor, p1.cell.Floor become null and refund 1
+                // if p2.cell.Floor is wall, p.cell.BaseTile become wall
+                // if p cell.Floor is floor or wall, costs nothing
+                // if p cell.Floor is null, costs 1
+                // placement: r- roof, w-wall, x-null or floor
+                // RX
+                // RR
+                // WW
+                // XX
+            }
+
+            cmd.cost.AddItem(e.builder.Material, cost);
+        }
     }
 }

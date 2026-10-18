@@ -149,6 +149,11 @@ namespace UnityEngine.Tilemaps
             }
         }
 
+        protected virtual bool IsMatch(TileBase other)
+        {
+            return other == this;
+        }
+        
         /// <summary>
         /// Retrieves any tile rendering data from the scripted tile.
         /// </summary>
@@ -173,7 +178,7 @@ namespace UnityEngine.Tilemaps
                 {
                     var tilePosition = new Vector3Int(position.x + x, position.y + y, position.z);
                     m_CachedTiles[index] = itilemap.GetTile(tilePosition);
-                    if (m_CachedTiles[index] == this)
+                    if (IsMatch(m_CachedTiles[index]))
                         mask |= (uint)1 << index;
                     index++;
                 }

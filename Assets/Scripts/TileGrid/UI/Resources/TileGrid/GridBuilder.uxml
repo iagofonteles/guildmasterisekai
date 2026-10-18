@@ -12,13 +12,13 @@
         <ui:Button name="place" text="Place" tooltip="Place selected tile" />
         <ui:Button name="paint" text="Paint" tooltip="Paint selected tile" />
         <ui:Button name="remove" text="Remove" tooltip="Remove tiles" />
+        <ui:Button name="undo" text="Undo" tooltip="Undo last command" enabled="false" />
+        <ui:Button name="redo" text="Redo" tooltip="Redo undone command" enabled="false" />
       </ui:VisualElement>
       <ui:VisualElement class="auxiliary-controls">
         <ui:Button name="move" text="Move" />
         <ui:Button name="pixel" text="Pixel" />
         <ui:Button name="rectangle" text="Rectangle" />
-        <ui:Button name="undo" text="Undo" />
-        <ui:Button name="redo" text="Redo" />
         <ui:Label name="selection" />
         <ui:Label name="help" />
         <ui:Label name="status" />

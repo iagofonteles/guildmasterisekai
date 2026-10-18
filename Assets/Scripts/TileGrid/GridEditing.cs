@@ -7,6 +7,7 @@ namespace GuildMasterIsekai.TileGrid
     /// <summary>Validates the current live grid state.</summary>
     internal static class GridEditing
     {
+        [Obsolete("brush area should be trimmed before use")]
         public static bool CheckArea(GridData data, RectInt area, out string error)
         {
             error = null;

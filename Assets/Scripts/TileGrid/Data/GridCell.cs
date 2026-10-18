@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,8 +9,8 @@ namespace GuildMasterIsekai.TileGrid
     {
         Vector3 Position { get; }
         Vector2Int Key { get; }
-        TileBase DefaultTile { get; }
-        TileBase BaseTile { get; }
+        ITileEntry DefaultTile { get; }
+        ITileEntry BaseTile { get; }
         BaseTileSo Floor { get; }
         FurnitureTileSo Furniture { get; }
         IReadOnlyList<ToppingTileSo> Toppings { get; }
@@ -21,8 +22,8 @@ namespace GuildMasterIsekai.TileGrid
         public GridData Grid { get; internal set; }
         public Vector2Int Key { get; internal set; }
         public Vector3 Position { get; internal set; }
-        public TileBase DefaultTile { get; internal set; }
-        public TileBase BaseTile { get; internal set; }
+        public ITileEntry DefaultTile { get; internal set; }
+        public ITileEntry BaseTile { get; internal set; }
         public BaseTileSo Floor { get; internal set; }
         public FurnitureTileSo Furniture { get; internal set; }
         internal List<ToppingTileSo> slots = new();

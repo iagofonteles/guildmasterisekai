@@ -3,8 +3,8 @@ guid: 73f4f3a376608234fa7aceeacfbb2a50
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 881161667122616349
-    second: Stone Wall Minimal Tileset 47_0
+      213: 5867257254742127777
+    second: tex stone roof 47_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,24 +96,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_00_mask_016
+      name: tex stone roof 47_00_mask_016
       rect:
         serializedVersion: 2
         x: 0
@@ -128,14 +115,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dfa28b309851cb04399544b0bc5a6b75
-      internalID: -397548180
+      spriteID: 6067f3a60d189db45ba2b4baac008305
+      internalID: 1604217437
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_01_mask_018
+      name: tex stone roof 47_01_mask_018
       rect:
         serializedVersion: 2
         x: 32
@@ -150,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f796e3d7e6d407d4a8a57ebad713c34b
-      internalID: 672805034
+      spriteID: 8d08d3c0606d4df409ab40047a0b6132
+      internalID: 463717721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_02_mask_024
+      name: tex stone roof 47_02_mask_024
       rect:
         serializedVersion: 2
         x: 64
@@ -172,14 +159,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1781fad304722fd4abdada351976697f
-      internalID: 1704440342
+      spriteID: b9565552cb83d6043bb10d0ac5ce41ec
+      internalID: -1677377160
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_03_mask_026
+      name: tex stone roof 47_03_mask_026
       rect:
         serializedVersion: 2
         x: 96
@@ -194,14 +181,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 315a73e732e518243a403bbb7dc0995d
-      internalID: 1400887532
+      spriteID: 0fb6421371f4f084c98fd30c2ed1b6d7
+      internalID: -147588135
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_04_mask_027
+      name: tex stone roof 47_04_mask_027
       rect:
         serializedVersion: 2
         x: 128
@@ -216,14 +203,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0add8ca8b9126448a8cacf98b857817
-      internalID: -194516950
+      spriteID: 0c2ab832f6e922641851d2a984327735
+      internalID: -416476110
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_05_mask_048
+      name: tex stone roof 47_05_mask_048
       rect:
         serializedVersion: 2
         x: 160
@@ -238,14 +225,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 417ae1e16b83c0c41ab2c12f994e04d8
-      internalID: -1081684298
+      spriteID: 5fdf51a4e771dc945ab89301b5ccdcf5
+      internalID: 113601909
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_06_mask_050
+      name: tex stone roof 47_06_mask_050
       rect:
         serializedVersion: 2
         x: 192
@@ -260,14 +247,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5a3cddb9d7d744c46b983a3c196f25bc
-      internalID: -1780914685
+      spriteID: 15ff36462a60fcf45b0a49b2afe3288a
+      internalID: 1518125748
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_07_mask_054
+      name: tex stone roof 47_07_mask_054
       rect:
         serializedVersion: 2
         x: 224
@@ -282,14 +269,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 49bd8b6ca403e694f8b8fe646a06bcc0
-      internalID: 447294083
+      spriteID: a0eafd2fba4da534fa4bb68f13f333f6
+      internalID: 2098691779
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_08_mask_056
+      name: tex stone roof 47_08_mask_056
       rect:
         serializedVersion: 2
         x: 0
@@ -304,14 +291,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 74a2798eb0be3e84ca46249a5bb3a0c2
-      internalID: -1200132871
+      spriteID: ebe0d27471d81764094d47d9c90d2521
+      internalID: -1926037995
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_09_mask_058
+      name: tex stone roof 47_09_mask_058
       rect:
         serializedVersion: 2
         x: 32
@@ -326,14 +313,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f6090335ca5589845b1337c8510cf9e7
-      internalID: -1898521109
+      spriteID: e7e26ae6c97d96049b1535c666a28335
+      internalID: 1434235753
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_10_mask_059
+      name: tex stone roof 47_10_mask_059
       rect:
         serializedVersion: 2
         x: 64
@@ -348,14 +335,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1ea0f42c25b043c46b94d086b79c66b5
-      internalID: -469960902
+      spriteID: 8189b4d241e50a84f9f70caf3b18bed7
+      internalID: 1186103668
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_11_mask_062
+      name: tex stone roof 47_11_mask_062
       rect:
         serializedVersion: 2
         x: 96
@@ -370,14 +357,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 51516b4614ffc5a44a7c7e4cea03c347
-      internalID: -1629555958
+      spriteID: 86df03b4b2fc1ad468c48a5a0bf120b3
+      internalID: -1488924611
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_12_mask_063
+      name: tex stone roof 47_12_mask_063
       rect:
         serializedVersion: 2
         x: 128
@@ -392,14 +379,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e1e0594cf174fc94781378f23289b8a0
-      internalID: -2136214023
+      spriteID: 39a59d1d998693f4f9a81b9290e3225d
+      internalID: -204366596
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_13_mask_144
+      name: tex stone roof 47_13_mask_144
       rect:
         serializedVersion: 2
         x: 160
@@ -414,14 +401,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 290681750f808de45b4cde6a064fed69
-      internalID: -1615333413
+      spriteID: a4d482897ce2fcc4c9c8ff9055e9643a
+      internalID: 746515052
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_14_mask_146
+      name: tex stone roof 47_14_mask_146
       rect:
         serializedVersion: 2
         x: 192
@@ -436,14 +423,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ff3f8d21fa79fe40ba38332c6d6091b
-      internalID: 254310314
+      spriteID: 63f015453c3900447ac61714571bfcf7
+      internalID: 694511635
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_15_mask_152
+      name: tex stone roof 47_15_mask_152
       rect:
         serializedVersion: 2
         x: 224
@@ -458,14 +445,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 394999dce35d7a744aed01d7c2a367e1
-      internalID: 22386545
+      spriteID: 35972252b3fce9747a3423b6b52c61ed
+      internalID: 1377336228
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_16_mask_154
+      name: tex stone roof 47_16_mask_154
       rect:
         serializedVersion: 2
         x: 0
@@ -480,14 +467,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0993fd079bf58ba4190f53b316958ada
-      internalID: -665264491
+      spriteID: 2100d06e47c361c4f92d2863532c7f5e
+      internalID: -1154357904
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_17_mask_155
+      name: tex stone roof 47_17_mask_155
       rect:
         serializedVersion: 2
         x: 32
@@ -502,14 +489,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1a0fbad1075feed40b2e19f00ac36351
-      internalID: 1665126741
+      spriteID: fb10dbcf3ebaab9458a631d8e57eb5ac
+      internalID: -1482310193
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_18_mask_176
+      name: tex stone roof 47_18_mask_176
       rect:
         serializedVersion: 2
         x: 64
@@ -524,14 +511,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5dfd41eba69939e448c18399ccaf8e5e
-      internalID: 1133709043
+      spriteID: 35b87a5fbd6724846bb64b9fd0cc4e2e
+      internalID: 685930575
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_19_mask_178
+      name: tex stone roof 47_19_mask_178
       rect:
         serializedVersion: 2
         x: 96
@@ -546,14 +533,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c99dd0275ed711048a17bfbe4703fb9c
-      internalID: -430462643
+      spriteID: 1035ecd4f957bd346bb78bf177c066ce
+      internalID: -778138149
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_20_mask_182
+      name: tex stone roof 47_20_mask_182
       rect:
         serializedVersion: 2
         x: 128
@@ -568,14 +555,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c501e16238232364b9fd1da90b069fcc
-      internalID: -1414596184
+      spriteID: 6161925802d4a664eb9e2cf0a8cd0bc9
+      internalID: -1704454350
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_21_mask_184
+      name: tex stone roof 47_21_mask_184
       rect:
         serializedVersion: 2
         x: 160
@@ -590,14 +577,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 45d99b5b99c3900488408a0a5b91925f
-      internalID: 1124541768
+      spriteID: 93eeff67a23eb0a40b2f5afcdf1ac9af
+      internalID: -629158422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_22_mask_186
+      name: tex stone roof 47_22_mask_186
       rect:
         serializedVersion: 2
         x: 192
@@ -612,14 +599,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f8fb16392f8b3e468c8ef1386c145d4
-      internalID: -1080559480
+      spriteID: efcc462f7a123ee4c8761791667b9698
+      internalID: -1579638613
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_23_mask_187
+      name: tex stone roof 47_23_mask_187
       rect:
         serializedVersion: 2
         x: 224
@@ -634,14 +621,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6bc6db9321f10144ebb70ff7e6c1ea47
-      internalID: -149635084
+      spriteID: 61fca7993a91bc54eb573e2c01667c0d
+      internalID: -1979969301
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_24_mask_190
+      name: tex stone roof 47_24_mask_190
       rect:
         serializedVersion: 2
         x: 0
@@ -656,14 +643,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46cfdd0576de2a14086e95144e7a863e
-      internalID: 1545457807
+      spriteID: f2bf2a4002b21d5438dcf0694affe6df
+      internalID: -310566096
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_25_mask_191
+      name: tex stone roof 47_25_mask_191
       rect:
         serializedVersion: 2
         x: 32
@@ -678,14 +665,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f17fe726749f454c8675361f7d0d882
-      internalID: -80299090
+      spriteID: 3f7665c1550ae6f48a5c215e33224a2b
+      internalID: -207934279
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_26_mask_216
+      name: tex stone roof 47_26_mask_216
       rect:
         serializedVersion: 2
         x: 64
@@ -700,14 +687,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3d7e20f27e601245a4c51fe757fb29a
-      internalID: 1323000223
+      spriteID: 4ef68fbb89b2b1047af9f13873fd422f
+      internalID: -1517690296
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_27_mask_218
+      name: tex stone roof 47_27_mask_218
       rect:
         serializedVersion: 2
         x: 96
@@ -722,14 +709,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9fb2ee96ba0e96f48b93d474dd1d7b8b
-      internalID: -2046865941
+      spriteID: fdbde7406a3c22c4d86234e394df6e7e
+      internalID: 988712325
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_28_mask_219
+      name: tex stone roof 47_28_mask_219
       rect:
         serializedVersion: 2
         x: 128
@@ -744,14 +731,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0e087801e17e21444a2aad78d415bca5
-      internalID: 1302226071
+      spriteID: 97b04abdd73d00349a973e900c9aa932
+      internalID: -1822656931
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_29_mask_248
+      name: tex stone roof 47_29_mask_248
       rect:
         serializedVersion: 2
         x: 160
@@ -766,14 +753,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73cb8da757c3037439d3937b3e28784d
-      internalID: -9671086
+      spriteID: 6801a10b7ca467f46a80c32322f5802b
+      internalID: -965705323
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_30_mask_250
+      name: tex stone roof 47_30_mask_250
       rect:
         serializedVersion: 2
         x: 192
@@ -788,14 +775,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9eba18e2c08bd5c41a80a67acba7bec6
-      internalID: 1204863720
+      spriteID: 340f97c7a98622244b5842ec9818d992
+      internalID: 1785440128
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_31_mask_251
+      name: tex stone roof 47_31_mask_251
       rect:
         serializedVersion: 2
         x: 224
@@ -810,14 +797,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c105b5e783394564caeae4289a2c4738
-      internalID: 704215393
+      spriteID: 1111c086008563d43984aaffe6bc88c2
+      internalID: -479506996
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_32_mask_254
+      name: tex stone roof 47_32_mask_254
       rect:
         serializedVersion: 2
         x: 0
@@ -832,14 +819,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c431a229b30161a449c2675c0cb2c54e
-      internalID: -247284061
+      spriteID: aaec98a4bdf20c942912508c4bdd2fca
+      internalID: 953390335
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_33_mask_255
+      name: tex stone roof 47_33_mask_255
       rect:
         serializedVersion: 2
         x: 32
@@ -854,14 +841,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3a9081c330d3253498915cb7e6a26cab
-      internalID: 273744311
+      spriteID: 51b129ad83c92164081adb407ca45884
+      internalID: 1309829590
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_34_mask_432
+      name: tex stone roof 47_34_mask_432
       rect:
         serializedVersion: 2
         x: 64
@@ -876,14 +863,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d77b376a8247444ba1c141b82413212
-      internalID: -299059417
+      spriteID: dadcd876c5ef9194291ee5cb3aac49ed
+      internalID: -1178554364
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_35_mask_434
+      name: tex stone roof 47_35_mask_434
       rect:
         serializedVersion: 2
         x: 96
@@ -898,14 +885,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a6f508cc1e070944588233cdb33d06e0
-      internalID: -986160639
+      spriteID: 478d5c41c70068f4d8d64a9ec3c79a11
+      internalID: 113090829
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_36_mask_438
+      name: tex stone roof 47_36_mask_438
       rect:
         serializedVersion: 2
         x: 128
@@ -920,14 +907,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: acf7e13b12c610a40896e412a7d3de2e
-      internalID: 910673825
+      spriteID: ff88629802bed70478b46e05a849bef5
+      internalID: 675034618
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_37_mask_440
+      name: tex stone roof 47_37_mask_440
       rect:
         serializedVersion: 2
         x: 160
@@ -942,14 +929,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6228601039e0c5641ba71765cfcffc47
-      internalID: 1129925300
+      spriteID: c1e78b5a4ef72614788988d8c29d77c6
+      internalID: 1740866831
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_38_mask_442
+      name: tex stone roof 47_38_mask_442
       rect:
         serializedVersion: 2
         x: 192
@@ -964,14 +951,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6335524c6cb31bb4ebaa300d887210b2
-      internalID: -668148250
+      spriteID: 58c936deaeea7754b9ca6a4f4211d50c
+      internalID: -1174940416
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_39_mask_443
+      name: tex stone roof 47_39_mask_443
       rect:
         serializedVersion: 2
         x: 224
@@ -986,14 +973,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 883e382e6bd2470429206f3eb0004787
-      internalID: -888238769
+      spriteID: 21f7cfefc17d6524bb9be85b6b8ef9ff
+      internalID: 473290807
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_40_mask_446
+      name: tex stone roof 47_40_mask_446
       rect:
         serializedVersion: 2
         x: 0
@@ -1008,14 +995,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a14d5dfaddbfa7e43a333fc312435b70
-      internalID: 464496577
+      spriteID: 5ad57c8f7b51eb948a237453fcbefc1c
+      internalID: -2029837647
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_41_mask_447
+      name: tex stone roof 47_41_mask_447
       rect:
         serializedVersion: 2
         x: 32
@@ -1030,14 +1017,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f9cc0411751cf18478d5c0ec56d34544
-      internalID: -358462414
+      spriteID: 29a0ecae7a7ebf845b3c0dbdcb1bb33f
+      internalID: 1632581648
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_42_mask_504
+      name: tex stone roof 47_42_mask_504
       rect:
         serializedVersion: 2
         x: 64
@@ -1052,14 +1039,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 966216bb44e0c90418567f2e77c1fb5d
-      internalID: 1054779867
+      spriteID: 3adf25628d1ad534aacce9cf5bc27881
+      internalID: -1447511472
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_43_mask_506
+      name: tex stone roof 47_43_mask_506
       rect:
         serializedVersion: 2
         x: 96
@@ -1074,14 +1061,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a227328d6f41b404681e01c7f1c02860
-      internalID: -1113926587
+      spriteID: a9fc52963019e3d4f9c76a6ef2ea5e22
+      internalID: -122097739
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_44_mask_507
+      name: tex stone roof 47_44_mask_507
       rect:
         serializedVersion: 2
         x: 128
@@ -1096,14 +1083,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e3f8677bff94d5e4dad7fe48a6072921
-      internalID: -1545064094
+      spriteID: 436d261722adb4f488c6667b6d8b8da4
+      internalID: -55244968
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_45_mask_510
+      name: tex stone roof 47_45_mask_510
       rect:
         serializedVersion: 2
         x: 160
@@ -1118,14 +1105,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d8eb24ec873d3244a695536cfdf060c
-      internalID: -1248474769
+      spriteID: df31294783fba9249b53eb44ecb211cb
+      internalID: 1110008842
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone Wall Minimal Tileset 47_46_mask_511
+      name: tex stone roof 47_46_mask_511
       rect:
         serializedVersion: 2
         x: 192
@@ -1140,8 +1127,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fa0564b938c0a4944b8b36bba983ae9b
-      internalID: -530083234
+      spriteID: 2867d3e5b7da1764c8136468cbf08d2c
+      internalID: 817518289
       vertices: []
       indices: 
       edges: []
@@ -1150,7 +1137,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 76629d5296233d44ca2d775e9a024539
+    spriteID: 369bb96f6f484aa4abbb1458672f0e66
     internalID: 0
     vertices: []
     indices: 
@@ -1160,53 +1147,53 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stone Wall Minimal Tileset 47_00_mask_016: -397548180
-      Stone Wall Minimal Tileset 47_01_mask_018: 672805034
-      Stone Wall Minimal Tileset 47_02_mask_024: 1704440342
-      Stone Wall Minimal Tileset 47_03_mask_026: 1400887532
-      Stone Wall Minimal Tileset 47_04_mask_027: -194516950
-      Stone Wall Minimal Tileset 47_05_mask_048: -1081684298
-      Stone Wall Minimal Tileset 47_06_mask_050: -1780914685
-      Stone Wall Minimal Tileset 47_07_mask_054: 447294083
-      Stone Wall Minimal Tileset 47_08_mask_056: -1200132871
-      Stone Wall Minimal Tileset 47_09_mask_058: -1898521109
-      Stone Wall Minimal Tileset 47_10_mask_059: -469960902
-      Stone Wall Minimal Tileset 47_11_mask_062: -1629555958
-      Stone Wall Minimal Tileset 47_12_mask_063: -2136214023
-      Stone Wall Minimal Tileset 47_13_mask_144: -1615333413
-      Stone Wall Minimal Tileset 47_14_mask_146: 254310314
-      Stone Wall Minimal Tileset 47_15_mask_152: 22386545
-      Stone Wall Minimal Tileset 47_16_mask_154: -665264491
-      Stone Wall Minimal Tileset 47_17_mask_155: 1665126741
-      Stone Wall Minimal Tileset 47_18_mask_176: 1133709043
-      Stone Wall Minimal Tileset 47_19_mask_178: -430462643
-      Stone Wall Minimal Tileset 47_20_mask_182: -1414596184
-      Stone Wall Minimal Tileset 47_21_mask_184: 1124541768
-      Stone Wall Minimal Tileset 47_22_mask_186: -1080559480
-      Stone Wall Minimal Tileset 47_23_mask_187: -149635084
-      Stone Wall Minimal Tileset 47_24_mask_190: 1545457807
-      Stone Wall Minimal Tileset 47_25_mask_191: -80299090
-      Stone Wall Minimal Tileset 47_26_mask_216: 1323000223
-      Stone Wall Minimal Tileset 47_27_mask_218: -2046865941
-      Stone Wall Minimal Tileset 47_28_mask_219: 1302226071
-      Stone Wall Minimal Tileset 47_29_mask_248: -9671086
-      Stone Wall Minimal Tileset 47_30_mask_250: 1204863720
-      Stone Wall Minimal Tileset 47_31_mask_251: 704215393
-      Stone Wall Minimal Tileset 47_32_mask_254: -247284061
-      Stone Wall Minimal Tileset 47_33_mask_255: 273744311
-      Stone Wall Minimal Tileset 47_34_mask_432: -299059417
-      Stone Wall Minimal Tileset 47_35_mask_434: -986160639
-      Stone Wall Minimal Tileset 47_36_mask_438: 910673825
-      Stone Wall Minimal Tileset 47_37_mask_440: 1129925300
-      Stone Wall Minimal Tileset 47_38_mask_442: -668148250
-      Stone Wall Minimal Tileset 47_39_mask_443: -888238769
-      Stone Wall Minimal Tileset 47_40_mask_446: 464496577
-      Stone Wall Minimal Tileset 47_41_mask_447: -358462414
-      Stone Wall Minimal Tileset 47_42_mask_504: 1054779867
-      Stone Wall Minimal Tileset 47_43_mask_506: -1113926587
-      Stone Wall Minimal Tileset 47_44_mask_507: -1545064094
-      Stone Wall Minimal Tileset 47_45_mask_510: -1248474769
-      Stone Wall Minimal Tileset 47_46_mask_511: -530083234
+      tex stone roof 47_00_mask_016: 1604217437
+      tex stone roof 47_01_mask_018: 463717721
+      tex stone roof 47_02_mask_024: -1677377160
+      tex stone roof 47_03_mask_026: -147588135
+      tex stone roof 47_04_mask_027: -416476110
+      tex stone roof 47_05_mask_048: 113601909
+      tex stone roof 47_06_mask_050: 1518125748
+      tex stone roof 47_07_mask_054: 2098691779
+      tex stone roof 47_08_mask_056: -1926037995
+      tex stone roof 47_09_mask_058: 1434235753
+      tex stone roof 47_10_mask_059: 1186103668
+      tex stone roof 47_11_mask_062: -1488924611
+      tex stone roof 47_12_mask_063: -204366596
+      tex stone roof 47_13_mask_144: 746515052
+      tex stone roof 47_14_mask_146: 694511635
+      tex stone roof 47_15_mask_152: 1377336228
+      tex stone roof 47_16_mask_154: -1154357904
+      tex stone roof 47_17_mask_155: -1482310193
+      tex stone roof 47_18_mask_176: 685930575
+      tex stone roof 47_19_mask_178: -778138149
+      tex stone roof 47_20_mask_182: -1704454350
+      tex stone roof 47_21_mask_184: -629158422
+      tex stone roof 47_22_mask_186: -1579638613
+      tex stone roof 47_23_mask_187: -1979969301
+      tex stone roof 47_24_mask_190: -310566096
+      tex stone roof 47_25_mask_191: -207934279
+      tex stone roof 47_26_mask_216: -1517690296
+      tex stone roof 47_27_mask_218: 988712325
+      tex stone roof 47_28_mask_219: -1822656931
+      tex stone roof 47_29_mask_248: -965705323
+      tex stone roof 47_30_mask_250: 1785440128
+      tex stone roof 47_31_mask_251: -479506996
+      tex stone roof 47_32_mask_254: 953390335
+      tex stone roof 47_33_mask_255: 1309829590
+      tex stone roof 47_34_mask_432: -1178554364
+      tex stone roof 47_35_mask_434: 113090829
+      tex stone roof 47_36_mask_438: 675034618
+      tex stone roof 47_37_mask_440: 1740866831
+      tex stone roof 47_38_mask_442: -1174940416
+      tex stone roof 47_39_mask_443: 473290807
+      tex stone roof 47_40_mask_446: -2029837647
+      tex stone roof 47_41_mask_447: 1632581648
+      tex stone roof 47_42_mask_504: -1447511472
+      tex stone roof 47_43_mask_506: -122097739
+      tex stone roof 47_44_mask_507: -55244968
+      tex stone roof 47_45_mask_510: 1110008842
+      tex stone roof 47_46_mask_511: 817518289
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

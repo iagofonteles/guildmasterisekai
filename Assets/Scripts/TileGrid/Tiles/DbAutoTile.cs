@@ -15,11 +15,24 @@ namespace GuildMasterIsekai.TileGrid
         public uint Id => id;
         public BaseTileSo Item => item;
         public AutoTileType Type => type;
+        TileBase ITileEntry.Tile => this;
+
+        public int Cost => type switch
+        {
+            AutoTileType.Floor => 1,
+            AutoTileType.Wall => 1,
+            _ => 0
+        };
 
         public void __setup(BaseTileSo i, AutoTileType t)
         {
             item = i;
             type = t;
+        }
+
+        protected override bool IsMatch(TileBase other)
+        {
+            return other is DbAutoTile a && a.type == type;
         }
 
         [ContextMenu("Reroll Id")]
