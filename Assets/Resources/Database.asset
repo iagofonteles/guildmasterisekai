@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.System.Database
   items:
   - {fileID: 0}
-  - {fileID: 11400000, guid: e7185ce0e40581f418babb8e6fe9c9c3, type: 2}
-  - {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
+  - {fileID: 11400000, guid: d5876faa5509e7248a9f8d2b1290f7ca, type: 2}
+  - {fileID: 11400000, guid: 4949b18dbd5f4a34291daa7d17a5da57, type: 2}
+  - {fileID: 11400000, guid: c773c259709e2bf458a19a87abd386b4, type: 2}
+  - {fileID: 11400000, guid: 61acc7612b198384380762d2dcfe6209, type: 2}
+  - {fileID: 11400000, guid: 1a7ec6e38507b4e4f80a1fbfd023b321, type: 2}
   - {fileID: 11400000, guid: 8e3e6c5f6e3fd1e46821b4750d33c6ff, type: 2}
   - {fileID: 11400000, guid: 806d0044f2d58914bb8cf583274d078d, type: 2}
   - {fileID: 11400000, guid: 2164f8be5679160418fafd87c9d4b615, type: 2}

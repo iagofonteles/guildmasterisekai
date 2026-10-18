@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
-  m_Name: so stone tile roof
+  m_Name: tile stone roof
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
   m_DefaultSprite: {fileID: 1604217437, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -214,5 +214,5 @@ MonoBehaviour:
   m_TextureScaleList:
   - 1
   id: 0
-  item: {fileID: 11400000, guid: e7185ce0e40581f418babb8e6fe9c9c3, type: 2}
+  item: {fileID: 11400000, guid: c773c259709e2bf458a19a87abd386b4, type: 2}
   type: 4

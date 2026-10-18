@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
-  m_Name: so stone tile wall
+  m_Name: tile stone wall
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
   m_DefaultSprite: {fileID: -2118842861, guid: ec28a6c5c4d9cf64aac6ee55994679c1, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -42,5 +42,5 @@ MonoBehaviour:
   m_TextureScaleList:
   - 1.78
   id: 0
-  item: {fileID: 11400000, guid: e7185ce0e40581f418babb8e6fe9c9c3, type: 2}
+  item: {fileID: 11400000, guid: c773c259709e2bf458a19a87abd386b4, type: 2}
   type: 3

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
-  m_Name: so stone tile floor
+  m_Name: tile grass floor
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
-  m_DefaultSprite: {fileID: 817518289, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
+  m_DefaultSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_DefaultGameObject: {fileID: 0}
-  m_DefaultColliderType: 2
+  m_DefaultColliderType: 1
   m_MaskType: 0
   m_Random: 0
   m_PhysicsShapeCheck: 0
@@ -24,5 +24,5 @@ MonoBehaviour:
   m_TextureList: []
   m_TextureScaleList: []
   id: 0
-  item: {fileID: 11400000, guid: e7185ce0e40581f418babb8e6fe9c9c3, type: 2}
+  item: {fileID: 11400000, guid: d5876faa5509e7248a9f8d2b1290f7ca, type: 2}
   type: 2

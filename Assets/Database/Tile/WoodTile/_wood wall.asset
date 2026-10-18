@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b152cb8e006949b3af72e716a8db7200, type: 3}
   m_Name: _wood wall
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.WallTileSo
-  id: 0
+  id: 3352792993
   displayName:
     m_TableReference:
       m_TableCollectionName: 
