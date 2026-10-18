@@ -23,7 +23,8 @@
     flex-direction: row;
     flex-shrink: 0;
 }
-.build-toolbar Button {
+.build-toolbar Button,
+.build-toolbar .tile-choice {
     flex-grow: 1;
     flex-basis: 0;
     min-width: 0;
@@ -37,12 +38,15 @@
     border-radius: 3px;
     -unity-text-align: middle-center;
 }
-.build-toolbar Button:hover { background-color: rgb(49, 65, 92); }
-.build-toolbar Button.selected {
+.build-toolbar Button:hover,
+.build-toolbar .tile-choice:hover { background-color: rgb(49, 65, 92); }
+.build-toolbar Button.selected,
+.build-toolbar .tile-choice.selected {
     background-color: rgb(49, 75, 133);
     border-color: rgb(135, 175, 255);
 }
-.build-toolbar Button:disabled { opacity: 0.4; }
+.build-toolbar Button:disabled,
+.build-toolbar .tile-choice:disabled { opacity: 0.4; }
 .build-toolbar .tile-list {
     flex-grow: 1;
     min-height: 60px;

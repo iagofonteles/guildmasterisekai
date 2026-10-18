@@ -8,6 +8,7 @@ namespace GuildMasterIsekai.TileGrid
 {
     public sealed class GridRenderer : MonoBehaviour
     {
+        [SerializeField] private GridBuilder builder;
         [SerializeField] private Tilemap source;
         private GridData _grid;
         private Tilemap _baseMap;
@@ -23,7 +24,7 @@ namespace GuildMasterIsekai.TileGrid
             public GameObject Instance;
         }
 
-        public void SetGrid(GridData grid)
+        private void SetGrid(GridData grid)
         {
             if (_baseMap) Destroy(_baseMap.gameObject);
             if (_furnitureMap) Destroy(_furnitureMap.gameObject);
@@ -41,10 +42,11 @@ namespace GuildMasterIsekai.TileGrid
 
         private void Update()
         {
-            if (_grid == null) return;
-            if (_grid.Modified.Count == 0) return;
+            if (builder.Grid == null) return;
+            if (builder.Grid.Modified.Count == 0) return;
+            if (_grid == null) SetGrid(builder.Grid);
 
-            foreach (var cell in _grid.Modified)
+            foreach (var cell in _grid!.Modified)
             {
                 var p = cell.Key;
                 var at = new Vector3Int(p.x + _grid.Bounds.x, p.y + _grid.Bounds.y, _grid.Bounds.z);
@@ -99,7 +101,7 @@ namespace GuildMasterIsekai.TileGrid
         private void RenderToppings(GridCell cell)
         {
             _toppings.TryGetValue(cell.Key, out var rendered);
-            
+
             var count = cell.Furniture ? cell.slots.Count : 0;
             if (rendered == null && count == 0) return;
             if (rendered == null) rendered = Array.Empty<RenderedTopping>();
@@ -145,7 +147,7 @@ namespace GuildMasterIsekai.TileGrid
 
         private static void DisposeObject(UnityEngine.Object obj)
         {
-            if(Application.isPlaying) Destroy(obj);
+            if (Application.isPlaying) Destroy(obj);
             else DestroyImmediate(obj);
         }
     }

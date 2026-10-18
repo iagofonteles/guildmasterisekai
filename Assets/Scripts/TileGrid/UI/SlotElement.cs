@@ -86,7 +86,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             var item = value as DatabaseEntrySo;
             var icon = item ? item.Icon : null;
-            EnableInClassList("selected", item && ReferenceEquals(item, _selectedItem));
+            EnableInClassList("selected", item && item == _selectedItem as DatabaseEntrySo);
             tooltip = item ? item.name : string.Empty;
             _image.sprite = icon;
             _image.EnableInClassList("hidden", !icon);

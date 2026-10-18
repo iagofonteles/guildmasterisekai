@@ -84,6 +84,7 @@ namespace GuildMasterIsekai.TileGrid
             document.visualTreeAsset.CloneTree(_root);
             _root.AddToClassList("build-document");
             _root.pickingMode = PickingMode.Ignore;
+            foreach (var child in _root.Children()) child.pickingMode = PickingMode.Ignore;
             _tiles = _root.Q<ScrollView>("tiles");
             if (_tiles == null) return;
             _undo = _root.Q<Button>("undo");
@@ -94,8 +95,6 @@ namespace GuildMasterIsekai.TileGrid
             _undo.clicked += input.Undo;
             _redo.clicked += input.Redo;
             var toolbar = _root.Q("toolbar");
-            toolbar.RegisterCallback<PointerDownEvent>(evt => evt.StopPropagation());
-            toolbar.RegisterCallback<PointerUpEvent>(evt => evt.StopPropagation());
             toolbar.RegisterCallback<WheelEvent>(evt => evt.StopPropagation());
             input.SelectionChanged += Refresh;
             input.StatusChanged += RefreshStatus;
@@ -136,10 +135,15 @@ namespace GuildMasterIsekai.TileGrid
                 var root = candidate.rootVisualElement;
                 var panel = root?.panel;
                 if (panel == null) continue;
-                if (panel.GetCapturingElement(PointerId.mousePointerId) != null) return true;
+                // Documents may share a panel; only count hits inside this document's controls.
+                var controls = candidate == document ? root.Q("toolbar") : root;
+                if (controls == null) continue;
+                var captured = panel.GetCapturingElement(PointerId.mousePointerId) as VisualElement;
+                if (captured != null && (captured == controls || controls.Contains(captured))) return true;
                 var position = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screen.x, Screen.height - screen.y));
                 var picked = panel.Pick(position);
-                if (picked != null && picked != panel.visualTree) return true;
+                if (picked != null && (picked == controls || controls.Contains(picked)) &&
+                    (candidate == document || picked != root)) return true;
             }
 
             return false;

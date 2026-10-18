@@ -15,19 +15,20 @@ namespace GuildMasterIsekai.TileGrid
         public GridBuilder Builder { get; set; }
         public Sprite Icon => icon;
 
-        public void CancelGesture() { }
+        public void CancelGesture() => _cancel = true;
 
         public void OnMouseDown(Vector2Int pos, MouseButton button)
         {
             _cancel = false;
-            _first = pos;
+            _first = _last = pos;
         }
 
-        public void OnMouseDrag(Vector2Int pos, MouseButton button) { }
+        public void OnMouseDrag(Vector2Int pos, MouseButton button) => _last = pos;
 
         public void OnMouseUp(Vector2Int pos, MouseButton button)
         {
             if (_cancel) return;
+            _last = pos;
 
             var min = Vector2Int.Min(_first, _last);
             var max = Vector2Int.Max(_first, _last);
