@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
 {
-    [CreateAssetMenu(menuName = "Tiles/BaseTile")]
+    [CreateAssetMenu(menuName = "Tiles/FloorTile")]
     public class FloorTileSo : BaseTileSo
     {
         [SerializeField, SO] private DbAutoTile floor;
