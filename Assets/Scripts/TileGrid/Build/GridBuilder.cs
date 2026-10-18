@@ -259,8 +259,8 @@ namespace GuildMasterIsekai.TileGrid
 
         private static void SetChangedTile(Tilemap map, Vector3Int at, ITileEntry tile, HashSet<Vector3Int> refresh)
         {
-            if (map.GetTile(at) == tile.Tile) return;
-            map.SetTile(at, tile.Tile);
+            if (map.GetTile(at) == tile?.Tile) return;
+            map.SetTile(at, tile?.Tile);
             for (var y = -1; y <= 1; y++)
             for (var x = -1; x <= 1; x++)
                 refresh.Add(at + new Vector3Int(x, y, 0));

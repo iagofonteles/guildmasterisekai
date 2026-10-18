@@ -26,6 +26,12 @@ namespace GuildMasterIsekai.TileGrid
             if (tile is WallTileSo w)
                 PopulateWall(cmd, e, w);
 
+            if (cmd.after.Count == 0)
+            {
+                error = "no change";
+                return null;
+            }
+
             if (!e.bag.CanPay(cmd.cost))
             {
                 error = "not enough items";
@@ -43,12 +49,13 @@ namespace GuildMasterIsekai.TileGrid
 
             foreach (var p in e.area.allPositionsWithin)
             {
-                //TODO brush area should be trimmed before used
-                //if (!grid.Contains(p)) continue;
+                if (!e.grid.Contains(p)) continue;
 
                 var cell = e.grid[p.x, p.y];
                 if (cell.Floor == tile) continue;
                 if (cell.Floor && cell.Floor is not FloorTileSo) continue;
+                if (cell.BaseTile != null && cell.BaseTile is not DbAutoTile { Type: AutoTileType.Floor })
+                    continue;
 
                 var after = (GridCell)cell.Clone();
                 after.BaseTile = tile.Floor;
@@ -62,33 +69,53 @@ namespace GuildMasterIsekai.TileGrid
             cmd.cost.AddItem(e.builder.Material, cost);
         }
 
-        // wall can override floor, other wall or null 
+        // Wall ownership is separate from the visible wall/roof variant.
         private static void PopulateWall(CellCommand cmd, OperationArgs e, WallTileSo tile)
         {
-            var cost = 0;
-
+            var anchors = new HashSet<Vector2Int>();
+            var changes = new Dictionary<Vector2Int, GridCell>();
             foreach (var p in e.area.allPositionsWithin)
             {
-                var p1 = p + Vector2Int.up;
-                var p2 = p + Vector2Int.down;
-                if (!e.grid.Contains(p1)) continue; // no space for the roof
-                
+                if (!e.grid.Contains(p) || !e.grid.Contains(p + Vector2Int.up)) continue;
                 var cell = e.grid[p.x, p.y];
-             
-                //TODO
-                // wall need a roof direct above (y+)
-                // if p1.cell.Floor is null or wall, p1.cell.BaseTile become wall
-                // if p1.cell.Floor is floor, p1.cell.Floor become null and refund 1
-                // if p2.cell.Floor is wall, p.cell.BaseTile become wall
-                // if p cell.Floor is floor or wall, costs nothing
-                // if p cell.Floor is null, costs 1
-                // placement: r- roof, w-wall, x-null or floor
-                // RX
-                // RR
-                // WW
-                // XX
+                if (cell.Floor && cell.Floor is not FloorTileSo && cell.Floor is not WallTileSo) continue;
+                anchors.Add(p);
+                var after = (GridCell)cell.Clone();
+                after.Floor = tile;
+                changes[p] = after;
             }
 
+            foreach (var p in anchors)
+            {
+                var below = p + Vector2Int.down;
+                var hasWallBelow = anchors.Contains(below) ||
+                    e.grid.Contains(below) && e.grid[below.x, below.y].Floor is WallTileSo;
+                changes[p].BaseTile = hasWallBelow ? tile.Roof : tile.Wall;
+            }
+
+            foreach (var p in anchors)
+            {
+                var above = p + Vector2Int.up;
+                if (!changes.TryGetValue(above, out var roof))
+                {
+                    roof = (GridCell)e.grid[above.x, above.y].Clone();
+                    changes.Add(above, roof);
+                }
+                if (roof.Floor is FloorTileSo) roof.Floor = null;
+                roof.BaseTile = roof.Floor is WallTileSo owner ? owner.Roof : tile.Roof;
+            }
+
+            var cost = 0;
+            foreach (var pair in changes)
+            {
+                var cell = e.grid[pair.Key.x, pair.Key.y];
+                var after = pair.Value;
+                if (cell.Floor == after.Floor && cell.BaseTile == after.BaseTile) continue;
+                cmd.before.Add(cell.Clone());
+                cmd.after.Add(after);
+                if (!cell.Floor && after.Floor) cost++;
+                else if (cell.Floor && !after.Floor) cost--;
+            }
             cmd.cost.AddItem(e.builder.Material, cost);
         }
     }
