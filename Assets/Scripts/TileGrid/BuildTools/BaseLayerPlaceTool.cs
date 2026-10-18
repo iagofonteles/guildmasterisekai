@@ -5,9 +5,8 @@ namespace GuildMasterIsekai.TileGrid
 {
     public sealed class BaseLayerPlaceTool : IBuildTool
     {
-        public bool RequiresItem => true;
-        public IEnumerable<object> GetCompatibleItems(IBuildBag bag) => bag.GetUnlockedTiles();
-
+        public GridBuilder Builder { get; set; }
+        
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {
             e.Validate();
@@ -19,12 +18,8 @@ namespace GuildMasterIsekai.TileGrid
             }
 
             var cmd = new CellCommand(e.builder);
-
-            if (tile is FloorTileSo f)
-                PopulateFloor(cmd, e, f);
-
-            if (tile is WallTileSo w)
-                PopulateWall(cmd, e, w);
+            if (tile is FloorTileSo f) PopulateFloor(cmd, e, f);
+            if (tile is WallTileSo w) PopulateWall(cmd, e, w);
 
             if (cmd.after.Count == 0)
             {

@@ -1,3 +1,0 @@
-create UIDocument needed to test the building tools
-update Guild Hall Montagem.scene with needed components to be playable
-put all outputfiles in TileGrid/UI folder

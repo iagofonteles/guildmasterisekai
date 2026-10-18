@@ -767,6 +767,100 @@ Sprite:
   m_Bones: []
   m_ScriptableObjects: []
   m_SpriteID: 
+--- !u!1 &1119795983
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1119795987}
+  - component: {fileID: 1119795986}
+  - component: {fileID: 1119795985}
+  - component: {fileID: 1119795984}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1119795984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119795983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a57a47838022de4498894f5e62b72301, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 600872eb24aa4093802cc1104ef8166e, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &1119795985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119795983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032471f5682e4685acab56b52bfd82ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilderUI
+  input: {fileID: 1119795986}
+  document: {fileID: 1119795984}
+  panelSettings: {fileID: 11400000, guid: a57a47838022de4498894f5e62b72301, type: 2}
+--- !u!114 &1119795986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119795983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db2e7d258a129d543a6d351d69bd95c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilderInput
+  tilemap: {fileID: 1204020680}
+  builder: {fileID: 1886873622}
+  viewCamera: {fileID: 464989009}
+  userInterface: {fileID: 1119795985}
+  layer: 0
+  action: 0
+  brush: 0
+  baseTile: {fileID: 0}
+  furnitureTile: {fileID: 0}
+  toppingTile: {fileID: 0}
+--- !u!4 &1119795987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119795983}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.04068, y: 8.61414, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1204020677
 GameObject:
   m_ObjectHideFlags: 0
@@ -6329,10 +6423,9 @@ GameObject:
   - component: {fileID: 1886873620}
   - component: {fileID: 1886873619}
   - component: {fileID: 1886873622}
+  - component: {fileID: 1886873627}
   - component: {fileID: 1886873621}
-  - component: {fileID: 1886873623}
-  - component: {fileID: 1886873625}
-  - component: {fileID: 1886873624}
+  - component: {fileID: 1886873626}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -6395,10 +6488,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilder
   initialTilemap: {fileID: 1204020680}
-  buildBag: {fileID: 1886873621}
+  buildBag: {fileID: 1886873626}
   material: {fileID: 11400000, guid: 5acde736144ab68448fc825aae55e5f0, type: 2}
   historyLimit: 64
---- !u!114 &1886873623
+  filePath: 
+--- !u!114 &1886873626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6407,19 +6501,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1886873618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db2e7d258a129d543a6d351d69bd95c9, type: 3}
+  m_Script: {fileID: 11500000, guid: 798379671a8f504468bc70bb17f54a88, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilderInput
-  builder: {fileID: 1886873622}
-  viewCamera: {fileID: 464989009}
-  userInterface: {fileID: 1886873625}
-  layer: 0
-  action: 0
-  brush: 0
-  baseTile: {fileID: 0}
-  furnitureTile: {fileID: 0}
-  toppingTile: {fileID: 0}
---- !u!114 &1886873624
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.InventoryBuildBag
+  buildingMaterial: {fileID: 11400000, guid: 5acde736144ab68448fc825aae55e5f0, type: 2}
+  inventory:
+    slots:
+    - item: {fileID: 11400000, guid: 5acde736144ab68448fc825aae55e5f0, type: 2}
+      amount: 100
+      favorite: 0
+    - item: {fileID: 11400000, guid: 4949b18dbd5f4a34291daa7d17a5da57, type: 2}
+      amount: 1
+      favorite: 0
+    - item: {fileID: 11400000, guid: c773c259709e2bf458a19a87abd386b4, type: 2}
+      amount: 1
+      favorite: 0
+    - item: {fileID: 11400000, guid: 61acc7612b198384380762d2dcfe6209, type: 2}
+      amount: 1
+      favorite: 0
+    - item: {fileID: 11400000, guid: 1a7ec6e38507b4e4f80a1fbfd023b321, type: 2}
+      amount: 1
+      favorite: 0
+--- !u!114 &1886873627
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6428,38 +6531,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1886873618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Script: {fileID: 11500000, guid: 557e17bb86804c9b84fe661475fd8c16, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 0}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 600872eb24aa4093802cc1104ef8166e, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &1886873625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1886873618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 032471f5682e4685acab56b52bfd82ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilderUI
-  input: {fileID: 1886873623}
-  document: {fileID: 1886873624}
-  panelSettings: {fileID: 0}
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridRenderer
+  source: {fileID: 1204020680}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 464989010}
   - {fileID: 1886873620}
+  - {fileID: 1119795987}

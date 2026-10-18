@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace GuildMasterIsekai.TileGrid
 {

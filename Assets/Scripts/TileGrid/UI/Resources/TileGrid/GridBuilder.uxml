@@ -9,9 +9,8 @@
       </ui:VisualElement>
       <ui:ScrollView name="tiles" class="tile-list" mode="Vertical" />
       <ui:VisualElement name="tools" class="row tool-tabs">
-        <ui:Button name="place" text="Place" tooltip="Place selected tile" />
-        <ui:Button name="paint" text="Paint" tooltip="Paint selected tile" />
-        <ui:Button name="remove" text="Remove" tooltip="Remove tiles" />
+        <ui:Button name="place" text="Place" tooltip="Left-click: place. Right-click: remove." />
+        <ui:Button name="paint" text="Paint" tooltip="Left-click: paint. Right-click: pick material." />
         <ui:Button name="undo" text="Undo" tooltip="Undo last command" enabled="false" />
         <ui:Button name="redo" text="Redo" tooltip="Redo undone command" enabled="false" />
       </ui:VisualElement>

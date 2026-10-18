@@ -76,7 +76,7 @@
 .build-toolbar .unity-base-slider__dragger { background-color: rgb(110, 135, 166); min-width: 8px; min-height: 8px; }
 
 .build-toolbar .tool-tabs {
-    width: 400px;
+    width: 320px;
     height: 40px;
     min-height: 40px;
 }

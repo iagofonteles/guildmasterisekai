@@ -20,32 +20,17 @@ namespace GuildMasterIsekai.TileGrid
         public int Height => _cells.GetLength(1);
         public IGridCell this[int x, int y] => _cells[x, y];
 
-        public GridData(Tilemap source)
+        public GridData(Tilemap defaultMap, Tilemap baseMap = null, Tilemap furniture = null)
         {
-            if (!source) throw new ArgumentNullException(nameof(source));
-            var b = Bounds = source.cellBounds;
-            Indexes = new(0, 0, b.size.x, b.size.y);
-            TileSize = source.cellSize;
-            _cells = new GridCell[b.size.x, b.size.y];
-
-            foreach (var p in b.allPositionsWithin)
-            {
-                var tile = (ITileEntry)source.GetTile(p);
-                var key = new Vector2Int(p.x - b.x, p.y - b.y);
-                var cell = new GridCell
-                {
-                    Grid = this,
-                    Key = key,
-                    Position = source.CellToWorld(p),
-                    DefaultTile = tile,
-                    BaseTile = tile
-                };
-                _cells[key.x, key.y] = cell;
-                Modified.Add(cell);
-            }
+            BuildFrom(defaultMap, baseMap, furniture);
         }
 
-        private GridData(GridData src)
+        public GridData(IGridSerializer serializer, string key)
+        {
+            Load(serializer, key);
+        }
+
+        public GridData(GridData src)
         {
             Bounds = src.Bounds;
             Indexes = src.Indexes;
@@ -59,14 +44,11 @@ namespace GuildMasterIsekai.TileGrid
             }
         }
 
-        internal event Action<IGridCell, IGridCell> StateChanging;
-
         public bool Contains(Vector2Int position) => Indexes.Contains(position);
 
         internal void ApplyState(IGridCell state)
         {
             var cell = _cells[state.Key.x, state.Key.y];
-            StateChanging?.Invoke(cell, state);
             cell.CopyState(state);
             Modified.Add(cell);
         }

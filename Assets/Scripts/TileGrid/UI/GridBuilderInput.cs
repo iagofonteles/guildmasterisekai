@@ -2,33 +2,28 @@ using System;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Tilemaps;
 
 namespace GuildMasterIsekai.TileGrid
 {
-    public enum GridBuildAction { Place, Paint, Remove, Move }
-    public enum GridBuildBrush { Pixel, Rectangle }
-
-    [DisallowMultipleComponent, RequireComponent(typeof(GridBuilder))]
+    [DisallowMultipleComponent]
     public sealed class GridBuilderInput : MonoBehaviour
     {
+        [SerializeField] private Tilemap tilemap;
         [SerializeField] private GridBuilder builder;
         [SerializeField] private Camera viewCamera;
         [SerializeField] private GridBuilderUI userInterface;
         [SerializeField] private BuildLayer layer;
-        [SerializeField] private GridBuildAction action;
-        [SerializeField] private GridBuildBrush brush;
         [SerializeField] private BaseTileSo baseTile;
         [SerializeField] private FurnitureTileSo furnitureTile;
         [SerializeField] private ToppingTileSo toppingTile;
 
-        private bool _dragging, _uiGesture;
-        private Vector2Int _first, _last;
-        private RectInt? _moveArea;
+        private bool _uiGesture;
+        internal Vector3 PointerWorld { get; private set; }
 
         public GridBuilder Builder => builder;
         public BuildLayer Layer => layer;
-        public GridBuildAction Action => action;
-        public GridBuildBrush Brush => brush;
         public string Status { get; private set; }
         public event Action SelectionChanged;
         public event Action StatusChanged;
@@ -42,9 +37,9 @@ namespace GuildMasterIsekai.TileGrid
 
         private void Awake()
         {
-            if (!builder) builder = GetComponent<GridBuilder>();
-            if (!userInterface) userInterface = GetComponent<GridBuilderUI>();
             if (!viewCamera) viewCamera = Camera.main;
+            _pixelBrush = new BuildPixelBrush(builder, this);
+            _rectBrush = new BuildRectBrush(builder, this);
         }
 
         private void OnDisable() => CancelGesture();
@@ -53,18 +48,18 @@ namespace GuildMasterIsekai.TileGrid
         public void SetLayer(BuildLayer value)
         {
             layer = value;
-            if (!Supports(layer, action)) action = GridBuildAction.Place;
+            if (action == GridBuildAction.Remove || !Supports(layer, action)) action = GridBuildAction.Place;
             SelectionUpdated();
         }
 
         public void SetAction(GridBuildAction value)
         {
             if (!Supports(layer, value)) return;
-            action = value;
+            action = value == GridBuildAction.Remove ? GridBuildAction.Place : value;
             SelectionUpdated();
         }
 
-        public void SetBrush(GridBuildBrush value) { brush = value; SelectionUpdated(); }
+        public void SetBrush(GridBuildBrush value) { CancelGesture(); brush = value; SelectionUpdated(); }
 
         public void SelectTile(DatabaseEntrySo tile)
         {
@@ -93,14 +88,8 @@ namespace GuildMasterIsekai.TileGrid
 
         public void CancelGesture()
         {
-            var hadMoveSelection = _moveArea.HasValue;
-            _dragging = false;
-            _moveArea = null;
-            if (hadMoveSelection)
-            {
-                Status = null;
-                StatusChanged?.Invoke();
-            }
+            _pixelBrush?.CancelGesture();
+            _rectBrush?.CancelGesture();
         }
 
         public void Undo() { CancelGesture(); Complete(builder && builder.IsInitialized && builder.Undo()); }
@@ -118,18 +107,20 @@ namespace GuildMasterIsekai.TileGrid
             var screen = mouse.position.ReadValue();
             ProcessPointer(screen, mouse.leftButton.wasPressedThisFrame, mouse.leftButton.isPressed,
                 mouse.leftButton.wasReleasedThisFrame, mouse.rightButton.wasPressedThisFrame,
-                userInterface && userInterface.BlocksWorldInput(screen, mouse.leftButton.wasPressedThisFrame));
+                userInterface && userInterface.BlocksWorldInput(screen,
+                    mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame),
+                mouse.rightButton.isPressed, mouse.rightButton.wasReleasedThisFrame);
         }
 
         // Kept separate from device polling so gesture/UI isolation can be validated deterministically.
-        internal void ProcessPointer(Vector2 screen, bool pressed, bool held, bool released, bool cancel, bool overUI)
+        internal void ProcessPointer(Vector2 screen, bool pressed, bool held, bool released, bool cancel, bool overUI,
+            bool rightHeld = false, bool rightReleased = false)
         {
-            if (cancel) { CancelGesture(); return; }
-            if (pressed) _uiGesture = overUI;
+            if (pressed || cancel) _uiGesture = overUI;
             if (_uiGesture || overUI)
             {
                 CancelGesture();
-                if (!held) _uiGesture = false;
+                if (!held && !rightHeld) _uiGesture = false;
                 return;
             }
             if (!TryGetPointer(screen, out var cell, out var world))
@@ -137,55 +128,31 @@ namespace GuildMasterIsekai.TileGrid
                 CancelGesture();
                 return;
             }
-            if (pressed)
+            PointerWorld = world;
+            var activeBrush = CurrentBrush;
+            if (activeBrush == null) return;
+            if (pressed) activeBrush.OnMouseDown(cell, MouseButton.Left);
+            if (cancel) activeBrush.OnMouseDown(cell, MouseButton.Right);
+            if (held) activeBrush.OnMouseDrag(cell, MouseButton.Left);
+            if (rightHeld) activeBrush.OnMouseDrag(cell, MouseButton.Right);
+            if (released) activeBrush.OnMouseUp(cell, MouseButton.Left);
+            if (rightReleased) activeBrush.OnMouseUp(cell, MouseButton.Right);
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return;
+            foreach (var key in keyboard.allKeys)
             {
-                _dragging = true;
-                _first = _last = cell;
-                if (UsesPixelStroke()) Apply(GridBuilder.Pixel(cell), cell, world);
+                if (key.wasPressedThisFrame) activeBrush.OnKeyDown(cell, key.keyCode);
+                if (key.wasReleasedThisFrame) activeBrush.OnKeyUp(cell, key.keyCode);
             }
-            if (!_dragging) return;
-            if ((held || released) && UsesPixelStroke() && cell != _last)
-            {
-                _last = cell;
-                Apply(GridBuilder.Pixel(cell), cell, world);
-            }
-            if (!released) return;
-            _dragging = false;
-            if (action == GridBuildAction.Move)
-            {
-                if (brush == GridBuildBrush.Pixel)
-                    Complete(builder.TryMove(GridBuilder.Pixel(_first), cell - _first));
-                else if (_moveArea.HasValue)
-                {
-                    var moved = builder.TryMove(_moveArea.Value, cell - _moveArea.Value.min);
-                    if (moved) _moveArea = null;
-                    Complete(moved);
-                }
-                else
-                {
-                    _moveArea = GridBuilder.Rectangle(_first, cell);
-                    Status = "Source selected. Click the new bottom-left cell. Right-click cancels.";
-                    StatusChanged?.Invoke();
-                }
-            }
-            else if (!UsesPixelStroke()) Apply(GridBuilder.Rectangle(_first, cell), cell, world);
         }
 
-        private bool UsesPixelStroke() => action != GridBuildAction.Move &&
-            (brush == GridBuildBrush.Pixel || layer == BuildLayer.Topping && action == GridBuildAction.Place);
-
-        private void Apply(RectInt area, Vector2Int cell, Vector3 world)
+        internal void SetStatus(string value)
         {
-            bool success;
-            if (action == GridBuildAction.Remove) success = builder.TryRemove(area, layer, world);
-            else if (action == GridBuildAction.Paint) success = builder.TryPaint(area, baseTile);
-            else if (layer == BuildLayer.Base) success = builder.TryPlaceFloor(area, baseTile);
-            else if (layer == BuildLayer.Furniture) success = builder.TryPlaceFurniture(area, furnitureTile);
-            else success = builder.TryPlaceTopping(cell, toppingTile);
-            Complete(success);
+            Status = value;
+            StatusChanged?.Invoke();
         }
 
-        private void Complete(bool success)
+        internal void Complete(bool success)
         {
             Status = success ? null : builder ? builder.LastError ?? "Grid is not ready." : "Assign a GridBuilder.";
             StatusChanged?.Invoke();
@@ -196,7 +163,8 @@ namespace GuildMasterIsekai.TileGrid
             cell = default;
             world = default;
             if (!viewCamera || !builder || !builder.IsInitialized || !viewCamera.pixelRect.Contains(screen)) return false;
-            var map = builder.BaseMap;
+            var map = tilemap;
+            if (!map) return false;
             var origin = map.CellToWorld(builder.Origin);
             var right = map.CellToWorld(builder.Origin + Vector3Int.right) - origin;
             var up = map.CellToWorld(builder.Origin + Vector3Int.up) - origin;

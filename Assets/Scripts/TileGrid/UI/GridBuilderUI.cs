@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace GuildMasterIsekai.TileGrid
 {
-    [DisallowMultipleComponent, RequireComponent(typeof(GridBuilderInput))]
+    [DisallowMultipleComponent]
     public sealed class GridBuilderUI : MonoBehaviour
     {
         [SerializeField] private GridBuilderInput input;
@@ -90,7 +90,6 @@ namespace GuildMasterIsekai.TileGrid
             _root.Q<Button>("toppingLayer").clicked += () => input.SetLayer(BuildLayer.Topping);
             _root.Q<Button>("place").clicked += () => input.SetAction(GridBuildAction.Place);
             _root.Q<Button>("paint").clicked += () => input.SetAction(GridBuildAction.Paint);
-            _root.Q<Button>("remove").clicked += () => input.SetAction(GridBuildAction.Remove);
             _root.Q<Button>("move").clicked += () => input.SetAction(GridBuildAction.Move);
             _root.Q<Button>("pixel").clicked += () => input.SetBrush(GridBuildBrush.Pixel);
             _root.Q<Button>("rectangle").clicked += () => input.SetBrush(GridBuildBrush.Rectangle);
@@ -149,7 +148,6 @@ namespace GuildMasterIsekai.TileGrid
             Selected("toppingLayer", input.Layer == BuildLayer.Topping);
             Selected("place", input.Action == GridBuildAction.Place);
             Selected("paint", input.Action == GridBuildAction.Paint);
-            Selected("remove", input.Action == GridBuildAction.Remove);
             Selected("move", input.Action == GridBuildAction.Move);
             Selected("pixel", input.Brush == GridBuildBrush.Pixel);
             Selected("rectangle", input.Brush == GridBuildBrush.Rectangle);
@@ -165,15 +163,17 @@ namespace GuildMasterIsekai.TileGrid
             }
             if (_tiles.contentContainer.childCount == 0) _tiles.Add(new Label("No available tiles on this layer."));
             _selection.text = input.SelectedTile ? input.SelectedTile.name : "Select a tile below.";
-            _help.text = input.Action == GridBuildAction.Move
+            _help.text = input.Action == GridBuildAction.Paint
+                ? "Left-click paints. Right-click picks the tile material."
+                : input.Action == GridBuildAction.Move
                 ? input.Brush == GridBuildBrush.Pixel
                     ? "Drag furniture to its destination. Right-click cancels."
                     : "Drag a source rectangle, then click its new bottom-left cell. Right-click cancels."
                 : input.Layer == BuildLayer.Topping && input.Action == GridBuildAction.Place
                     ? "Click or drag over furniture to fill its first free topping slot."
                     : input.Brush == GridBuildBrush.Rectangle
-                        ? "Drag a rectangle; release to apply once. Right-click cancels."
-                        : "Click or hold and drag to edit cells. Right-click cancels.";
+                        ? "Left-drag places a rectangle. Right-drag removes a rectangle."
+                        : "Left-click or drag places tiles. Right-click or drag removes tiles.";
             RefreshStatus();
         }
 

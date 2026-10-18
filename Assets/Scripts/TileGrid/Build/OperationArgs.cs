@@ -16,7 +16,7 @@ namespace GuildMasterIsekai.TileGrid
 
         public void Validate()
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (!builder) throw new ArgumentNullException(nameof(builder));
             if (grid == null) throw new NullReferenceException(nameof(grid));
             if (bag == null) throw new NullReferenceException(nameof(bag));
             if (!builder.Material) throw new NullReferenceException(nameof(builder.Material));
