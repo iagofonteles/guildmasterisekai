@@ -8,10 +8,11 @@ namespace GuildMasterIsekai.TileGrid
     {
         GridBuilder Builder { set; }
         Sprite Icon { get; }
+        bool IsPixel { get; }
 
-        void OnMouseDown(Vector2Int pos, MouseButton button);
-        void OnMouseDrag(Vector2Int pos, MouseButton button);
-        void OnMouseUp(Vector2Int pos, MouseButton button);
+        void OnMouseDown(IBuildTool tool, Vector2Int pos, MouseButton button);
+        void OnMouseDrag(IBuildTool tool, Vector2Int pos, MouseButton button);
+        void OnMouseUp(IBuildTool tool, Vector2Int pos, MouseButton button);
         void OnKeyDown(Vector2Int pos, Key key);
         void OnKeyUp(Vector2Int pos, Key key);
     }

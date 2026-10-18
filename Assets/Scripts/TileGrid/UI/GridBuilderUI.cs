@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Drafts.Inventory;
 using GuildMasterIsekai.Systems;
@@ -16,39 +15,20 @@ namespace GuildMasterIsekai.TileGrid
 
         private PanelSettings _ownedPanel;
         private VisualElement _root;
+        private VisualElement _outline;
+        private Image _cursorIcon;
+        private readonly Vector2[] _outlineCorners = new Vector2[4];
         private ScrollView _tiles;
         private Button _undo, _redo;
         private GridBuilder _subscribedBuilder;
-        private UIDocument[] _documents = Array.Empty<UIDocument>();
         private bool _bound, _initialized;
 
-        private void Awake()
-        {
-            if (!input) input = GetComponent<GridBuilderInput>();
-            if (!document) document = GetComponent<UIDocument>();
-            if (!document) document = gameObject.AddComponent<UIDocument>();
-            if (panelSettings) document.panelSettings = panelSettings;
-
-            if (!document.panelSettings)
-            {
-                _ownedPanel = ScriptableObject.CreateInstance<PanelSettings>();
-                _ownedPanel.name = "TileGrid runtime panel";
-                _ownedPanel.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-                _ownedPanel.referenceResolution = new Vector2Int(1280, 720);
-                _ownedPanel.themeStyleSheet = Resources.Load<ThemeStyleSheet>("TileGrid/GridBuilderTheme");
-                document.panelSettings = _ownedPanel;
-            }
-
-            if (!document.visualTreeAsset)
-                document.visualTreeAsset = Resources.Load<VisualTreeAsset>("TileGrid/GridBuilder");
-            document.sortingOrder = 100;
-        }
+        private void Awake() => document.sortingOrder = 100;
 
         private void OnEnable()
         {
             if (!document) return;
             document.enabled = true;
-            _documents = FindObjectsByType<UIDocument>(FindObjectsInactive.Include);
         }
 
         private void Start()
@@ -75,6 +55,43 @@ namespace GuildMasterIsekai.TileGrid
             }
         }
 
+        private void LateUpdate()
+        {
+            if (!_bound) return;
+            _outline?.MarkDirtyRepaint();
+            var builder = input.Builder;
+            var icon = builder
+                ? input.TemporaryTool != null ? input.TemporaryTool.Icon : builder.CurrentTool?.Icon
+                : null;
+            var visible = input.TryGetToolCursorPosition(out var screen) && icon;
+            _cursorIcon.sprite = icon;
+            _cursorIcon.EnableInClassList("hidden", !visible);
+            if (visible && _cursorIcon.panel != null)
+            {
+                var panelPoint = RuntimePanelUtils.ScreenToPanel(_cursorIcon.panel, screen);
+                var point = _root.WorldToLocal(panelPoint);
+                _cursorIcon.style.translate = new Translate(point.x + 12, point.y - 44);
+            }
+        }
+
+        private void DrawSelection(MeshGenerationContext context)
+        {
+            if (!input || _outline.panel == null || !input.TryGetSelectionScreenCorners(_outlineCorners)) return;
+            var painter = context.painter2D;
+            painter.strokeColor = Color.yellow;
+            painter.lineWidth = 2;
+            painter.BeginPath();
+            for (var i = 0; i < _outlineCorners.Length; i++)
+            {
+                var panelPoint = RuntimePanelUtils.ScreenToPanel(_outline.panel, _outlineCorners[i]);
+                var point = _outline.WorldToLocal(panelPoint);
+                if (i == 0) painter.MoveTo(point);
+                else painter.LineTo(point);
+            }
+            painter.ClosePath();
+            painter.Stroke();
+        }
+
         private void Bind()
         {
             if (_bound || !document.visualTreeAsset || !input) return;
@@ -85,6 +102,14 @@ namespace GuildMasterIsekai.TileGrid
             _root.AddToClassList("build-document");
             _root.pickingMode = PickingMode.Ignore;
             foreach (var child in _root.Children()) child.pickingMode = PickingMode.Ignore;
+            _outline = new VisualElement { pickingMode = PickingMode.Ignore };
+            _outline.AddToClassList("grid-selection-outline");
+            _outline.generateVisualContent += DrawSelection;
+            _root.Insert(0, _outline);
+            _cursorIcon = new Image { pickingMode = PickingMode.Ignore, scaleMode = ScaleMode.ScaleToFit };
+            _cursorIcon.AddToClassList("tool-cursor-icon");
+            _cursorIcon.AddToClassList("hidden");
+            _root.Add(_cursorIcon);
             _tiles = _root.Q<ScrollView>("tiles");
             if (_tiles == null) return;
             _undo = _root.Q<Button>("undo");
@@ -117,36 +142,13 @@ namespace GuildMasterIsekai.TileGrid
             if (document) document.enabled = false;
             _bound = false;
             _root = null;
+            _outline = null;
+            _cursorIcon = null;
         }
 
         private void OnDestroy()
         {
             if (_ownedPanel) Destroy(_ownedPanel);
-        }
-
-        public bool BlocksWorldInput(Vector2 screen, bool refreshDocuments = false)
-        {
-            if (refreshDocuments)
-                _documents = FindObjectsByType<UIDocument>(FindObjectsInactive.Include);
-
-            foreach (var candidate in _documents)
-            {
-                if (!candidate || !candidate.isActiveAndEnabled) continue;
-                var root = candidate.rootVisualElement;
-                var panel = root?.panel;
-                if (panel == null) continue;
-                // Documents may share a panel; only count hits inside this document's controls.
-                var controls = candidate == document ? root.Q("toolbar") : root;
-                if (controls == null) continue;
-                var captured = panel.GetCapturingElement(PointerId.mousePointerId) as VisualElement;
-                if (captured != null && (captured == controls || controls.Contains(captured))) return true;
-                var position = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screen.x, Screen.height - screen.y));
-                var picked = panel.Pick(position);
-                if (picked != null && (picked == controls || controls.Contains(picked)) &&
-                    (candidate == document || picked != root)) return true;
-            }
-
-            return false;
         }
 
         public void Refresh()
@@ -160,8 +162,8 @@ namespace GuildMasterIsekai.TileGrid
             _root.Q<Button>("toppingLayer").SetEnabled(input.HasLayer(BuildLayer.Topping));
             RefreshTools();
             _tiles.Clear();
-            if (input.Builder && input.Builder.IsInitialized && input.Builder.CurrentTool?.Main != null)
-                AddItems(input.Builder.CurrentTool.Main.GetItems());
+            if (input.Builder && input.Builder.IsInitialized && input.Builder.CurrentTool?.Left != null)
+                AddItems(input.Builder.CurrentTool.Left.GetItems(input.Builder.Bag));
             if (_tiles.contentContainer.childCount == 0) _tiles.Add(new Label("No available tiles on this layer."));
             RefreshStatus();
         }
@@ -179,7 +181,7 @@ namespace GuildMasterIsekai.TileGrid
                 if (tool == null) continue;
                 var button = new Button(() => input.SelectTool(tool)) { text = tool.DisplayName };
                 button.EnableInClassList("selected", ReferenceEquals(input.Builder.CurrentTool, tool));
-                button.SetEnabled(tool.Main != null || tool.Alt != null);
+                button.SetEnabled(tool.Left != null || tool.Right != null);
                 tools.Add(button);
             }
 

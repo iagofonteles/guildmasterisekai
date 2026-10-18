@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using Drafts.Inventory;
+using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
 {
-    /// <summary>Prepares a command without changing the live grid or inventory.</summary>
+    /// <summary>Prepares a grid command or performs a selection-only operation.</summary>
     public interface IBuildTool
     {
-        public GridBuilder Builder { get; set; }
-        IEnumerable<ISlot> GetItems();
+        Sprite Icon => null;
+        IEnumerable<ISlot> GetItems(IBuildBag bag);
 
-        /// <returns>Null on error</returns>
+        /// <returns>Null for selection-only success or failure; a non-null error indicates failure.</returns>
         IBuildCommand CreateCommand(OperationArgs e, out string error);
     }
 }

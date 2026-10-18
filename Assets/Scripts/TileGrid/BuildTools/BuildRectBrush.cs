@@ -14,18 +14,19 @@ namespace GuildMasterIsekai.TileGrid
 
         public GridBuilder Builder { get; set; }
         public Sprite Icon => icon;
+        public bool IsPixel => false;
 
         public void CancelGesture() => _cancel = true;
 
-        public void OnMouseDown(Vector2Int pos, MouseButton button)
+        public void OnMouseDown(IBuildTool tool, Vector2Int pos, MouseButton button)
         {
             _cancel = false;
             _first = _last = pos;
         }
 
-        public void OnMouseDrag(Vector2Int pos, MouseButton button) => _last = pos;
+        public void OnMouseDrag(IBuildTool tool, Vector2Int pos, MouseButton button) => _last = pos;
 
-        public void OnMouseUp(Vector2Int pos, MouseButton button)
+        public void OnMouseUp(IBuildTool tool, Vector2Int pos, MouseButton button)
         {
             if (_cancel) return;
             _last = pos;
@@ -33,12 +34,7 @@ namespace GuildMasterIsekai.TileGrid
             var min = Vector2Int.Min(_first, _last);
             var max = Vector2Int.Max(_first, _last);
             var area = new RectInt(min, max - min + Vector2Int.one);
-            var curr = Builder.CurrentTool;
-
-            if (button == MouseButton.Left)
-                Builder.TryUseTool(area, curr.Main);
-            if (button == MouseButton.Right)
-                Builder.TryUseTool(area, curr.Alt);
+            Builder.TryUseTool(area, tool);
         }
 
         public void OnKeyDown(Vector2Int pos, Key key)

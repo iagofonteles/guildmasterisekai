@@ -44,14 +44,7 @@ namespace GuildMasterIsekai.TileGrid
             if (!defaultMap.layoutGrid) throw new ArgumentNullException(nameof(defaultMap.layoutGrid));
             if (!tools) throw new ArgumentNullException(nameof(tools));
             _opArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
-            _opArgs.builder= this;
-
-            foreach (var layer in tools.LayerTools)
-            foreach (var tool in layer.Tools)
-            {
-                tool.Main.Builder = this;
-                tool.Alt.Builder = this;
-            }
+            _opArgs.builder = this;
         }
 
         private void Start()
@@ -73,7 +66,15 @@ namespace GuildMasterIsekai.TileGrid
             _opArgs.nearestSlot = nearestSlot;
 
             var command = tool.CreateCommand(_opArgs, out var error);
-            if (command == null) return Fail(error);
+
+            if (command == null)
+            {
+                if (error != null) return Fail(error);
+                LastError = null;
+                Changed?.Invoke();
+                return true;
+            }
+
             if (!command.Do()) return Fail("The command could not be applied.");
             _redo.Clear();
             _undo.Add(command);

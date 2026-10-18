@@ -21,9 +21,11 @@ namespace GuildMasterIsekai.TileGrid
     public class LayerToolsConfig
     {
         [SerializeField] private BuildLayer layer;
+        [SerializeReference, TypeInstance(true)] private IBuildTool altTool;
         [SerializeField] private LayerToolConfig[] tools;
 
         public BuildLayer Layer => layer;
+        public IBuildTool AltTool => altTool;
         public LayerToolConfig[] Tools => tools;
     }
 
@@ -31,11 +33,13 @@ namespace GuildMasterIsekai.TileGrid
     public class LayerToolConfig
     {
         [SerializeField, Loc] private LocalizedString str;
-        [SerializeReference, TypeInstance(true)] private IBuildTool main;
-        [SerializeReference, TypeInstance(true)] private IBuildTool alt;
+        [SerializeField, Loc] private Sprite icon;
+        [SerializeReference, TypeInstance(true)] private IBuildTool left;
+        [SerializeReference, TypeInstance(true)] private IBuildTool right;
 
         public string DisplayName => str.GetLocalizedString();
-        public IBuildTool Main => main;
-        public IBuildTool Alt => alt;
+        public Sprite Icon => icon;
+        public IBuildTool Left => left;
+        public IBuildTool Right => right;
     }
 }

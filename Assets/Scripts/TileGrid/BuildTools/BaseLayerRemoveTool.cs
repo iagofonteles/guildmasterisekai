@@ -10,9 +10,7 @@ namespace GuildMasterIsekai.TileGrid
     [Serializable, Preserve]
     public sealed class BaseLayerRemoveTool : IBuildTool
     {
-        public GridBuilder Builder { get; set; }
-
-        public IEnumerable<ISlot> GetItems() => throw new System.InvalidOperationException();
+        public IEnumerable<ISlot> GetItems(IBuildBag bag) => throw new InvalidOperationException();
 
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {

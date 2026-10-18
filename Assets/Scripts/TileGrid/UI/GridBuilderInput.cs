@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Tilemaps;
@@ -9,12 +11,12 @@ using UnityEngine.Tilemaps;
 namespace GuildMasterIsekai.TileGrid
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(100)]
     public sealed class GridBuilderInput : MonoBehaviour
     {
         [SerializeField] private Tilemap tilemap;
         [SerializeField] private GridBuilder builder;
         [SerializeField] private Camera viewCamera;
-        [SerializeField] private GridBuilderUI userInterface;
         [SerializeField] private BuildLayer layer;
         [SerializeField] private BaseTileSo baseTile;
         [SerializeField] private FurnitureTileSo furnitureTile;
@@ -23,6 +25,11 @@ namespace GuildMasterIsekai.TileGrid
         private bool _uiGesture, _leftGesture, _rightGesture, _selectionReady;
         private Vector2Int _leftCell, _rightCell, _pointerCell;
         private IBuildBrush _gestureBrush;
+        private Vector2Int _gestureStart;
+        private bool _pointerValid;
+        private Vector2 _pointerScreen;
+        private bool _altOverride;
+        public IBuildTool TemporaryTool { get; private set; }
 
         public GridBuilder Builder => builder;
         public BuildLayer Layer => layer;
@@ -66,7 +73,7 @@ namespace GuildMasterIsekai.TileGrid
                 if (tool != null && ReferenceEquals(tool, builder.CurrentTool)) return;
             builder.CurrentTool = null;
             foreach (var tool in available)
-                if (tool != null && (tool.Main != null || tool.Alt != null))
+                if (tool != null && (tool.Left != null || tool.Right != null))
                 {
                     builder.CurrentTool = tool;
                     break;
@@ -76,10 +83,15 @@ namespace GuildMasterIsekai.TileGrid
         private void Awake()
         {
             if (!viewCamera) viewCamera = Camera.main;
+            var eventSystem = EventSystem.current ? EventSystem.current : FindAnyObjectByType<EventSystem>();
+            if (!eventSystem)
+                eventSystem = new GameObject("EventSystem", typeof(EventSystem)).GetComponent<EventSystem>();
+            if (!eventSystem.GetComponent<BaseInputModule>())
+                eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
         }
 
-        private void OnDisable() => CancelGesture();
-        private void OnApplicationFocus(bool focused) { if (!focused) CancelGesture(); }
+        private void OnDisable() { CancelGesture(); RestoreAltTool(); }
+        private void OnApplicationFocus(bool focused) { if (!focused) { CancelGesture(); RestoreAltTool(); } }
 
         private void EnsureSelection()
         {
@@ -101,6 +113,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             if (!HasLayer(value)) return;
             CancelGesture();
+            RestoreAltTool();
             layer = value;
             SelectLayerTool();
             SelectionUpdated();
@@ -114,6 +127,7 @@ namespace GuildMasterIsekai.TileGrid
                 if (ReferenceEquals(candidate, tool)) { available = true; break; }
             if (!available) return;
             CancelGesture();
+            RestoreAltTool();
             builder.CurrentTool = tool;
             SelectionUpdated();
         }
@@ -152,6 +166,7 @@ namespace GuildMasterIsekai.TileGrid
 
         public void CancelGesture()
         {
+            _pointerValid = false;
             _gestureBrush?.OnKeyDown(_pointerCell, Key.Escape);
             _leftGesture = _rightGesture = false;
             _gestureBrush = null;
@@ -160,9 +175,42 @@ namespace GuildMasterIsekai.TileGrid
         public void Undo() { CancelGesture(); Complete(builder && builder.IsInitialized && builder.Undo()); }
         public void Redo() { CancelGesture(); Complete(builder && builder.IsInitialized && builder.Redo()); }
 
+        private void RestoreAltTool()
+        {
+            if (!_altOverride) return;
+            CancelGesture();
+            TemporaryTool = null;
+            _altOverride = false;
+        }
+
+        private void UpdateAltTool()
+        {
+            var keyboard = Keyboard.current;
+            var held = Application.isFocused && keyboard != null &&
+                (keyboard.leftAltKey.isPressed || keyboard.rightAltKey.isPressed);
+            if (!held) { RestoreAltTool(); return; }
+            if (_altOverride || !builder || !builder.IsInitialized) return;
+            foreach (var config in builder.Tools)
+            {
+                if (config == null || config.Layer != layer || config.AltTool == null) continue;
+                CancelGesture();
+                _altOverride = true;
+                TemporaryTool = config.AltTool;
+                return;
+            }
+        }
+
+        public bool TryGetToolCursorPosition(out Vector2 position)
+        {
+            position = _pointerScreen;
+            return _pointerValid && isActiveAndEnabled;
+        }
+
         private void Update()
         {
+            _pointerValid = false;
             EnsureSelection();
+            UpdateAltTool();
             var mouse = Mouse.current;
             if (mouse == null || !builder || !builder.IsInitialized)
             {
@@ -173,8 +221,7 @@ namespace GuildMasterIsekai.TileGrid
             var screen = mouse.position.ReadValue();
             ProcessPointer(screen, mouse.leftButton.wasPressedThisFrame, mouse.leftButton.isPressed,
                 mouse.leftButton.wasReleasedThisFrame, mouse.rightButton.wasPressedThisFrame,
-                userInterface && userInterface.BlocksWorldInput(screen,
-                    mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame),
+                EventSystem.current && EventSystem.current.IsPointerOverGameObject(),
                 mouse.rightButton.isPressed, mouse.rightButton.wasReleasedThisFrame);
         }
 
@@ -191,10 +238,12 @@ namespace GuildMasterIsekai.TileGrid
             }
             if (!TryGetPointer(screen, out var cell, out _)) { CancelGesture(); return; }
             _pointerCell = cell;
+            _pointerScreen = new Vector2(screen.x, Screen.height - screen.y);
             var activeBrush = builder.CurrentBrush;
             if (activeBrush == null || builder.CurrentTool == null) { CancelGesture(); return; }
             if (_gestureBrush != null && !ReferenceEquals(_gestureBrush, activeBrush)) CancelGesture();
             activeBrush.Builder = builder;
+            _pointerValid = true;
             var keyboard = Keyboard.current;
             if (keyboard != null)
                 foreach (var key in keyboard.allKeys)
@@ -213,28 +262,31 @@ namespace GuildMasterIsekai.TileGrid
         private void ForwardButton(IBuildBrush brush, Vector2Int cell, MouseButton button,
             bool pressed, bool held, bool released, ref bool gesture, ref Vector2Int last)
         {
-            var tool = button == MouseButton.Left ? builder.CurrentTool.Main : builder.CurrentTool.Alt;
+            var tool = TemporaryTool ??
+                (button == MouseButton.Left ? builder.CurrentTool.Left : builder.CurrentTool.Right);
             if (tool == null) return;
             if (pressed)
             {
                 // A brush receives one button's gesture at a time.
                 if (_gestureBrush != null) CancelGesture();
                 _gestureBrush = brush;
+                _gestureStart = cell;
+                _pointerValid = true;
                 gesture = true;
                 last = cell;
-                brush.OnMouseDown(cell, button);
+                brush.OnMouseDown(tool, cell, button);
                 Complete(string.IsNullOrEmpty(builder.LastError));
             }
             if (!gesture) return;
             if ((held || released) && cell != last)
             {
                 last = cell;
-                brush.OnMouseDrag(cell, button);
+                brush.OnMouseDrag(tool, cell, button);
                 Complete(string.IsNullOrEmpty(builder.LastError));
             }
             if (!released) return;
             gesture = false;
-            brush.OnMouseUp(cell, button);
+            brush.OnMouseUp(tool, cell, button);
             Complete(string.IsNullOrEmpty(builder.LastError));
         }
 
@@ -252,6 +304,27 @@ namespace GuildMasterIsekai.TileGrid
             }
             Status = success ? null : builder ? builder.LastError ?? "Grid is not ready." : "Assign a GridBuilder.";
             StatusChanged?.Invoke();
+        }
+
+        public bool TryGetSelectionScreenCorners(Vector2[] corners)
+        {
+            if (!_pointerValid || !isActiveAndEnabled || !builder || !builder.IsInitialized ||
+                !tilemap || !viewCamera || builder.CurrentBrush == null ||
+                !builder.Grid.Contains(_pointerCell)) return false;
+            var first = (_leftGesture || _rightGesture) && !builder.CurrentBrush.IsPixel
+                ? _gestureStart : _pointerCell;
+            var min = Vector2Int.Min(first, _pointerCell);
+            var max = Vector2Int.Max(first, _pointerCell) + Vector2Int.one;
+            for (var i = 0; i < 4; i++)
+            {
+                var x = i == 0 || i == 3 ? min.x : max.x;
+                var y = i < 2 ? min.y : max.y;
+                var world = tilemap.CellToWorld(builder.Origin + new Vector3Int(x, y, 0));
+                var screen = viewCamera.WorldToScreenPoint(world);
+                if (screen.z <= 0) return false;
+                corners[i] = new Vector2(screen.x, Screen.height - screen.y);
+            }
+            return true;
         }
 
         private bool TryGetPointer(Vector2 screen, out Vector2Int cell, out Vector3 world)

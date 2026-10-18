@@ -9,9 +9,7 @@ namespace GuildMasterIsekai.TileGrid
     [Serializable, Preserve]
     public sealed class BaseLayerPlaceTool : IBuildTool
     {
-        public GridBuilder Builder { get; set; }
-
-        public IEnumerable<ISlot> GetItems() => Builder.Bag.GetItems<BaseTileSo>();
+        public IEnumerable<ISlot> GetItems(IBuildBag bag) => bag.GetItems<BaseTileSo>();
 
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {
