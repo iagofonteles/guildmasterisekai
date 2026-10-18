@@ -1,12 +1,18 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Drafts.Inventory;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace GuildMasterIsekai.TileGrid
 {
+    [Serializable, Preserve]
     public sealed class BaseLayerRemoveTool : IBuildTool
     {
         public GridBuilder Builder { get; set; }
+
+        public IEnumerable<ISlot> GetItems() => throw new System.InvalidOperationException();
 
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {
@@ -68,12 +74,6 @@ namespace GuildMasterIsekai.TileGrid
             }
 
             cmd.cost.AddItem(e.builder.Material, -removed.Count);
-
-            if (!e.bag.CanPay(cmd.cost))
-            {
-                error = "Not enough inventory capacity for the refunded building materials.";
-                return null;
-            }
 
             error = null;
             return cmd;

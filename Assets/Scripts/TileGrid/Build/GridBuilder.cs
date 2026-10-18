@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Drafts;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
@@ -21,15 +20,15 @@ namespace GuildMasterIsekai.TileGrid
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
-        private OperationArgs _opArgs;
+        private readonly OperationArgs _opArgs = new();
 
-        public GridData Grid { get; private set; }
-        public IBuildBag Bag { get; private set; }
+        public GridData Grid => _opArgs.grid;
+        public IBuildBag Bag => _opArgs.bag;
         public LayerToolConfig CurrentTool { get; set; }
         public IBuildBrush CurrentBrush { get; set; }
         public string LastError { get; private set; }
         public event Action Changed;
-        
+
         public LayerToolsConfig[] Tools => tools.LayerTools;
         public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
         public object SelectedItem { get => _opArgs.item; set => _opArgs.item = value; }
@@ -39,49 +38,27 @@ namespace GuildMasterIsekai.TileGrid
         public bool CanRedo => _redo.Count > 0;
         public DatabaseEntrySo Material => material;
 
-        public IReadOnlyList<T> GetAvailable<T>() where T : DatabaseEntrySo
+        private void Awake()
         {
-            if (Bag == null) return Array.Empty<T>();
-            if (typeof(T) == typeof(BaseTileSo)) return Bag.GetUnlockedTiles().Cast<T>().ToArray();
-            return Bag.GetAvailableItems<T>().Where(pair => pair.Item2 > 0)
-                .Select(pair => pair.Item1).ToArray();
+            if (!defaultMap) throw new ArgumentNullException(nameof(defaultMap));
+            if (!defaultMap.layoutGrid) throw new ArgumentNullException(nameof(defaultMap.layoutGrid));
+            if (!tools) throw new ArgumentNullException(nameof(tools));
+            _opArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
+            _opArgs.builder= this;
+
+            foreach (var layer in tools.LayerTools)
+            foreach (var tool in layer.Tools)
+            {
+                tool.Main.Builder = this;
+                tool.Alt.Builder = this;
+            }
         }
 
         private void Start()
         {
-            if (!tools) throw new ArgumentNullException(nameof(tools));
-            _opArgs = new()
-            {
-                grid = Grid,
-                bag = Bag,
-                builder = this,
-            };
-
-            if (!defaultMap || !defaultMap.layoutGrid)
-                throw new ArgumentException("Source Tilemap needs a parent Grid.");
-
-            foreach (var layer in Tools)
-            foreach (var tool in layer.Tools)
-            {
-                if (tool == null) continue;
-                if (tool.Main != null) tool.Main.Builder = this;
-                if (tool.Alt != null) tool.Alt.Builder = this;
-            }
-
-            Grid = string.IsNullOrEmpty(filePath)
+            _opArgs.grid = string.IsNullOrEmpty(filePath)
                 ? new(defaultMap)
                 : new GridData(Serializer, filePath);
-
-            if (!IsInitialized && defaultMap)
-                Initialize(defaultMap, buildBag as IBuildBag);
-        }
-
-        public void Initialize(Tilemap source, IBuildBag inventory)
-        {
-            if (IsInitialized) throw new InvalidOperationException("GridBuilder is already initialized.");
-            Bag = inventory ?? throw new ArgumentNullException(nameof(inventory));
-            defaultMap = source;
-            Grid = new GridData(source);
         }
 
         /// <summary>Runs a tool through inventory checks, atomic commit, rendering and undo history.</summary>
@@ -191,7 +168,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             if (string.IsNullOrEmpty(path))
                 throw new Exception("no filePath");
-            Grid = new(Serializer, filePath = path);
+            _opArgs.grid = new(Serializer, filePath = path);
         }
 
         private bool Fail(string error)

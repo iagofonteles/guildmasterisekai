@@ -1,12 +1,18 @@
+using System;
 using System.Collections.Generic;
+using Drafts.Inventory;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace GuildMasterIsekai.TileGrid
 {
+    [Serializable, Preserve]
     public sealed class BaseLayerPlaceTool : IBuildTool
     {
         public GridBuilder Builder { get; set; }
-        
+
+        public IEnumerable<ISlot> GetItems() => Builder.Bag.GetItems<BaseTileSo>();
+
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {
             e.Validate();
@@ -24,12 +30,6 @@ namespace GuildMasterIsekai.TileGrid
             if (cmd.after.Count == 0)
             {
                 error = "no change";
-                return null;
-            }
-
-            if (!e.bag.CanPay(cmd.cost))
-            {
-                error = "not enough items";
                 return null;
             }
 

@@ -12,30 +12,18 @@ namespace GuildMasterIsekai.TileGrid
         public ListInventory<DatabaseEntrySo> inventory;
         private bool _applying;
 
-        private void Start() => inventory.GetStackSize = _ => int.MaxValue;
-
-        public InventoryBuildBag(ListInventory<DatabaseEntrySo> inventory, DatabaseEntrySo buildingMaterial)
+        private void Start()
         {
-            this.inventory = inventory ?? throw new ArgumentNullException(nameof(inventory));
-            this.buildingMaterial = buildingMaterial
-                ? buildingMaterial
-                : throw new ArgumentNullException(nameof(buildingMaterial));
+            inventory.GetStackSize = _ => int.MaxValue;
         }
 
         public int GetBuildingMaterials() => inventory.Count(buildingMaterial);
 
-        public IEnumerable<BaseTileSo> GetUnlockedTiles()
+        public IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo
         {
             foreach (var slot in inventory)
-                if (slot.Item is BaseTileSo so)
-                    yield return so;
-        }
-
-        public IEnumerable<(T, int)> GetAvailableItems<T>()
-        {
-            foreach (var slot in inventory)
-                if (slot.Item is T item)
-                    yield return (item, slot.Amount);
+                if (slot.Item is T)
+                    yield return slot;
         }
 
         public bool CanPay(OperationCost cost) => CanApply(cost, false);

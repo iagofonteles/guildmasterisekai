@@ -1,10 +1,16 @@
+using System;
 using System.Collections.Generic;
+using Drafts.Inventory;
+using UnityEngine.Scripting;
 
 namespace GuildMasterIsekai.TileGrid
 {
+    [Serializable, Preserve]
     public sealed class BaseLayerPaintTool : IBuildTool
     {
         public GridBuilder Builder { get; set; }
+
+        public IEnumerable<ISlot> GetItems() => Builder.Bag.GetItems<BaseTileSo>();
 
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {

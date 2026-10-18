@@ -54,20 +54,26 @@
     border-radius: 3px;
 }
 .build-toolbar .tile-choice {
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
+    flex-grow: 0;
     flex-shrink: 0;
     flex-basis: auto;
-    height: auto;
-    min-height: 44px;
+    width: 64px;
+    height: 64px;
+    min-height: 64px;
     margin: 3px 0;
-    padding: 6px;
+    padding: 4px;
 }
-.build-toolbar .tile-choice Label {
-    flex-grow: 1;
-    white-space: normal;
-    -unity-text-align: middle-left;
+.build-toolbar .slot-icon,
+.build-toolbar .slot-placeholder {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 4px;
+    bottom: 4px;
+}
+.build-toolbar .slot-placeholder {
+    font-size: 32px;
+    -unity-text-align: middle-center;
 }
 .build-toolbar .tile-icon { width: 32px; height: 32px; margin-right: 8px; flex-shrink: 0; }
 .build-toolbar .auxiliary-controls Label { white-space: normal; }
@@ -94,3 +100,13 @@
     height: 28px;
     flex-shrink: 0;
 }
+.build-toolbar .tile-choice .tile-amount {
+    position: absolute;
+    right: 3px;
+    bottom: 2px;
+    -unity-text-align: lower-right;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(30, 38, 53);
+}
+.build-toolbar .hidden { display: none; }

@@ -14,10 +14,6 @@
         <ui:Button name="undo" text="Undo" tooltip="Undo last command" enabled="false" />
         <ui:Button name="redo" text="Redo" tooltip="Redo undone command" enabled="false" />
       </ui:VisualElement>
-      <ui:VisualElement class="auxiliary-controls">
-        <ui:Label name="selection" />
-        <ui:Label name="status" />
-      </ui:VisualElement>
     </ui:VisualElement>
   </ui:VisualElement>
 </ui:UXML>

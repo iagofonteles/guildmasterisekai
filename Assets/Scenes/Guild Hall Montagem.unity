@@ -6486,7 +6486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilder
   defaultMap: {fileID: 1204020680}
-  buildBag: {fileID: 1886873626}
+  buildBag: {fileID: 1886873621}
   material: {fileID: 11400000, guid: 5acde736144ab68448fc825aae55e5f0, type: 2}
   historyLimit: 64
   tools: {fileID: 11400000, guid: c5ea3131df17ad047a52eb1f1c112bcd, type: 2}
