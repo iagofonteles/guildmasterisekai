@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Drafts;
+using Drafts.Localization;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -11,7 +12,7 @@ namespace GuildMasterIsekai.TileGrid
     {
         [SerializeReference, TypeInstance] private IBuildBrush[] bruhes;
         [SerializeField] private LayerToolsConfig[] layerTools;
-        
+
         public IReadOnlyList<IBuildBrush> Bushes => bruhes;
         public LayerToolsConfig[] LayerTools => layerTools;
     }
@@ -19,9 +20,19 @@ namespace GuildMasterIsekai.TileGrid
     [Serializable]
     public class LayerToolsConfig
     {
-        [SerializeField] private LocalizedString str;
-        [SerializeReference, TypeInstance] private IBuildTool main;
-        [SerializeReference, TypeInstance] private IBuildTool alt;
+        [SerializeField] private BuildLayer layer;
+        [SerializeField] private LayerToolConfig[] tools;
+
+        public BuildLayer Layer => layer;
+        public LayerToolConfig[] Tools => tools;
+    }
+
+    [Serializable]
+    public class LayerToolConfig
+    {
+        [SerializeField, Loc] private LocalizedString str;
+        [SerializeReference, TypeInstance(true)] private IBuildTool main;
+        [SerializeReference, TypeInstance(true)] private IBuildTool alt;
 
         public string DisplayName => str.GetLocalizedString();
         public IBuildTool Main => main;

@@ -16,7 +16,15 @@ MonoBehaviour:
   m_TableCollectionNameGuidString: 437dbaec634e281428c583e0e734e619
   m_Entries:
   - m_Id: 96082399232
-    m_Key: new entry 783
+    m_Key: tool_place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1452511924224
+    m_Key: tool_move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1465728176128
+    m_Key: tool_paint
     m_Metadata:
       m_Items: []
   m_Metadata:

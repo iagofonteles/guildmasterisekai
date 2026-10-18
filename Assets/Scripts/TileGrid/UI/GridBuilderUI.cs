@@ -16,7 +16,7 @@ namespace GuildMasterIsekai.TileGrid
         private PanelSettings _ownedPanel;
         private VisualElement _root;
         private ScrollView _tiles;
-        private Label _selection, _help, _status;
+        private Label _selection, _status;
         private Button _undo, _redo;
         private GridBuilder _subscribedBuilder;
         private UIDocument[] _documents = Array.Empty<UIDocument>();
@@ -81,18 +81,12 @@ namespace GuildMasterIsekai.TileGrid
             _tiles = _root.Q<ScrollView>("tiles");
             if (_tiles == null) return;
             _selection = _root.Q<Label>("selection");
-            _help = _root.Q<Label>("help");
             _status = _root.Q<Label>("status");
             _undo = _root.Q<Button>("undo");
             _redo = _root.Q<Button>("redo");
             _root.Q<Button>("baseLayer").clicked += () => input.SetLayer(BuildLayer.Base);
             _root.Q<Button>("furnitureLayer").clicked += () => input.SetLayer(BuildLayer.Furniture);
             _root.Q<Button>("toppingLayer").clicked += () => input.SetLayer(BuildLayer.Topping);
-            _root.Q<Button>("place").clicked += () => input.SetAction(GridBuildAction.Place);
-            _root.Q<Button>("paint").clicked += () => input.SetAction(GridBuildAction.Paint);
-            _root.Q<Button>("move").clicked += () => input.SetAction(GridBuildAction.Move);
-            _root.Q<Button>("pixel").clicked += () => input.SetBrush(GridBuildBrush.Pixel);
-            _root.Q<Button>("rectangle").clicked += () => input.SetBrush(GridBuildBrush.Rectangle);
             _undo.clicked += input.Undo;
             _redo.clicked += input.Redo;
             var toolbar = _root.Q("toolbar");
@@ -146,14 +140,10 @@ namespace GuildMasterIsekai.TileGrid
             Selected("baseLayer", input.Layer == BuildLayer.Base);
             Selected("furnitureLayer", input.Layer == BuildLayer.Furniture);
             Selected("toppingLayer", input.Layer == BuildLayer.Topping);
-            Selected("place", input.Action == GridBuildAction.Place);
-            Selected("paint", input.Action == GridBuildAction.Paint);
-            Selected("move", input.Action == GridBuildAction.Move);
-            Selected("pixel", input.Brush == GridBuildBrush.Pixel);
-            Selected("rectangle", input.Brush == GridBuildBrush.Rectangle);
-            _root.Q<Button>("paint").SetEnabled(input.Layer == BuildLayer.Base);
-            _root.Q<Button>("move").SetEnabled(input.Layer == BuildLayer.Furniture);
-            _root.Q<Button>("rectangle").SetEnabled(input.Layer != BuildLayer.Topping || input.Action != GridBuildAction.Place);
+            _root.Q<Button>("baseLayer").SetEnabled(input.HasLayer(BuildLayer.Base));
+            _root.Q<Button>("furnitureLayer").SetEnabled(input.HasLayer(BuildLayer.Furniture));
+            _root.Q<Button>("toppingLayer").SetEnabled(input.HasLayer(BuildLayer.Topping));
+            RefreshTools();
             _tiles.Clear();
             if (input.Builder && input.Builder.IsInitialized)
             {
@@ -163,18 +153,41 @@ namespace GuildMasterIsekai.TileGrid
             }
             if (_tiles.contentContainer.childCount == 0) _tiles.Add(new Label("No available tiles on this layer."));
             _selection.text = input.SelectedTile ? input.SelectedTile.name : "Select a tile below.";
-            _help.text = input.Action == GridBuildAction.Paint
-                ? "Left-click paints. Right-click picks the tile material."
-                : input.Action == GridBuildAction.Move
-                ? input.Brush == GridBuildBrush.Pixel
-                    ? "Drag furniture to its destination. Right-click cancels."
-                    : "Drag a source rectangle, then click its new bottom-left cell. Right-click cancels."
-                : input.Layer == BuildLayer.Topping && input.Action == GridBuildAction.Place
-                    ? "Click or drag over furniture to fill its first free topping slot."
-                    : input.Brush == GridBuildBrush.Rectangle
-                        ? "Left-drag places a rectangle. Right-drag removes a rectangle."
-                        : "Left-click or drag places tiles. Right-click or drag removes tiles.";
             RefreshStatus();
+        }
+
+        private void RefreshTools()
+        {
+            var tools = _root.Q("tools");
+            var brushes = _root.Q("brushes");
+            tools.Clear();
+            brushes.Clear();
+            if (!input.Builder) return;
+            foreach (var tool in input.AvailableTools)
+            {
+                if (tool == null) continue;
+                var button = new Button(() => input.SelectTool(tool)) { text = tool.DisplayName };
+                button.EnableInClassList("selected", ReferenceEquals(input.Builder.CurrentTool, tool));
+                button.SetEnabled(tool.Main != null || tool.Alt != null);
+                tools.Add(button);
+            }
+            foreach (var brush in input.Builder.Brushes)
+            {
+                if (brush == null) continue;
+                var name = brush.GetType().Name;
+                var button = new Button(() => input.SelectBrush(brush)) { tooltip = name };
+                button.AddToClassList("brush-choice");
+                button.EnableInClassList("selected", ReferenceEquals(input.Builder.CurrentBrush, brush));
+                if (brush.Icon)
+                {
+                    var image = new Image { sprite = brush.Icon, scaleMode = ScaleMode.ScaleToFit };
+                    image.AddToClassList("brush-icon");
+                    image.pickingMode = PickingMode.Ignore;
+                    button.Add(image);
+                }
+                else button.text = name;
+                brushes.Add(button);
+            }
         }
 
         private void AddTiles<T>(IReadOnlyList<T> tiles) where T : DatabaseEntrySo

@@ -20,12 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f2db24dc31a034c4c95aa85dab73fa3b
-    m_Address: Assets/Settings/Localization/ScriptableObjects/GridBuilderTools Shared
-      Data.asset
-    m_ReadOnly: 1
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 879dd5bd2a8df004a9f504a6ae9de201, type: 2}
   m_SchemaSet:

@@ -21,12 +21,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-US
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fe0c8ed4ba952334a930b43b64bf25b0
-    m_Address: GridBuilderTools_en-US
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-en-US
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 879dd5bd2a8df004a9f504a6ae9de201, type: 2}
   m_SchemaSet:

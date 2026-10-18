@@ -8,18 +8,14 @@
         <ui:Button name="toppingLayer" text="Topping" tooltip="Topping layer" />
       </ui:VisualElement>
       <ui:ScrollView name="tiles" class="tile-list" mode="Vertical" />
-      <ui:VisualElement name="tools" class="row tool-tabs">
-        <ui:Button name="place" text="Place" tooltip="Left-click: place. Right-click: remove." />
-        <ui:Button name="paint" text="Paint" tooltip="Left-click: paint. Right-click: pick material." />
+      <ui:VisualElement name="tools" class="row tool-tabs" />
+      <ui:VisualElement class="row brush-controls">
+        <ui:VisualElement name="brushes" class="row" />
         <ui:Button name="undo" text="Undo" tooltip="Undo last command" enabled="false" />
         <ui:Button name="redo" text="Redo" tooltip="Redo undone command" enabled="false" />
       </ui:VisualElement>
       <ui:VisualElement class="auxiliary-controls">
-        <ui:Button name="move" text="Move" />
-        <ui:Button name="pixel" text="Pixel" />
-        <ui:Button name="rectangle" text="Rectangle" />
         <ui:Label name="selection" />
-        <ui:Label name="help" />
         <ui:Label name="status" />
       </ui:VisualElement>
     </ui:VisualElement>

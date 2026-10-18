@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Drafts;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -15,7 +16,7 @@ namespace GuildMasterIsekai.TileGrid
         [SerializeField] private MonoBehaviour buildBag;
         [SerializeField] private DatabaseEntrySo material;
         [SerializeField, Min(1)] private int historyLimit = 64;
-        [SerializeField] private GridBuilderTools tools;
+        [SerializeField, SO] private GridBuilderTools tools;
         [SerializeField] private string filePath;
 
         private readonly List<IBuildCommand> _undo = new();
@@ -24,17 +25,19 @@ namespace GuildMasterIsekai.TileGrid
 
         public GridData Grid { get; private set; }
         public IBuildBag Bag { get; private set; }
-
+        public LayerToolConfig CurrentTool { get; set; }
+        public IBuildBrush CurrentBrush { get; set; }
+        public string LastError { get; private set; }
+        public event Action Changed;
+        
         public LayerToolsConfig[] Tools => tools.LayerTools;
+        public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
+        public object SelectedItem { get => _opArgs.item; set => _opArgs.item = value; }
         public Vector3Int Origin => Grid.Bounds.position;
         public bool IsInitialized => Grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
         public DatabaseEntrySo Material => material;
-        
-        public LayerToolsConfig CurrentTool { get; set; }
-        public IBuildBrush CurrentBrush { get; set; }
-        public object SelectedItem { get => _opArgs.item; set => _opArgs.item = value; }
 
         public IReadOnlyList<T> GetAvailable<T>() where T : DatabaseEntrySo
         {
@@ -44,11 +47,9 @@ namespace GuildMasterIsekai.TileGrid
                 .Select(pair => pair.Item1).ToArray();
         }
 
-        public string LastError { get; private set; }
-        public event Action Changed;
-
         private void Start()
         {
+            if (!tools) throw new ArgumentNullException(nameof(tools));
             _opArgs = new()
             {
                 grid = Grid,
@@ -59,10 +60,12 @@ namespace GuildMasterIsekai.TileGrid
             if (!defaultMap || !defaultMap.layoutGrid)
                 throw new ArgumentException("Source Tilemap needs a parent Grid.");
 
-            foreach (var tool in tools.LayerTools)
+            foreach (var layer in Tools)
+            foreach (var tool in layer.Tools)
             {
-                tool.Main.Builder = this;
-                tool.Alt.Builder = this;
+                if (tool == null) continue;
+                if (tool.Main != null) tool.Main.Builder = this;
+                if (tool.Alt != null) tool.Alt.Builder = this;
             }
 
             Grid = string.IsNullOrEmpty(filePath)
