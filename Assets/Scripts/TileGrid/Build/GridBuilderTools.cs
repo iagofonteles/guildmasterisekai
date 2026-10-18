@@ -33,7 +33,7 @@ namespace GuildMasterIsekai.TileGrid
     public class LayerToolConfig
     {
         [SerializeField, Loc] private LocalizedString str;
-        [SerializeField, Loc] private Sprite icon;
+        [SerializeField] private Sprite icon;
         [SerializeReference, TypeInstance(true)] private IBuildTool left;
         [SerializeReference, TypeInstance(true)] private IBuildTool right;
 
