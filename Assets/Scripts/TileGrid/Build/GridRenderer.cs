@@ -44,7 +44,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             if (builder.Grid == null) return;
             if (builder.Grid.Modified.Count == 0) return;
-            if (_grid == null) SetGrid(builder.Grid);
+            if (_grid != builder.Grid) SetGrid(builder.Grid);
 
             foreach (var cell in _grid!.Modified)
             {
@@ -58,6 +58,21 @@ namespace GuildMasterIsekai.TileGrid
             // AutoTile uses the eight surrounding cells. Refresh after all writes are visible.
             foreach (var at in _baseRefresh) _baseMap.RefreshTile(at);
             foreach (var at in _furnitureRefresh) _furnitureMap.RefreshTile(at);
+            // Refreshing tiles can restore LockColor; apply cell colors afterwards.
+            _baseRefresh.UnionWith(_furnitureRefresh);
+            foreach (var cell in _grid.Modified)
+                _baseRefresh.Add(new Vector3Int(cell.Key.x + _grid.Bounds.x,
+                    cell.Key.y + _grid.Bounds.y, _grid.Bounds.z));
+            foreach (var at in _baseRefresh)
+            {
+                var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
+                if (!_grid.Contains(key)) continue;
+                var cell = _grid[key.x, key.y];
+                _baseMap.RemoveTileFlags(at, TileFlags.LockColor);
+                _baseMap.SetColor(at, cell.BaseColor);
+                _furnitureMap.RemoveTileFlags(at, TileFlags.LockColor);
+                _furnitureMap.SetColor(at, cell.FurnitureColor);
+            }
             _grid.Modified.Clear();
             _baseRefresh.Clear();
             _furnitureRefresh.Clear();

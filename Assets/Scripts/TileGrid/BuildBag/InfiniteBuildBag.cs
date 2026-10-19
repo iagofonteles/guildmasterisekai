@@ -17,7 +17,7 @@ namespace GuildMasterIsekai.TileGrid
         private static IEnumerable<Slot<DatabaseEntrySo>> FetchItems()
             => Game.Database.Items.Select(i => new Slot<DatabaseEntrySo>(i, -1, true));
 
-        public IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo
+        public IEnumerable<ISlot> GetItems<T>()
         {
             if (typeof(T) == typeof(Color))
             {

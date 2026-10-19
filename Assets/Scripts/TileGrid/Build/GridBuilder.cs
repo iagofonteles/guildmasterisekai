@@ -32,7 +32,6 @@ namespace GuildMasterIsekai.TileGrid
         public LayerToolsConfig[] Tools => tools.LayerTools;
         public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
         public object SelectedItem { get => _opArgs.item; set => _opArgs.item = value; }
-        public Color Color { get => _opArgs.color; set => _opArgs.color = value; }
         public Vector3Int Origin => Grid.Bounds.position;
         public bool IsInitialized => Grid != null;
         public bool CanUndo => _undo.Count > 0;

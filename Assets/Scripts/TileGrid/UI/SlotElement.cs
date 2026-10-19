@@ -84,11 +84,23 @@ namespace GuildMasterIsekai.TileGrid
 
         private void RefreshItem(object value)
         {
+            if (value is Color color)
+            {
+                EnableInClassList("selected", color.Equals(_selectedItem));
+                tooltip = "#" + ColorUtility.ToHtmlStringRGBA(color);
+                _image.image = Texture2D.whiteTexture;
+                _image.tintColor = new Color(color.r, color.g, color.b, 1);
+                _image.EnableInClassList("hidden", false);
+                _placeholder.EnableInClassList("hidden", true);
+                return;
+            }
+
             var item = value as DatabaseEntrySo;
             var icon = item ? item.Icon : null;
             EnableInClassList("selected", item && item == _selectedItem as DatabaseEntrySo);
             tooltip = item ? item.name : string.Empty;
             _image.sprite = icon;
+            _image.tintColor = Color.white;
             _image.EnableInClassList("hidden", !icon);
             _placeholder.EnableInClassList("hidden", icon);
         }

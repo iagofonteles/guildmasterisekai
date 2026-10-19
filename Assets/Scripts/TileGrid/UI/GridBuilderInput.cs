@@ -157,6 +157,15 @@ namespace GuildMasterIsekai.TileGrid
             SelectionUpdated();
         }
 
+        public void SelectColor(Color color)
+        {
+            if (!builder || !builder.IsInitialized) return;
+            CancelGesture();
+            builder.SelectedItem = color;
+            Status = null;
+            SelectionChanged?.Invoke();
+        }
+
         private void SelectionUpdated()
         {
             if (builder && builder.IsInitialized) builder.SelectedItem = LocalTile;
@@ -292,7 +301,9 @@ namespace GuildMasterIsekai.TileGrid
 
         private void Complete(bool success)
         {
-            if (builder && builder.IsInitialized && SelectedTile != LocalTile)
+            if (builder && builder.IsInitialized && builder.SelectedItem is Color)
+                SelectionChanged?.Invoke();
+            else if (builder && builder.IsInitialized && SelectedTile != LocalTile)
             {
                 switch (layer)
                 {

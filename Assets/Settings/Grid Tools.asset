@@ -48,6 +48,20 @@ MonoBehaviour:
         rid: 8997147944345141544
       right:
         rid: 8997147944345141545
+    - str:
+        m_TableReference:
+          m_TableCollectionName: General
+        m_TableEntryReference:
+          m_KeyId: 121213560360960
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      icon: {fileID: 0}
+      left:
+        rid: 8997147951574024298
+      right:
+        rid: 8997147951574024299
   references:
     version: 2
     RefIds:
@@ -76,3 +90,9 @@ MonoBehaviour:
       type: {class: BaseLayerPickTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
       data:
         icon: {fileID: 21300000, guid: f26fa8880b3aeef4b8516c82dc12f2a5, type: 3}
+    - rid: 8997147951574024298
+      type: {class: BaseLayerColorTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
+      data: 
+    - rid: 8997147951574024299
+      type: {class: BaseLayerColorPickTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
+      data: 

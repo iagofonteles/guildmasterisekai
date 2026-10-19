@@ -70,9 +70,9 @@ Shader "Custom/TilemapHueMask"
                 Varyings o;
                 o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
                 o.uv = v.uv;
-                // Each vertex channel controls one mask: 0.5 is neutral,
-                // and 0..1 spans -180..180 degrees. Alpha is a shift, not opacity.
-                sincos((v.color - 0.5) * TWO_PI, o.shiftSin, o.shiftCos);
+                // Each vertex channel controls one mask: 0 is neutral,
+                // and 0..1 spans 0..360 degrees. Alpha is a shift, not opacity.
+                sincos(v.color * TWO_PI, o.shiftSin, o.shiftCos);
                 return o;
             }
 

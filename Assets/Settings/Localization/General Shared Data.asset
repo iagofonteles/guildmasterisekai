@@ -27,6 +27,10 @@ MonoBehaviour:
     m_Key: tool_paint
     m_Metadata:
       m_Items: []
+  - m_Id: 121213560360960
+    m_Key: tool_color
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

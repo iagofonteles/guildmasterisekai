@@ -20,7 +20,7 @@ namespace GuildMasterIsekai.TileGrid
 
         public int GetBuildingMaterials() => inventory.Count(buildingMaterial);
 
-        public IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo
+        public IEnumerable<ISlot> GetItems<T>()
         {
             if (typeof(T) == typeof(Color))
             {
