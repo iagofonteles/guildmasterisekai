@@ -66,9 +66,6 @@ namespace GuildMasterIsekai.TileGrid
                     Grid = this, Key = new(i, j),
                     Position = new(reader.ReadSingle(), reader.ReadSingle(), 0),
                 };
-                if (float.IsNaN(cell.Position.x) || float.IsInfinity(cell.Position.x) ||
-                    float.IsNaN(cell.Position.y) || float.IsInfinity(cell.Position.y))
-                    throw new InvalidDataException("Invalid cell position.");
 
                 for (var t = 0; t < LayerCount; t++)
                     cell.Tiles[t] = serializer.ReadTile(reader);
@@ -76,7 +73,6 @@ namespace GuildMasterIsekai.TileGrid
                     cell.Colors[c] = serializer.ReadColor(reader);
 
                 var count = reader.ReadInt32();
-                if (count < 0) throw new InvalidDataException("Invalid decoration count.");
                 for (var k = 0; k < count; k++)
                     cell.Decoration.Add(CellTopping.Load(serializer, reader));
 

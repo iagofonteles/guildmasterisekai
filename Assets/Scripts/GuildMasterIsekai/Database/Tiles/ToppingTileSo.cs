@@ -10,7 +10,6 @@ namespace GuildMasterIsekai.TileGrid
     {
         [SerializeField, Prefab] private GameObject prefab;
 
-        public int Layer => 2;
         public GameObject Prefab => prefab;
     }
 }

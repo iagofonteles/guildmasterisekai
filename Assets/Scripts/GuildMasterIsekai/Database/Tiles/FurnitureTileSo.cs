@@ -12,7 +12,6 @@ namespace GuildMasterIsekai.TileGrid
         [SerializeField, SO] private DbTile tile;
         [SerializeField] private AutoTileType buildOn;
 
-        public int Layer => (int)BuildLayer.Furniture;
         public ITileEntry Tile => tile;
         public AutoTileType BuildOn => buildOn;
 

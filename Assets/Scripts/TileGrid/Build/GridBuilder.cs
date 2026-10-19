@@ -10,7 +10,7 @@ namespace GuildMasterIsekai.TileGrid
     public sealed class GridBuilder : MonoBehaviour
     {
         [SerializeReference, TypeInstance] private IGridSerializer serializer;
-        [SerializeField] private Tilemap defaultMap;
+        [SerializeField] private Tilemap[] defaultMaps;
         [SerializeField] private MonoBehaviour buildBag;
         [SerializeField] private ScriptableObject material;
         [SerializeField, Min(1)] private int historyLimit = 64;
@@ -39,8 +39,8 @@ namespace GuildMasterIsekai.TileGrid
 
         private void Awake()
         {
-            if (!defaultMap) throw new ArgumentNullException(nameof(defaultMap));
-            if (!defaultMap.layoutGrid) throw new ArgumentNullException(nameof(defaultMap.layoutGrid));
+            if (!defaultMaps[0]) throw new ArgumentNullException(nameof(defaultMaps));
+            if (!defaultMaps[0].layoutGrid) throw new ArgumentNullException(nameof(Tilemap.layoutGrid));
             if (!tools) throw new ArgumentNullException(nameof(tools));
             _opArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
             _opArgs.builder = this;
@@ -49,7 +49,7 @@ namespace GuildMasterIsekai.TileGrid
         private void Start()
         {
             _opArgs.grid = string.IsNullOrEmpty(filePath)
-                ? new(defaultMap)
+                ? new(defaultMaps)
                 : new GridData(serializer, filePath);
         }
 
@@ -105,48 +105,9 @@ namespace GuildMasterIsekai.TileGrid
         public Vector2Int WorldToCell(Vector3 world)
         {
             if (!IsInitialized) throw new InvalidOperationException("Grid is not initialized.");
-            var cell = defaultMap.WorldToCell(world);
+            var cell = defaultMaps[0].WorldToCell(world);
             return new Vector2Int(cell.x - Grid.Bounds.x, cell.y - Grid.Bounds.y);
         }
-
-        // private int NearestEmptySlot(GridData state, Vector2Int p, Vector3? pointer)
-        // {
-        //     var cell = state[p.x, p.y];
-        //     if (!cell.Furniture) return -1;
-        //     var used = cell.Toppings;
-        //
-        //     if (!pointer.HasValue)
-        //     {
-        //         for (var i = 0; i < used.Count; i++)
-        //             if (!used[i])
-        //                 return i;
-        //         return -1;
-        //     }
-        //
-        //     var pos = pointer.Value - cell.Position; // move to local tile position
-        //     var best = -1;
-        //     var slots = cell.Furniture.ToppingSlots;
-        //     var distance = float.PositiveInfinity;
-        //
-        //     for (var i = 0; i < slots.Count; i++)
-        //     {
-        //         if (used[i]) continue;
-        //         if (!pointer.HasValue) return i;
-        //         var current = (SlotWorld(state, p, slots[i]) - pointer.Value).sqrMagnitude;
-        //
-        //         if (current < distance)
-        //         {
-        //             best = i;
-        //             distance = current;
-        //         }
-        //     }
-        //
-        //     return best;
-        // }
-
-        // private Vector3 SlotWorld(GridData state, Vector2Int p, Vector2 offset) =>
-        //     defaultMap.GetCellCenterWorld(new Vector3Int(p.x + state.Bounds.x, p.y + state.Bounds.y, state.Bounds.z)) +
-        //     defaultMap.transform.TransformVector(new Vector3(offset.x, offset.y, 0));
 
         public void Clear()
         {

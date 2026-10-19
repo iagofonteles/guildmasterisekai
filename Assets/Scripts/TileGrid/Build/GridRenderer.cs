@@ -9,76 +9,121 @@ namespace GuildMasterIsekai.TileGrid
     public sealed class GridRenderer : MonoBehaviour
     {
         [SerializeField] private GridBuilder builder;
-        [SerializeField] private Tilemap source;
+        [SerializeField] private Tilemap[] layers;
         private GridData _grid;
-        private Tilemap _baseMap;
-        private Tilemap _furnitureMap;
+        private Tilemap[] _maps = Array.Empty<Tilemap>();
         private Transform _toppingRoot;
-        private readonly HashSet<Vector3Int> _baseRefresh = new();
-        private readonly HashSet<Vector3Int> _furnitureRefresh = new();
+        private HashSet<Vector3Int>[] _refresh = Array.Empty<HashSet<Vector3Int>>();
         private readonly Dictionary<Vector2Int, RenderedTopping[]> _toppings = new();
 
         private sealed class RenderedTopping
         {
-            public IPrefabTile Definition;
-            public GameObject Instance;
+            public IPrefabTile tile;
+            public GameObject instance;
+
+            public RenderedTopping(IPrefabTile tile, GameObject instance)
+            {
+                this.tile = tile;
+                this.instance = instance;
+            }
         }
 
         private void SetGrid(GridData grid)
         {
-            if (_baseMap) Destroy(_baseMap.gameObject);
-            if (_furnitureMap) Destroy(_furnitureMap.gameObject);
-            if (_toppingRoot) Destroy(_toppingRoot.gameObject);
-            _toppings.Clear();
-            _baseRefresh.Clear();
-            _furnitureRefresh.Clear();
+            if (grid != null)
+            {
+                if (layers == null || layers.Length == 0 || layers.Length > GridData.LayerCount)
+                    throw new InvalidOperationException($"Assign between 1 and {GridData.LayerCount} Tilemap layers.");
+                foreach (var layer in layers)
+                    if (!layer || !layer.GetComponent<TilemapRenderer>())
+                        throw new InvalidOperationException("Each layer requires a Tilemap and TilemapRenderer.");
+            }
 
+            if (_toppingRoot)
+            {
+                _toppingRoot.gameObject.SetActive(false);
+                _toppingRoot.SetParent(null, false);
+                DisposeObject(_toppingRoot.gameObject);
+            }
+
+            foreach (var map in _maps)
+                if (map)
+                {
+                    map.gameObject.SetActive(false);
+                    DisposeObject(map.gameObject);
+                }
+
+            _toppings.Clear();
+            _maps = Array.Empty<Tilemap>();
+            _refresh = Array.Empty<HashSet<Vector3Int>>();
             _grid = grid;
-            _baseMap = CreateMap(0, source);
-            _furnitureMap = CreateMap(1, source);
+            if (grid == null) return;
+
+            _maps = new Tilemap[layers.Length];
+            _refresh = new HashSet<Vector3Int>[layers.Length];
+
+            for (var i = 0; i < layers.Length; i++)
+            {
+                _maps[i] = CreateMap(i, layers[i]);
+                _refresh[i] = new HashSet<Vector3Int>();
+            }
+
             _toppingRoot = new GameObject("Runtime Toppings").transform;
-            _toppingRoot.SetParent(_baseMap.transform, false);
+            _toppingRoot.SetParent(_maps[0].transform, false);
+
+            // Replacement snapshots need a full render even when the dirty set is empty.
+            foreach (var key in grid.Indexes.allPositionsWithin)
+                grid.Modified.Add((GridCell)grid[key.x, key.y]);
         }
 
         private void Update()
         {
-            if (builder.Grid == null) return;
-            if (builder.Grid.Modified.Count == 0) return;
+            if (!builder) return;
             if (_grid != builder.Grid) SetGrid(builder.Grid);
+            if (_grid == null || _grid.Modified.Count == 0) return;
 
-            foreach (var cell in _grid!.Modified)
+            foreach (var cell in _grid.Modified)
             {
-                var p = cell.Key;
-                var at = new Vector3Int(p.x + _grid.Bounds.x, p.y + _grid.Bounds.y, _grid.Bounds.z);
-                SetChangedTile(_baseMap, at, cell.BaseTile, _baseRefresh);
-                SetChangedTile(_furnitureMap, at, cell.Furniture?.Tile, _furnitureRefresh);
+                var at = CellPosition(cell.Key);
+
+                for (var i = 0; i < _maps.Length; i++)
+                {
+                    SetChangedTile(_maps[i], at, cell.Tiles[i], _refresh[i]);
+                    _refresh[i].Add(at);
+                }
+
                 RenderToppings(cell);
             }
 
-            // AutoTile uses the eight surrounding cells. Refresh after all writes are visible.
-            foreach (var at in _baseRefresh) _baseMap.RefreshTile(at);
-            foreach (var at in _furnitureRefresh) _furnitureMap.RefreshTile(at);
-            // Refreshing tiles can restore LockColor; apply cell colors afterwards.
-            _baseRefresh.UnionWith(_furnitureRefresh);
-            foreach (var cell in _grid.Modified)
-                _baseRefresh.Add(new Vector3Int(cell.Key.x + _grid.Bounds.x,
-                    cell.Key.y + _grid.Bounds.y, _grid.Bounds.z));
-            foreach (var at in _baseRefresh)
+            // Refresh neighbors after all writes, then restore colors and unlock LockColor.
+            for (var i = 0; i < _maps.Length; i++)
+                foreach (var at in _refresh[i])
+                    _maps[i].RefreshTile(at);
+
+            for (var i = 0; i < _maps.Length; i++)
             {
-                var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
-                if (!_grid.Contains(key)) continue;
-                var cell = _grid[key.x, key.y];
-                _baseMap.SetColor(at, cell.BaseColor);
-                _furnitureMap.SetColor(at, cell.FurnitureColor);
+                foreach (var at in _refresh[i])
+                {
+                    var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
+                    if (!_grid.Contains(key)) continue;
+                    //_maps[i].RemoveTileFlags(at, TileFlags.LockColor);
+                    _maps[i].SetColor(at, _grid[key.x, key.y].Colors[i]);
+                }
+
+                _refresh[i].Clear();
             }
+
             _grid.Modified.Clear();
-            _baseRefresh.Clear();
-            _furnitureRefresh.Clear();
         }
+
+        private Vector3Int CellPosition(Vector2Int key) =>
+            new(key.x + _grid.Bounds.x, key.y + _grid.Bounds.y, _grid.Bounds.z);
+
+        private void OnDestroy() => SetGrid(null);
 
         private Tilemap CreateMap(int order, Tilemap src)
         {
-            var go = new GameObject(order == 0 ? "Base" : "Furniture");
+            var go = new GameObject($"Runtime Layer {order} ({src.name})");
             go.transform.SetParent(transform, false);
             go.transform.localPosition = src.transform.localPosition;
             go.transform.localRotation = src.transform.localRotation;
@@ -95,7 +140,8 @@ namespace GuildMasterIsekai.TileGrid
             var renderer = go.AddComponent<TilemapRenderer>();
             renderer.sharedMaterials = original.sharedMaterials;
             renderer.sortingLayerID = original.sortingLayerID;
-            renderer.sortingOrder = original.sortingOrder + order;
+            renderer.sortingOrder = original.sortingOrder;
+            renderer.mode = original.mode;
             renderer.sortOrder = original.sortOrder;
 
             return map;
@@ -115,7 +161,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             _toppings.TryGetValue(cell.Key, out var rendered);
 
-            var count = cell.Furniture != null ? cell.docor.Count : 0;
+            var count = cell.Decoration.Count;
             if (rendered == null && count == 0) return;
             if (rendered == null) rendered = Array.Empty<RenderedTopping>();
             for (var i = count; i < rendered.Length; i++) DestroyTopping(rendered[i]);
@@ -126,12 +172,11 @@ namespace GuildMasterIsekai.TileGrid
 
             for (var i = 0; i < count; i++)
             {
-                var topping = cell.docor[i];
+                var topping = cell.Decoration[i];
                 var desired = topping.item;
-                
                 var current = rendered[i];
 
-                if (current != null && (current.Definition != desired || !current.Instance))
+                if (current != null && (current.tile != desired || !current.instance))
                 {
                     DestroyTopping(current);
                     rendered[i] = current = null;
@@ -142,22 +187,18 @@ namespace GuildMasterIsekai.TileGrid
                 if (current == null)
                 {
                     var instance = Instantiate(desired.Prefab, _toppingRoot);
-                    rendered[i] = current = new RenderedTopping { Definition = desired, Instance = instance };
+                    rendered[i] = current = new RenderedTopping(desired, instance);
                 }
 
-                current.Instance.transform.localPosition = topping.position;
+                current.instance.transform.localPosition = topping.position;
             }
         }
 
-        private Vector3 SlotWorld(GridData state, Vector2Int p, Vector2 offset) =>
-            _baseMap.GetCellCenterWorld(new Vector3Int(p.x + state.Bounds.x, p.y + state.Bounds.y, state.Bounds.z)) +
-            _baseMap.transform.TransformVector(new Vector3(offset.x, offset.y, 0));
-
         private static void DestroyTopping(RenderedTopping topping)
         {
-            if (topping == null || !topping.Instance) return;
-            topping.Instance.SetActive(false);
-            DisposeObject(topping.Instance);
+            if (topping == null || !topping.instance) return;
+            topping.instance.SetActive(false);
+            DisposeObject(topping.instance);
         }
 
         private static void DisposeObject(UnityEngine.Object obj)
