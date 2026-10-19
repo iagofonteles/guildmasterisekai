@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 730fd2e8697f46fe8ad3c933eae766d4, type: 3}
   m_Name: _stone
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.FloorTileSo
-  id: 0
+  id: 956940945
   displayName:
     m_TableReference:
       m_TableCollectionName: 
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 0}
+  icon: {fileID: -310204953, guid: 1c8d7321b6ca8d444b7a7fc774084b62, type: 3}
   floor: {fileID: 11400000, guid: 92a507e29f803dc49b6a50a83ba760a3, type: 2}
   references:
     version: 2
