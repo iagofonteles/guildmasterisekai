@@ -10,7 +10,7 @@ namespace GuildMasterIsekai.TileGrid
             writer.Write(tile?.Id ?? 0);
         }
 
-        public void WriteItem(BinaryWriter writer, ITileSo item)
+        public void WriteItem(BinaryWriter writer, IDbTile item)
         {
             writer.Write(item?.Id ?? 0);
         }

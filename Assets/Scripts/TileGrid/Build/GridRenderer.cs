@@ -20,7 +20,7 @@ namespace GuildMasterIsekai.TileGrid
 
         private sealed class RenderedTopping
         {
-            public ToppingTileSo Definition;
+            public IPrefabTile Definition;
             public GameObject Instance;
         }
 
@@ -51,7 +51,7 @@ namespace GuildMasterIsekai.TileGrid
                 var p = cell.Key;
                 var at = new Vector3Int(p.x + _grid.Bounds.x, p.y + _grid.Bounds.y, _grid.Bounds.z);
                 SetChangedTile(_baseMap, at, cell.BaseTile, _baseRefresh);
-                SetChangedTile(_furnitureMap, at, cell.Furniture ? cell.Furniture.Tile : null, _furnitureRefresh);
+                SetChangedTile(_furnitureMap, at, cell.Furniture?.Tile, _furnitureRefresh);
                 RenderToppings(cell);
             }
 
@@ -115,7 +115,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             _toppings.TryGetValue(cell.Key, out var rendered);
 
-            var count = cell.Furniture ? cell.slots.Count : 0;
+            var count = cell.Furniture != null ? cell.docor.Count : 0;
             if (rendered == null && count == 0) return;
             if (rendered == null) rendered = Array.Empty<RenderedTopping>();
             for (var i = count; i < rendered.Length; i++) DestroyTopping(rendered[i]);
@@ -126,7 +126,9 @@ namespace GuildMasterIsekai.TileGrid
 
             for (var i = 0; i < count; i++)
             {
-                var desired = cell.slots[i];
+                var topping = cell.docor[i];
+                var desired = topping.item;
+                
                 var current = rendered[i];
 
                 if (current != null && (current.Definition != desired || !current.Instance))
@@ -135,7 +137,7 @@ namespace GuildMasterIsekai.TileGrid
                     rendered[i] = current = null;
                 }
 
-                if (!desired) continue;
+                if (desired == null) continue;
 
                 if (current == null)
                 {
@@ -143,7 +145,7 @@ namespace GuildMasterIsekai.TileGrid
                     rendered[i] = current = new RenderedTopping { Definition = desired, Instance = instance };
                 }
 
-                current.Instance.transform.position = SlotWorld(_grid, cell.Key, cell.Furniture.ToppingSlots[i]);
+                current.Instance.transform.localPosition = topping.position;
             }
         }
 

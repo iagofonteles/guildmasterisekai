@@ -9,11 +9,10 @@ namespace GuildMasterIsekai.TileGrid
 {
     public sealed class GridBuilder : MonoBehaviour
     {
-        private static readonly GameGridSerializer Serializer = new();
-
+        [SerializeReference, TypeInstance] private IGridSerializer serializer;
         [SerializeField] private Tilemap defaultMap;
         [SerializeField] private MonoBehaviour buildBag;
-        [SerializeField] private DatabaseEntrySo material;
+        [SerializeField] private ScriptableObject material;
         [SerializeField, Min(1)] private int historyLimit = 64;
         [SerializeField, SO] private GridBuilderTools tools;
         [SerializeField] private string filePath;
@@ -36,7 +35,7 @@ namespace GuildMasterIsekai.TileGrid
         public bool IsInitialized => Grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
-        public DatabaseEntrySo Material => material;
+        public ScriptableObject Material => material;
 
         private void Awake()
         {
@@ -51,7 +50,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             _opArgs.grid = string.IsNullOrEmpty(filePath)
                 ? new(defaultMap)
-                : new GridData(Serializer, filePath);
+                : new GridData(serializer, filePath);
         }
 
         /// <summary>Runs a tool through inventory checks, atomic commit, rendering and undo history.</summary>
@@ -162,14 +161,14 @@ namespace GuildMasterIsekai.TileGrid
             filePath = path ?? filePath;
             if (string.IsNullOrEmpty(filePath))
                 throw new Exception("no filePath");
-            Grid?.Save(Serializer, filePath);
+            Grid?.Save(serializer, filePath);
         }
 
         public void LoadFile(string path)
         {
             if (string.IsNullOrEmpty(path))
                 throw new Exception("no filePath");
-            _opArgs.grid = new(Serializer, filePath = path);
+            _opArgs.grid = new(serializer, filePath = path);
         }
 
         private bool Fail(string error)

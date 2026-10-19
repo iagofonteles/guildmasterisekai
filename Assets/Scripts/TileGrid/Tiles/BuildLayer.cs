@@ -1,4 +1,13 @@
 namespace GuildMasterIsekai.TileGrid
 {
-    public enum BuildLayer { Base = 0, Furniture = 1, Topping = 2 }
+    // floor 0/1/2 are interchangeable
+    public enum BuildLayer
+    {
+        Default, // water or hole
+        Floor0, // ground
+        Floor1, // floor
+        Floor2, // carpet
+        World, // wall/furniture
+        Roof
+    }
 }

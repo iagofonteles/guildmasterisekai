@@ -1,5 +1,7 @@
 using Drafts;
+using Drafts.Database;
 using GuildMasterIsekai.Systems;
+using TileGrid.Tiles;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -9,12 +11,12 @@ namespace GuildMasterIsekai.TileGrid
     public class DbAutoTile : AutoTile, ITileEntry
     {
         [SerializeField, ReadOnly] private uint id;
-        [SerializeField] private BaseTileSo item;
+        [SerializeField] private ScriptableObject item;
         [SerializeField] private AutoTileType type;
         [SerializeField] private TileFlags flags = TileFlags.LockTransform;
 
         public uint Id => id;
-        public BaseTileSo Item => item;
+        public ITileSo Item => (ITileSo)item;
         public AutoTileType Type => type;
         TileBase ITileEntry.Tile => this;
 
@@ -32,10 +34,7 @@ namespace GuildMasterIsekai.TileGrid
         [ContextMenu("Reroll Id")]
         private void RerollId()
         {
-            do
-            {
-                id = Game.Id.Generate();
-            } while (Game.Tiles.Find(id) != null);
+            id = UIntGenerator.Instance.Generate();
         }
     }
 }

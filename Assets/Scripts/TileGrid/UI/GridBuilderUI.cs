@@ -114,7 +114,7 @@ namespace GuildMasterIsekai.TileGrid
             if (_tiles == null) return;
             _undo = _root.Q<Button>("undo");
             _redo = _root.Q<Button>("redo");
-            _root.Q<Button>("baseLayer").clicked += () => input.SetLayer(BuildLayer.Base);
+            _root.Q<Button>("baseLayer").clicked += () => input.SetLayer(BuildLayer.Floor);
             _root.Q<Button>("furnitureLayer").clicked += () => input.SetLayer(BuildLayer.Furniture);
             _root.Q<Button>("toppingLayer").clicked += () => input.SetLayer(BuildLayer.Topping);
             _undo.clicked += input.Undo;
@@ -154,10 +154,10 @@ namespace GuildMasterIsekai.TileGrid
         public void Refresh()
         {
             if (!_bound) return;
-            Selected("baseLayer", input.Layer == BuildLayer.Base);
+            Selected("baseLayer", input.Layer == BuildLayer.Floor);
             Selected("furnitureLayer", input.Layer == BuildLayer.Furniture);
             Selected("toppingLayer", input.Layer == BuildLayer.Topping);
-            _root.Q<Button>("baseLayer").SetEnabled(input.HasLayer(BuildLayer.Base));
+            _root.Q<Button>("baseLayer").SetEnabled(input.HasLayer(BuildLayer.Floor));
             _root.Q<Button>("furnitureLayer").SetEnabled(input.HasLayer(BuildLayer.Furniture));
             _root.Q<Button>("toppingLayer").SetEnabled(input.HasLayer(BuildLayer.Topping));
             RefreshTools();

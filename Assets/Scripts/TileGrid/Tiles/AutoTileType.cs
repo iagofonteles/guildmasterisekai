@@ -1,4 +1,4 @@
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Tiles
 {
     public enum AutoTileType
     {

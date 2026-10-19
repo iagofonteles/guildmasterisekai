@@ -7,29 +7,29 @@ namespace GuildMasterIsekai.TileGrid
 {
     public sealed partial class GridData
     {
-        public void BuildFrom(Tilemap defMap, Tilemap baseMap, Tilemap furniture)
+        public void BuildFrom(Tilemap[] layers)
         {
-            if (!defMap) throw new ArgumentNullException(nameof(defMap));
-            var b = Bounds = defMap.cellBounds;
+            if ((layers?.Length ?? 0) == 0) throw new ArgumentException(nameof(layers));
+            var b = Bounds = layers[0].cellBounds;
             Indexes = new(0, 0, b.size.x, b.size.y);
-            TileSize = defMap.cellSize;
+            TileSize = layers[0].cellSize;
             _cells = new GridCell[b.size.x, b.size.y];
+
+            var min = Math.Min(LayerCount, layers.Length);
 
             foreach (var p in b.allPositionsWithin)
             {
-                var entryD = defMap.GetTile(p) as ITileEntry;
-                //var entryB = baseMap.GetTile(p) as ITileEntry;
-                //var entryF = furniture.GetTile(p) as ITileEntry;
-                
                 var key = new Vector2Int(p.x - b.x, p.y - b.y);
                 var cell = new GridCell
                 {
                     Grid = this,
                     Key = key,
-                    Position = defMap.CellToWorld(p),
-                    DefaultTile = entryD,
-                    BaseTile = entryD,
+                    Position = layers[0].CellToWorld(p),
                 };
+
+                for (var l = 0; l < min; l++)
+                    cell.Tiles[l] = layers[l].GetTile(p) as ITileEntry;
+
                 _cells[key.x, key.y] = cell;
                 Modified.Add(cell);
             }

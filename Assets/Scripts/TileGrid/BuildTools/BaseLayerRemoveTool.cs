@@ -61,7 +61,7 @@ namespace GuildMasterIsekai.TileGrid
 
                 if (cell.Floor == after.Floor && cell.BaseTile == after.BaseTile) continue;
 
-                if (cell.Furniture || cell.Toppings.Any(t => t))
+                if (cell.Furniture || cell.Decoration.Any(t => t))
                 {
                     error = "Remove furniture and toppings from affected cells first.";
                     return null;

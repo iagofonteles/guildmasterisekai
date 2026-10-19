@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Drafts;
 using GuildMasterIsekai.Systems;
+using TileGrid.Tiles;
 using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
@@ -10,7 +11,7 @@ namespace GuildMasterIsekai.TileGrid
     {
         [SerializeField, SO] private DbAutoTile wall;
         [SerializeField, SO] private DbAutoTile roof;
-        public DbAutoTile Wall => wall;
+        public override ITileEntry Tile => wall;
         public DbAutoTile Roof => roof;
 
         public override Sprite Icon => icon ? icon : wall.m_DefaultSprite;

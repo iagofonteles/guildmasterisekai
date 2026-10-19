@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Drafts.Database;
 using Drafts.SaveData;
+using GuildMasterIsekai.TileGrid;
 
 namespace GuildMasterIsekai.Systems
 {
@@ -11,7 +12,7 @@ namespace GuildMasterIsekai.Systems
 
         private static IEnumerable<ITileEntry> GetTileEntries(Database db)
         {
-            foreach (var tileSo in db.GetAll<ITileSo>())
+            foreach (var tileSo in db.GetAll<ITileProvider>())
             foreach (var entry in tileSo.GetEntries())
                 yield return entry;
         }

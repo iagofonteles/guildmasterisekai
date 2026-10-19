@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Drafts;
 using GuildMasterIsekai.Systems;
+using TileGrid.Tiles;
 using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
@@ -9,8 +10,8 @@ namespace GuildMasterIsekai.TileGrid
     public class FloorTileSo : BaseTileSo
     {
         [SerializeField, SO] private DbAutoTile floor;
-        public DbAutoTile Floor => floor;
-        
+        public override ITileEntry Tile => floor;
+
         public override Sprite Icon => icon ? icon : floor.m_DefaultSprite;
 
         public override IEnumerable<ITileEntry> GetEntries()
@@ -18,7 +19,7 @@ namespace GuildMasterIsekai.TileGrid
             if (!floor) Debug.LogError("missing tiels", this);
             yield return floor;
         }
-        
+
         private void OnValidate()
         {
             floor?.EditorSet("item", this);

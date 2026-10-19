@@ -1,15 +1,43 @@
 using System.IO;
 using GuildMasterIsekai.Systems;
+using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
 {
     public interface IGridSerializer
     {
         void WriteTile(BinaryWriter writer, ITileEntry tile);
-        void WriteItem(BinaryWriter writer, ITileSo item);
+        void WriteItem(BinaryWriter writer, IDbTile item);
         ITileEntry ReadTile(BinaryReader reader);
         T ReadItem<T>(BinaryReader reader);
         BinaryWriter GetWriter(string key);
         BinaryReader GetReader(string key);
+
+        void WriteSingle(BinaryWriter writer, float value) => writer.Write(value);
+        float ReadSingle(BinaryReader reader) => reader.ReadSingle();
+
+        void WriteVector2(BinaryWriter writer, Vector2 value)
+        {
+            WriteSingle(writer, value.x);
+            WriteSingle(writer, value.y);
+        }
+
+        Vector2 ReadVector2(BinaryReader reader) => new(
+            ReadSingle(reader),
+            ReadSingle(reader));
+
+        void WriteColor(BinaryWriter writer, Color color)
+        {
+            WriteSingle(writer, color.r);
+            WriteSingle(writer, color.g);
+            WriteSingle(writer, color.b);
+            WriteSingle(writer, color.a);
+        }
+
+        Color ReadColor(BinaryReader reader) => new(
+            ReadSingle(reader),
+            ReadSingle(reader),
+            ReadSingle(reader),
+            ReadSingle(reader));
     }
 }

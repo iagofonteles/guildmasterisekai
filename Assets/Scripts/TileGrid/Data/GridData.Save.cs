@@ -1,4 +1,5 @@
 using System.IO;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
@@ -8,7 +9,8 @@ namespace GuildMasterIsekai.TileGrid
         public void Save(IGridSerializer serializer, string key)
         {
             using var writer = serializer.GetWriter(key);
-            writer.Write(Version);
+            writer.Write((short)Version);
+            writer.Write((short)LayerCount);
             writer.Write(Bounds.position.x);
             writer.Write(Bounds.position.y);
             writer.Write(Bounds.size.x);
@@ -22,23 +24,23 @@ namespace GuildMasterIsekai.TileGrid
                 var cell = _cells[i, j];
                 writer.Write(cell.Position.x);
                 writer.Write(cell.Position.y);
-                serializer.WriteTile(writer, cell.DefaultTile);
-                serializer.WriteTile(writer, cell.BaseTile);
-                serializer.WriteItem(writer, cell.Floor);
-                serializer.WriteItem(writer, cell.Furniture);
-                WriteColor(writer, cell.BaseColor);
-                WriteColor(writer, cell.FurnitureColor);
-                writer.Write(cell.slots.Count);
-                foreach (var topping in cell.slots)
-                    writer.Write(topping?.Id ?? 0);
+
+                foreach (var tile in cell.Tiles)
+                    serializer.WriteTile(writer, tile);
+                foreach (var color in cell.Colors)
+                    serializer.WriteColor(writer, color);
+
+                writer.Write(cell.Decoration.Count);
+                foreach (var topping in cell.Decoration)
+                    topping.Save(serializer, writer);
             }
         }
 
         public void Load(IGridSerializer serializer, string key)
         {
             using var reader = serializer.GetReader(key);
-            var version = reader.ReadInt32();
-            if (version < 0 || version > Version) throw new InvalidDataException("Unsupported grid save version.");
+            if (reader.ReadInt16() != Version) throw new InvalidDataException("Unsupported version.");
+            if (reader.ReadInt16() != LayerCount) throw new InvalidDataException("Unsupported layer count.");
 
             var minX = reader.ReadInt32();
             var minY = reader.ReadInt32();
@@ -58,20 +60,18 @@ namespace GuildMasterIsekai.TileGrid
             {
                 var cell = new GridCell
                 {
-                    Grid = this,
-                    Key = new(i, j),
+                    Grid = this, Key = new(i, j),
                     Position = new(reader.ReadSingle(), reader.ReadSingle(), 0),
-                    DefaultTile = serializer.ReadTile(reader),
-                    BaseTile = serializer.ReadTile(reader),
-                    Floor = serializer.ReadItem<BaseTileSo>(reader),
-                    Furniture = serializer.ReadItem<FurnitureTileSo>(reader),
-                    BaseColor = ReadColor(reader),
-                    FurnitureColor = ReadColor(reader),
                 };
+
+                for (var t = 0; t < LayerCount; t++)
+                    cell.Tiles[t] = serializer.ReadTile(reader);
+                for (var c = 0; c < LayerCount; c++)
+                    cell.Colors[c] = serializer.ReadColor(reader);
 
                 var count = reader.ReadInt32();
                 for (var k = 0; k < count; k++)
-                    cell.slots.Add(serializer.ReadItem<ToppingTileSo>(reader));
+                    cell.Decoration.Add(CellTopping.Load(serializer, reader));
 
                 _cells[i, j] = cell;
                 Modified.Add(cell);

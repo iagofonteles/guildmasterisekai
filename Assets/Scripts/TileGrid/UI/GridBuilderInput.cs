@@ -40,7 +40,7 @@ namespace GuildMasterIsekai.TileGrid
             ? builder.SelectedItem as DatabaseEntrySo : LocalTile;
         private DatabaseEntrySo LocalTile => layer switch
         {
-            BuildLayer.Base => baseTile,
+            BuildLayer.Floor => baseTile,
             BuildLayer.Furniture => furnitureTile,
             BuildLayer.Topping => toppingTile,
             _ => null
@@ -150,7 +150,7 @@ namespace GuildMasterIsekai.TileGrid
             CancelGesture();
             switch (layer)
             {
-                case BuildLayer.Base: baseTile = tile as BaseTileSo; break;
+                case BuildLayer.Floor: baseTile = tile as BaseTileSo; break;
                 case BuildLayer.Furniture: furnitureTile = tile as FurnitureTileSo; break;
                 case BuildLayer.Topping: toppingTile = tile as ToppingTileSo; break;
             }
@@ -307,7 +307,7 @@ namespace GuildMasterIsekai.TileGrid
             {
                 switch (layer)
                 {
-                    case BuildLayer.Base: baseTile = SelectedTile as BaseTileSo; break;
+                    case BuildLayer.Floor: baseTile = SelectedTile as BaseTileSo; break;
                     case BuildLayer.Furniture: furnitureTile = SelectedTile as FurnitureTileSo; break;
                     case BuildLayer.Topping: toppingTile = SelectedTile as ToppingTileSo; break;
                 }
