@@ -211,11 +211,13 @@ namespace GuildMasterIsekai.TileGrid
             if (slots == null) return;
             foreach (var slot in slots)
             {
-                if (slot == null || slot.Item is not DatabaseEntrySo item || !item) continue;
-                var element = new SlotElement { Slot = slot, SelectedItem = input.SelectedTile };
+                if (slot == null) continue;
+                if (slot.Item is not Color && (slot.Item is not DatabaseEntrySo item || !item)) continue;
+                var element = new SlotElement { Slot = slot, SelectedItem = input.Builder.SelectedItem };
                 element.clicked += () =>
                 {
-                    if (element.Slot.Item is DatabaseEntrySo selected && selected) input.SelectTile(selected);
+                    if (element.Slot.Item is Color color) input.SelectColor(color);
+                    else if (element.Slot.Item is DatabaseEntrySo selected && selected) input.SelectTile(selected);
                 };
                 _tiles.Add(element);
             }

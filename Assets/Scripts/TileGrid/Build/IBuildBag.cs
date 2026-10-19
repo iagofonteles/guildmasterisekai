@@ -7,7 +7,7 @@ namespace GuildMasterIsekai.TileGrid
     public interface IBuildBag
     {
         int GetBuildingMaterials();
-        IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo;
+        IEnumerable<ISlot> GetItems<T>();
 
         bool CanPay(OperationCost cost);
         bool CanRefund(OperationCost cost);

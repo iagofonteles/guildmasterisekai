@@ -26,6 +26,8 @@ namespace GuildMasterIsekai.TileGrid
                 serializer.WriteTile(writer, cell.BaseTile);
                 serializer.WriteItem(writer, cell.Floor);
                 serializer.WriteItem(writer, cell.Furniture);
+                WriteColor(writer, cell.BaseColor);
+                WriteColor(writer, cell.FurnitureColor);
                 writer.Write(cell.slots.Count);
                 foreach (var topping in cell.slots)
                     writer.Write(topping?.Id ?? 0);
@@ -35,7 +37,8 @@ namespace GuildMasterIsekai.TileGrid
         public void Load(IGridSerializer serializer, string key)
         {
             using var reader = serializer.GetReader(key);
-            if (reader.ReadInt32() != Version) throw new InvalidDataException("Unsupported grid save version.");
+            var version = reader.ReadInt32();
+            if (version < 0 || version > Version) throw new InvalidDataException("Unsupported grid save version.");
 
             var minX = reader.ReadInt32();
             var minY = reader.ReadInt32();
@@ -53,7 +56,6 @@ namespace GuildMasterIsekai.TileGrid
             for (var i = 0; i < _cells.GetLength(0); i++)
             for (var j = 0; j < _cells.GetLength(1); j++)
             {
-                var p = new Vector3Int(i + minX, j + minY, 0);
                 var cell = new GridCell
                 {
                     Grid = this,
@@ -63,6 +65,8 @@ namespace GuildMasterIsekai.TileGrid
                     BaseTile = serializer.ReadTile(reader),
                     Floor = serializer.ReadItem<BaseTileSo>(reader),
                     Furniture = serializer.ReadItem<FurnitureTileSo>(reader),
+                    BaseColor = ReadColor(reader),
+                    FurnitureColor = ReadColor(reader),
                 };
 
                 var count = reader.ReadInt32();
@@ -73,5 +77,19 @@ namespace GuildMasterIsekai.TileGrid
                 Modified.Add(cell);
             }
         }
+
+        private static void WriteColor(BinaryWriter writer, Color color)
+        {
+            writer.Write(color.r);
+            writer.Write(color.g);
+            writer.Write(color.b);
+            writer.Write(color.a);
+        }
+
+        private static Color ReadColor(BinaryReader reader) => new(
+            reader.ReadSingle(),
+            reader.ReadSingle(),
+            reader.ReadSingle(),
+            reader.ReadSingle());
     }
 }

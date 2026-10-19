@@ -917,7 +917,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: f425e7cd664f6074aa7370e8e2a59bb9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6091,10 +6091,76 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 513
     m_Data: {fileID: 11400000, guid: bbdfecca83a33da47a9251ae4d1f093b, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: 567e4f0cacbcc2e408ddddc605df9e7c, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: fc79380a2900b2f42ae4e36201ac0d02, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: daf085270be1b854c9acc1fee35ecabe, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: f2a48040f09430b43b2c294560f7fbad, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: 8632925c9f2c4504e90a7a3843295b61, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: 8f0a3cdc23e43e843ba828dd16b3fb7b, type: 2}
   m_TileSpriteArray:
   - serializedVersion: 2
     m_RefCount: 513
     m_Data: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -513893759197939154, guid: 92213c06c9bd4a642902eaaeb0ed8738, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -1966341947, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 1253641383, guid: ec28a6c5c4d9cf64aac6ee55994679c1, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -1447693673, guid: ec28a6c5c4d9cf64aac6ee55994679c1, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 1536359430, guid: ec28a6c5c4d9cf64aac6ee55994679c1, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 1363454493, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 1115870871, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 113601909, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -1227161802, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -6471187932270448383, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -1926037995, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -2123532113, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -350968697, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 482207423, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -2118842861, guid: ec28a6c5c4d9cf64aac6ee55994679c1, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 1604217437, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
   m_TileMatrixArray:
   - serializedVersion: 2
     m_RefCount: 513
@@ -6472,6 +6538,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47474a355f15b2d48992891e714fb160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.InfiniteBuildBag
+  colors:
+    slots: []
 --- !u!114 &1886873622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6518,6 +6586,29 @@ MonoBehaviour:
       amount: -1
       favorite: 1
     - item: {fileID: 11400000, guid: 1a7ec6e38507b4e4f80a1fbfd023b321, type: 2}
+      amount: -1
+      favorite: 1
+  colors:
+    slots:
+    - item: {r: 0.551, g: 0, b: 0, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0, g: 0.54, b: 0, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0, g: 0, b: 0.545, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0, g: 0, b: 0, a: 1}
+      amount: -1
+      favorite: 1
+    - item: {r: 0.551, g: 0.602, b: 0, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0.551, g: 0, b: 0.574, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0.551, g: 0, b: 0, a: 0.5647059}
       amount: -1
       favorite: 1
 --- !u!114 &1886873627

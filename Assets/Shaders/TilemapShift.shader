@@ -4,6 +4,11 @@ Shader "Custom/TilemapHueMask"
     {
         [PerRendererData] _MainTex ("Sprite", 2D) = "white" {}
         [PerRendererData] _MaskTex ("Hue Mask", 2D) = "black" {}
+        _MaskColorR ("Mask Color (Vertex R)", Color) = (1, 0, 0, 1)
+        _MaskColorG ("Mask Color (Vertex G)", Color) = (0, 1, 0, 1)
+        _MaskColorB ("Mask Color (Vertex B)", Color) = (0, 0, 1, 1)
+        _MaskColorA ("Mask Color (Vertex A)", Color) = (1, 1, 1, 1)
+        _MaskTolerance ("Mask Color Tolerance", Range(0.001, 1)) = 0.1
     }
 
     SubShader
@@ -30,13 +35,20 @@ Shader "Custom/TilemapHueMask"
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
-
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MaskColorR;
+                float4 _MaskColorG;
+                float4 _MaskColorB;
+                float4 _MaskColorA;
+                float _MaskTolerance;
+            CBUFFER_END
 
             struct Attributes
             {
@@ -49,7 +61,8 @@ Shader "Custom/TilemapHueMask"
             {
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                float4 color : COLOR;
+                float4 shiftSin : TEXCOORD1;
+                float4 shiftCos : TEXCOORD2;
             };
 
             Varyings vert(Attributes v)
@@ -57,57 +70,36 @@ Shader "Custom/TilemapHueMask"
                 Varyings o;
                 o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
                 o.uv = v.uv;
-                o.color = v.color;
+                // Each vertex channel controls one mask: 0 is neutral,
+                // and 0..1 spans 0..360 degrees. Alpha is a shift, not opacity.
+                sincos(v.color * TWO_PI, o.shiftSin, o.shiftCos);
                 return o;
-            }
-
-            float3 RGBToHSV(float3 c)
-            {
-                float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-                float4 p = lerp(float4(c.bg, K.wz), float4(c.gb, K.xy), step(c.b, c.g));
-                float4 q = lerp(float4(p.xyw, c.r), float4(c.r, p.yzx), step(p.x, c.r));
-
-                float d = q.x - min(q.w, q.y);
-                float e = 1e-10;
-
-                return float3(
-                    abs(q.z + (q.w - q.y) / (6.0 * d + e)),
-                    d / (q.x + e),
-                    q.x
-                );
-            }
-
-            float3 HSVToRGB(float3 c)
-            {
-                float3 p = abs(frac(c.xxx + float3(0.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0);
-                return c.z * lerp(1.0.xxx, saturate(p - 1.0), c.y);
             }
 
             half4 frag(Varyings i) : SV_Target
             {
                 half4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                half3 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv).rgb;
+                float3 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv).rgb;
+                float3 deltaR = mask - _MaskColorR.rgb;
+                float3 deltaG = mask - _MaskColorG.rgb;
+                float3 deltaB = mask - _MaskColorB.rgb;
+                float3 deltaA = mask - _MaskColorA.rgb;
+                float4 distanceSquared = float4(
+                    dot(deltaR, deltaR), dot(deltaG, deltaG),
+                    dot(deltaB, deltaB), dot(deltaA, deltaA));
+                float4 regions = 1.0 - step(_MaskTolerance * _MaskTolerance, distanceSquared);
+                // Normalize overlapping matches; unmatched pixels keep their original color.
+                regions /= max(1.0, dot(regions, float4(1, 1, 1, 1)));
+                float coverage = dot(regions, float4(1, 1, 1, 1));
+                float shiftSin = dot(regions, i.shiftSin);
+                float shiftCos = 1.0 - coverage + dot(regions, i.shiftCos);
 
-                // Decode mask regions
-                float3 m = step(0.5, mask);
-
-                float4 regions = float4(
-                    m.r * (1.0 - m.g) * (1.0 - m.b), // Red
-                    m.g * (1.0 - m.r) * (1.0 - m.b), // Green
-                    m.b * (1.0 - m.r) * (1.0 - m.g), // Blue
-                    m.r * m.g * m.b                 // White
-                );
-
-                // Vertex color: 0.5 = neutral
-                float4 shifts = i.color - 0.5;
-
-                float hueShift = dot(regions, shifts);
-
-                float3 hsv = RGBToHSV(col.rgb);
-                hsv.x = frac(hsv.x + hueShift);
-
-                col.rgb = HSVToRGB(hsv);
-
+                // Rodrigues hue rotation matrix around the neutral RGB axis.
+                // Factored matrix multiplication avoids per-pixel trigonometry and HSV conversion.
+                const float3 axis = float3(0.577350269, 0.577350269, 0.577350269);
+                col.rgb = saturate(col.rgb * shiftCos
+                    + cross(axis, col.rgb) * shiftSin
+                    + axis * dot(axis, col.rgb) * (1.0 - shiftCos));
                 return col;
             }
             ENDHLSL
