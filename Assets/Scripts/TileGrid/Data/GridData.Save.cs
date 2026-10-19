@@ -8,11 +8,6 @@ namespace GuildMasterIsekai.TileGrid
         public void Save(IGridSerializer serializer, string key)
         {
             using var writer = serializer.GetWriter(key);
-            Save(writer, serializer);
-        }
-
-        public void Save(BinaryWriter writer, IGridSerializer serializer)
-        {
             writer.Write(Version);
             writer.Write(Bounds.position.x);
             writer.Write(Bounds.position.y);
@@ -35,17 +30,11 @@ namespace GuildMasterIsekai.TileGrid
                 foreach (var topping in cell.slots)
                     writer.Write(topping?.Id ?? 0);
             }
-
         }
 
         public void Load(IGridSerializer serializer, string key)
         {
             using var reader = serializer.GetReader(key);
-            Load(reader, serializer);
-        }
-
-        public void Load(BinaryReader reader, IGridSerializer serializer)
-        {
             if (reader.ReadInt32() != Version) throw new InvalidDataException("Unsupported grid save version.");
 
             var minX = reader.ReadInt32();
@@ -83,7 +72,6 @@ namespace GuildMasterIsekai.TileGrid
                 _cells[i, j] = cell;
                 Modified.Add(cell);
             }
-
         }
     }
 }

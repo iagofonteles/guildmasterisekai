@@ -1,40 +1,80 @@
-// using System.Linq;
-// using GuildMasterIsekai.Systems;
-// using UnityEngine;
-//
-// namespace GuildMasterIsekai.TileGrid
-// {
-//     public sealed class BaseLayerRemoveTool : BuildTool
-//     {
-//         protected override bool Apply(GridData data, RectInt area, OperationCost payment, OperationArgs e, out string error)
-//         {
-//             error = null;
-//             if (e.buildingMaterial == null)
-//             {
-//                 error = "Select a building material for floor costs and refunds.";
-//                 return false;
-//             }
-//             var changed = false;
-//             foreach (var p in area.allPositionsWithin)
-//             {
-//                 var cell = data[p.x, p.y].Clone();
-//                 if (!cell.Floor) continue;
-//                 for (var y = -2; y <= 2; y++)
-//                 for (var x = -1; x <= 1; x++)
-//                 {
-//                     var at = p + new Vector2Int(x, y);
-//                     if (data.Contains(at) && (data[at.x, at.y].Furniture ||
-//                         data[at.x, at.y].slots.Any(t => t)))
-//                     { error = "Remove furniture and toppings in the floor's 3 x 5 footprint first."; return false; }
-//                 }
-//                 payment.AddItem(e.buildingMaterial, cell.Floor.Cost);
-//                 cell.Floor = null;
-//                 data.ApplyState(cell);
-//                 changed = true;
-//             }
-//             if (!changed) { error = "The brush contains nothing removable on this layer."; return false; }
-//             return BaseLayerPlaceTool.Rebuild(data, out error) && GridEditing.Validate(data, out error);
-//         }
-//     }
-// }
-//
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Drafts.Inventory;
+using UnityEngine;
+using UnityEngine.Scripting;
+
+namespace GuildMasterIsekai.TileGrid
+{
+    [Serializable, Preserve]
+    public sealed class BaseLayerRemoveTool : IBuildTool
+    {
+        public IEnumerable<ISlot> GetItems(IBuildBag bag) => throw new InvalidOperationException();
+
+        public IBuildCommand CreateCommand(OperationArgs e, out string error)
+        {
+            e.Validate();
+            var removed = new HashSet<Vector2Int>();
+            var affected = new HashSet<Vector2Int>();
+
+            foreach (var p in e.area.allPositionsWithin)
+            {
+                if (!e.grid.Contains(p)) continue;
+                var cell = e.grid[p.x, p.y];
+                if (cell.Floor is not FloorTileSo && cell.Floor is not WallTileSo) continue;
+                removed.Add(p);
+                affected.Add(p);
+                if (cell.Floor is WallTileSo && e.grid.Contains(p + Vector2Int.up))
+                    affected.Add(p + Vector2Int.up);
+            }
+
+            if (removed.Count == 0)
+            {
+                error = "The brush contains no removable floors or walls.";
+                return null;
+            }
+
+            var cmd = new CellCommand(e.builder);
+
+            foreach (var p in affected)
+            {
+                var cell = e.grid[p.x, p.y];
+                var after = (GridCell)cell.Clone();
+                if (removed.Contains(p)) after.Floor = null;
+                var below = p + Vector2Int.down;
+                var wallBelow = e.grid.Contains(below) && !removed.Contains(below)
+                    ? e.grid[below.x, below.y].Floor as WallTileSo
+                    : null;
+
+                if (after.Floor is WallTileSo wall)
+                    after.BaseTile = wallBelow ? wall.Roof : wall.Wall;
+                else if (wallBelow)
+                {
+                    after.Floor = null;
+                    after.BaseTile = wallBelow.Roof;
+                }
+                else if (after.Floor is FloorTileSo floor)
+                    after.BaseTile = floor.Floor;
+                else
+                    after.BaseTile = cell.DefaultTile;
+
+                if (cell.Floor == after.Floor && cell.BaseTile == after.BaseTile) continue;
+
+                if (cell.Furniture || cell.Toppings.Any(t => t))
+                {
+                    error = "Remove furniture and toppings from affected cells first.";
+                    return null;
+                }
+
+                cmd.before.Add(cell.Clone());
+                cmd.after.Add(after);
+            }
+
+            cmd.cost.AddItem(e.builder.Material, -removed.Count);
+
+            error = null;
+            return cmd;
+        }
+    }
+}

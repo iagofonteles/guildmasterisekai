@@ -9,6 +9,15 @@
 //         public override System.Collections.Generic.IEnumerable<object> GetCompatibleItems(IBuildBag bag) =>
 //             System.Linq.Enumerable.Cast<object>(System.Linq.Enumerable.Select(bag.GetAvailableItem<FurnitureTileSo>(), pair => pair.Item1));
 //
+
+// public IReadOnlyList<T> GetAvailable<T>() where T : DatabaseEntrySo
+// {
+//     if (Bag == null) return Array.Empty<T>();
+//     if (typeof(T) == typeof(BaseTileSo)) return Bag.GetUnlockedTiles().Cast<T>().ToArray();
+//     return Bag.GetAvailableItems<T>().Where(pair => pair.Item2 > 0)
+//         .Select(pair => pair.Item1).ToArray();
+// }
+
 //         protected override bool Apply(GridData data, RectInt area, OperationCost payment, OperationArgs e, out string error)
 //         {
 //             var item = e.item as FurnitureTileSo;

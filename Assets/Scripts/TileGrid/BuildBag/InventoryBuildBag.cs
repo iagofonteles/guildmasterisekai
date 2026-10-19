@@ -2,38 +2,28 @@ using System;
 using System.Collections.Generic;
 using Drafts.Inventory;
 using GuildMasterIsekai.Systems;
+using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
 {
-    /// <summary>Adapter for item-based costs in a caller-owned Drafts inventory.</summary>
-    public sealed class InventoryBuildBag : IBuildBag
+    public sealed class InventoryBuildBag : MonoBehaviour, IBuildBag
     {
-        private readonly ListInventory<DatabaseEntrySo> _inventory;
-        private readonly DatabaseEntrySo _buildingMaterial;
+        public DatabaseEntrySo buildingMaterial;
+        public ListInventory<DatabaseEntrySo> inventory;
         private bool _applying;
 
-        public InventoryBuildBag(ListInventory<DatabaseEntrySo> inventory, DatabaseEntrySo buildingMaterial)
+        private void Start()
         {
-            _inventory = inventory ?? throw new ArgumentNullException(nameof(inventory));
-            _buildingMaterial = buildingMaterial
-                ? buildingMaterial
-                : throw new ArgumentNullException(nameof(buildingMaterial));
+            inventory.GetStackSize = _ => int.MaxValue;
         }
 
-        public int GetBuildingMaterials() => _inventory.Count(_buildingMaterial);
+        public int GetBuildingMaterials() => inventory.Count(buildingMaterial);
 
-        public IEnumerable<BaseTileSo> GetUnlockedTiles()
+        public IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo
         {
-            foreach (var slot in _inventory)
-                if (slot.Item is BaseTileSo so)
-                    yield return so;
-        }
-
-        public IEnumerable<(T, int)> GetAvailableItems<T>()
-        {
-            foreach (var slot in _inventory)
-                if (slot.Item is T item)
-                    yield return (item, slot.Amount);
+            foreach (var slot in inventory)
+                if (slot.Item is T)
+                    yield return slot;
         }
 
         public bool CanPay(OperationCost cost) => CanApply(cost, false);
@@ -49,9 +39,9 @@ namespace GuildMasterIsekai.TileGrid
             {
                 if (pair.Key is not DatabaseEntrySo item || !item) return false;
                 var delta = refund ? pair.Value : -(long)pair.Value;
-                var count = _inventory.Count(item) + delta;
+                var count = inventory.Count(item) + delta;
                 if (count < 0 || count > int.MaxValue || delta > int.MaxValue || delta < -int.MaxValue ||
-                    (delta > 0 && _inventory.Fits(item) < delta)) return false;
+                    (delta > 0 && inventory.Fits(item) < delta)) return false;
             }
 
             return true;
@@ -69,8 +59,8 @@ namespace GuildMasterIsekai.TileGrid
                 {
                     var item = (DatabaseEntrySo)pair.Key;
                     var delta = refund ? pair.Value : checked(-pair.Value);
-                    if (delta > 0) _inventory.Add(item, delta);
-                    else if (delta < 0) _inventory.Remove(item, -delta);
+                    if (delta > 0) inventory.Add(item, delta);
+                    else if (delta < 0) inventory.Remove(item, -delta);
                 }
             }
             finally

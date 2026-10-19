@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
   m_DefaultSprite: {fileID: -1966341947, guid: 8b04612301f651140ab72353553de75b, type: 3}
   m_DefaultGameObject: {fileID: 0}
-  m_DefaultColliderType: 2
+  m_DefaultColliderType: 0
   m_MaskType: 0
   m_Random: 0
   m_PhysicsShapeCheck: 0
@@ -23,5 +23,6 @@ MonoBehaviour:
     valueData: []
   m_TextureList: []
   m_TextureScaleList: []
-  item: {fileID: 11400000, guid: 5138f9b23b501e64cb0924b6c11d6d23, type: 2}
+  id: 0
+  item: {fileID: 11400000, guid: 61acc7612b198384380762d2dcfe6209, type: 2}
   type: 2

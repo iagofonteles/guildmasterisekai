@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:Style src="GridBuilder.uss" />
+  <ui:VisualElement name="buildScreen" class="build-screen" picking-mode="Ignore">
+    <ui:VisualElement name="toolbar" class="build-toolbar">
+      <ui:VisualElement name="layers" class="row layer-tabs">
+        <ui:Button name="baseLayer" text="Base" tooltip="Base layer" />
+        <ui:Button name="furnitureLayer" text="Furniture" tooltip="Furniture layer" />
+        <ui:Button name="toppingLayer" text="Topping" tooltip="Topping layer" />
+      </ui:VisualElement>
+      <ui:ScrollView name="tiles" class="tile-list" mode="Vertical" />
+      <ui:VisualElement name="tools" class="row tool-tabs" />
+      <ui:VisualElement class="row brush-controls">
+        <ui:VisualElement name="brushes" class="row" />
+        <ui:Button name="undo" text="Undo" tooltip="Undo last command" enabled="false" />
+        <ui:Button name="redo" text="Redo" tooltip="Redo undone command" enabled="false" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

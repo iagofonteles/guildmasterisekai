@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
+using Drafts.Inventory;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace GuildMasterIsekai.TileGrid
 {
+    [Serializable, Preserve]
     public sealed class BaseLayerPlaceTool : IBuildTool
     {
-        public bool RequiresItem => true;
-        public IEnumerable<object> GetCompatibleItems(IBuildBag bag) => bag.GetUnlockedTiles();
+        public IEnumerable<ISlot> GetItems(IBuildBag bag) => bag.GetItems<BaseTileSo>();
 
         public IBuildCommand CreateCommand(OperationArgs e, out string error)
         {
@@ -19,22 +22,12 @@ namespace GuildMasterIsekai.TileGrid
             }
 
             var cmd = new CellCommand(e.builder);
-
-            if (tile is FloorTileSo f)
-                PopulateFloor(cmd, e, f);
-
-            if (tile is WallTileSo w)
-                PopulateWall(cmd, e, w);
+            if (tile is FloorTileSo f) PopulateFloor(cmd, e, f);
+            if (tile is WallTileSo w) PopulateWall(cmd, e, w);
 
             if (cmd.after.Count == 0)
             {
                 error = "no change";
-                return null;
-            }
-
-            if (!e.bag.CanPay(cmd.cost))
-            {
-                error = "not enough items";
                 return null;
             }
 

@@ -1,14 +1,14 @@
 using System.Collections.Generic;
+using Drafts.Inventory;
+using GuildMasterIsekai.Systems;
 
 namespace GuildMasterIsekai.TileGrid
 {
     public interface IBuildBag
     {
-        int GetBuildingMaterials(); // used for base layer
-        IEnumerable<BaseTileSo> GetUnlockedTiles(); // used for base layer
-        IEnumerable<(T,int)> GetAvailableItems<T>(); // used for furniture and topings
+        int GetBuildingMaterials();
+        IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo;
 
-        /// <summary>Apply every delta or none. On failure, leave balances unchanged.</summary>
         bool CanPay(OperationCost cost);
         bool CanRefund(OperationCost cost);
         void Pay(OperationCost cost);
