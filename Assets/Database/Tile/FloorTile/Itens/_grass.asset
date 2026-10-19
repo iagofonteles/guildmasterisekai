@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 730fd2e8697f46fe8ad3c933eae766d4, type: 3}
-  m_Name: Item - Wood Plank
+  m_Name: _grass
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.FloorTileSo
   id: 0
   displayName:
@@ -32,7 +32,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   icon: {fileID: 0}
-  floor: {fileID: 11400000, guid: f7d0d924e15eaf247a46d4edd47332e0, type: 2}
+  floor: {fileID: 11400000, guid: e23571bc81e11e14d9b2d6ae7afc00db, type: 2}
   references:
     version: 2
     RefIds: []
