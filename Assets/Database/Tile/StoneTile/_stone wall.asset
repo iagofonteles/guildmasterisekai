@@ -31,7 +31,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: -2118842861, guid: ec28a6c5c4d9cf64aac6ee55994679c1, type: 3}
+  icon: {fileID: 0}
   wall: {fileID: 11400000, guid: daf085270be1b854c9acc1fee35ecabe, type: 2}
   roof: {fileID: 11400000, guid: 8f0a3cdc23e43e843ba828dd16b3fb7b, type: 2}
   references:
