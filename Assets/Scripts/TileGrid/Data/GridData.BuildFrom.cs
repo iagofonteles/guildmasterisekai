@@ -10,12 +10,15 @@ namespace GuildMasterIsekai.TileGrid
         public void BuildFrom(Tilemap[] layers)
         {
             if ((layers?.Length ?? 0) == 0) throw new ArgumentException(nameof(layers));
+            var min = Math.Min(LayerCount, layers.Length);
+            for (var l = 0; l < min; l++)
+                if (!layers[l]) throw new ArgumentException("Tilemap layers must not be null.", nameof(layers));
+            
             var b = Bounds = layers[0].cellBounds;
             Indexes = new(0, 0, b.size.x, b.size.y);
             TileSize = layers[0].cellSize;
             _cells = new GridCell[b.size.x, b.size.y];
-
-            var min = Math.Min(LayerCount, layers.Length);
+            Modified.Clear();
 
             foreach (var p in b.allPositionsWithin)
             {
@@ -28,7 +31,10 @@ namespace GuildMasterIsekai.TileGrid
                 };
 
                 for (var l = 0; l < min; l++)
+                {
                     cell.Tiles[l] = layers[l].GetTile(p) as ITileEntry;
+                    cell.Colors[l] = layers[l].GetColor(p);
+                }
 
                 _cells[key.x, key.y] = cell;
                 Modified.Add(cell);

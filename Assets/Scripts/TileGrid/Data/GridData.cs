@@ -26,6 +26,7 @@ namespace GuildMasterIsekai.TileGrid
         {
             Bounds = src.Bounds;
             Indexes = src.Indexes;
+            TileSize = src.TileSize;
             _cells = new GridCell[src.Width, src.Height];
 
             foreach (var p in Indexes.allPositionsWithin)

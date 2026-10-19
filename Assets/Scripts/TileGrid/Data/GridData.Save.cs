@@ -49,20 +49,26 @@ namespace GuildMasterIsekai.TileGrid
             var sx = reader.ReadSingle();
             var sy = reader.ReadSingle();
 
-            Bounds = new(minX, minY, 0, width, height, 1);
-            Indexes = new(0, 0, width, height);
-            TileSize = new(sx, sy, 0);
-            _cells = new GridCell[width, height];
-            Modified.Clear();
+            if (width < 0 || height < 0 || (long)width * height > int.MaxValue ||
+                (long)minX + width > int.MaxValue || (long)minY + height > int.MaxValue)
+                throw new InvalidDataException("Invalid grid bounds.");
+            if (float.IsNaN(sx) || float.IsInfinity(sx) || sx <= 0 ||
+                float.IsNaN(sy) || float.IsInfinity(sy) || sy <= 0)
+                throw new InvalidDataException("Invalid tile size.");
 
-            for (var i = 0; i < _cells.GetLength(0); i++)
-            for (var j = 0; j < _cells.GetLength(1); j++)
+            var cells = new GridCell[width, height];
+
+            for (var i = 0; i < width; i++)
+            for (var j = 0; j < height; j++)
             {
                 var cell = new GridCell
                 {
                     Grid = this, Key = new(i, j),
                     Position = new(reader.ReadSingle(), reader.ReadSingle(), 0),
                 };
+                if (float.IsNaN(cell.Position.x) || float.IsInfinity(cell.Position.x) ||
+                    float.IsNaN(cell.Position.y) || float.IsInfinity(cell.Position.y))
+                    throw new InvalidDataException("Invalid cell position.");
 
                 for (var t = 0; t < LayerCount; t++)
                     cell.Tiles[t] = serializer.ReadTile(reader);
@@ -70,26 +76,20 @@ namespace GuildMasterIsekai.TileGrid
                     cell.Colors[c] = serializer.ReadColor(reader);
 
                 var count = reader.ReadInt32();
+                if (count < 0) throw new InvalidDataException("Invalid decoration count.");
                 for (var k = 0; k < count; k++)
                     cell.Decoration.Add(CellTopping.Load(serializer, reader));
 
-                _cells[i, j] = cell;
-                Modified.Add(cell);
+                cells[i, j] = cell;
             }
-        }
 
-        private static void WriteColor(BinaryWriter writer, Color color)
-        {
-            writer.Write(color.r);
-            writer.Write(color.g);
-            writer.Write(color.b);
-            writer.Write(color.a);
+            Bounds = new(minX, minY, 0, width, height, 1);
+            Indexes = new(0, 0, width, height);
+            TileSize = new(sx, sy, 0);
+            _cells = cells;
+            Modified.Clear();
+            foreach (var cell in cells)
+                Modified.Add(cell);
         }
-
-        private static Color ReadColor(BinaryReader reader) => new(
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle());
     }
 }

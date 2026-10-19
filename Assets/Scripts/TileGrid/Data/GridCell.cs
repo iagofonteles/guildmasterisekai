@@ -43,11 +43,14 @@ namespace GuildMasterIsekai.TileGrid
 
         public void CopyState(IGridCell state)
         {
-            var s = (GridCell)state;
-            s.Tiles.CopyTo(Tiles, 0);
-            s.Colors.CopyTo(Colors, 0);
+            if (ReferenceEquals(this, state)) return;
+            for (var i = 0; i < GridData.LayerCount; i++)
+            {
+                Tiles[i] = state.Tiles[i];
+                Colors[i] = state.Colors[i];
+            }
             Decoration.Clear();
-            Decoration.AddRange(s.Decoration);
+            Decoration.AddRange(state.Decoration);
         }
     }
 }
