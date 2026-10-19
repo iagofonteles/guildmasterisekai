@@ -13,6 +13,7 @@ namespace GuildMasterIsekai.TileGrid
         public int slot = -1;
         public Vector2Int delta;
         public Func<Vector2Int, int> nearestSlot;
+        public Color color;
 
         public void Validate()
         {

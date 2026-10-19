@@ -12,6 +12,8 @@ namespace GuildMasterIsekai.TileGrid
         ITileEntry BaseTile { get; }
         BaseTileSo Floor { get; }
         FurnitureTileSo Furniture { get; }
+        public Color BaseColor { get; }
+        public Color FurnitureColor { get; }
         IReadOnlyList<ToppingTileSo> Toppings { get; }
         IGridCell Clone();
     }
@@ -25,6 +27,8 @@ namespace GuildMasterIsekai.TileGrid
         public ITileEntry BaseTile { get; internal set; }
         public BaseTileSo Floor { get; internal set; }
         public FurnitureTileSo Furniture { get; internal set; }
+        public Color BaseColor { get; internal set; }
+        public Color FurnitureColor { get; internal set; }
         internal List<ToppingTileSo> slots = new();
 
         public IReadOnlyList<ToppingTileSo> Toppings => slots;
@@ -40,6 +44,8 @@ namespace GuildMasterIsekai.TileGrid
             BaseTile = BaseTile,
             Floor = Floor,
             Furniture = Furniture,
+            BaseColor = BaseColor,
+            FurnitureColor = FurnitureColor,
             slots = new(slots)
         };
 
@@ -49,6 +55,8 @@ namespace GuildMasterIsekai.TileGrid
             BaseTile = state.BaseTile;
             Floor = state.Floor;
             Furniture = state.Furniture;
+            BaseColor = state.BaseColor;
+            FurnitureColor = state.FurnitureColor;
             slots.Clear();
             slots.AddRange(state.Toppings);
         }

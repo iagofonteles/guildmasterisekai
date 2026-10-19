@@ -12,12 +12,20 @@ namespace GuildMasterIsekai.TileGrid
         public int GetBuildingMaterials() => int.MaxValue;
 
         private ListInventory<DatabaseEntrySo> _inventory;
+        public ListInventory<Color> colors;
 
         private static IEnumerable<Slot<DatabaseEntrySo>> FetchItems()
             => Game.Database.Items.Select(i => new Slot<DatabaseEntrySo>(i, -1, true));
 
         public IEnumerable<ISlot> GetItems<T>() where T : DatabaseEntrySo
         {
+            if (typeof(T) == typeof(Color))
+            {
+                foreach (var slot in colors)
+                    yield return slot;
+                yield break;
+            }
+            
             _inventory ??= new(FetchItems(), _ => int.MaxValue);
             foreach (var slot in _inventory)
                 if (slot.Item is T)
