@@ -22,5 +22,10 @@ namespace GuildMasterIsekai.TileGrid
             if (!tile) Debug.LogError("missing tile", this);
             yield return tile;
         }
+        
+        private void OnValidate()
+        {
+            tile?.EditorSet("item", this);
+        }
     }
 }

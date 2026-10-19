@@ -68,9 +68,7 @@ namespace GuildMasterIsekai.TileGrid
                 var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
                 if (!_grid.Contains(key)) continue;
                 var cell = _grid[key.x, key.y];
-                _baseMap.RemoveTileFlags(at, TileFlags.LockColor);
                 _baseMap.SetColor(at, cell.BaseColor);
-                _furnitureMap.RemoveTileFlags(at, TileFlags.LockColor);
                 _furnitureMap.SetColor(at, cell.FurnitureColor);
             }
             _grid.Modified.Clear();

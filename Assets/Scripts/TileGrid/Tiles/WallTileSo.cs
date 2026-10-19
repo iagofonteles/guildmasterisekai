@@ -22,10 +22,10 @@ namespace GuildMasterIsekai.TileGrid
 
         private void OnValidate()
         {
-            if (wall && (wall.Type != AutoTileType.Wall || wall.Item != this))
-                wall.__setup(this, AutoTileType.Wall);
-            if (roof && (roof.Type != AutoTileType.Roof || roof.Item != this))
-                roof.__setup(this, AutoTileType.Roof);
+            wall?.EditorSet("item", this);
+            wall?.EditorSet("type", AutoTileType.Wall);
+            roof?.EditorSet("item", this);
+            roof?.EditorSet("type", AutoTileType.Roof);
         }
     }
 }

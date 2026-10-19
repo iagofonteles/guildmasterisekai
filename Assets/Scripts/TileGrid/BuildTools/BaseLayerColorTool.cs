@@ -27,7 +27,7 @@ namespace GuildMasterIsekai.TileGrid
             {
                 if (!e.grid.Contains(position)) return;
                 var cell = e.grid[position.x, position.y];
-                if (cell.BaseTile == null) return;
+                if (!cell.BaseTile?.Tile) return;
                 if (type.HasValue && (cell.BaseTile is not DbAutoTile tile || tile.Type != type)) return;
                 if (cell.BaseColor.Equals(color) || changes.ContainsKey(position)) return;
                 var after = (GridCell)cell.Clone();

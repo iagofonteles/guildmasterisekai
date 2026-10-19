@@ -11,6 +11,7 @@ namespace GuildMasterIsekai.TileGrid
         [SerializeField, ReadOnly] private uint id;
         [SerializeField] private BaseTileSo item;
         [SerializeField] private AutoTileType type;
+        [SerializeField] private TileFlags flags = TileFlags.None;
 
         public uint Id => id;
         public BaseTileSo Item => item;
@@ -28,6 +29,12 @@ namespace GuildMasterIsekai.TileGrid
         {
             item = i;
             type = t;
+        }
+
+        public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
+        {
+            base.GetTileData(position, tilemap, ref tileData);
+            tileData.flags = flags;
         }
 
         protected override bool IsMatch(TileBase other)

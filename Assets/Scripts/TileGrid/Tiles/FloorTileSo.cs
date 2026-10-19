@@ -19,8 +19,8 @@ namespace GuildMasterIsekai.TileGrid
         
         private void OnValidate()
         {
-            if (floor && (floor.Type != AutoTileType.Floor || floor.Item != this))
-                floor.__setup(this, AutoTileType.Floor);
+            floor?.EditorSet("item", this);
+            floor?.EditorSet("type", AutoTileType.Floor);
         }
     }
 }
