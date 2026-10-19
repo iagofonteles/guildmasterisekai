@@ -26,3 +26,4 @@ MonoBehaviour:
   id: 0
   item: {fileID: 11400000, guid: 4a1263d984848fa46ad964dec428b392, type: 2}
   type: 2
+  flags: 2

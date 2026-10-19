@@ -13,6 +13,8 @@ namespace GuildMasterIsekai.TileGrid
         public DbAutoTile Wall => wall;
         public DbAutoTile Roof => roof;
 
+        public override Sprite Icon => icon ? icon : wall.m_DefaultSprite;
+        
         public override IEnumerable<ITileEntry> GetEntries()
         {
             if (!wall || !roof) Debug.LogError("missing tiels", this);

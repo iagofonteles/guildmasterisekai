@@ -17,6 +17,8 @@ namespace GuildMasterIsekai.TileGrid
         public AutoTileType BuildOn => buildOn;
         public IReadOnlyList<Vector2> ToppingSlots => toppingSlots;
 
+        public override Sprite Icon => icon ? icon : tile.sprite;
+        
         public IEnumerable<ITileEntry> GetEntries()
         {
             if (!tile) Debug.LogError("missing tile", this);

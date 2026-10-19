@@ -10,6 +10,8 @@ namespace GuildMasterIsekai.TileGrid
     {
         [SerializeField, SO] private DbAutoTile floor;
         public DbAutoTile Floor => floor;
+        
+        public override Sprite Icon => icon ? icon : floor.m_DefaultSprite;
 
         public override IEnumerable<ITileEntry> GetEntries()
         {

@@ -24,5 +24,6 @@ MonoBehaviour:
   m_TextureList: []
   m_TextureScaleList: []
   id: 0
-  item: {fileID: 11400000, guid: 0b1d02a3eb2892f43ac110fdbc1cc1a6, type: 2}
+  item: {fileID: 11400000, guid: 5be3c61f36fdad2448d92f5d021bd8f0, type: 2}
   type: 2
+  flags: 2
