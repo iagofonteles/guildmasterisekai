@@ -13,9 +13,9 @@ namespace TileGrid.BuildTools
 
         public IBuildCommand CreateCommand(GestureArgs e)
         {
-            if (e.item is not ITileEntry tile)
+            if (e.item.Value is not ITileEntry tile)
                 return e.Error("not ITileEntry");
-            if (((int)tile.LayerMask & e.layer.Value) == 0)
+            if (((int)tile.LayerMask & (1 << e.layer.Value)) == 0)
                 return e.Error("incompatible layer");
 
             var cmd = new CellCommand(e.builder);

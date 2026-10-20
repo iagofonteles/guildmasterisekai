@@ -21,7 +21,6 @@ namespace TileGrid.Build
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
 
-        public string LastError { get; private set; }
         public event Action Changed;
 
         public GestureArgs Gesture => gesture;
@@ -54,12 +53,14 @@ namespace TileGrid.Build
         public bool TryUseTool(GestureArgs e)
         {
             if (e.tool == null) throw new ArgumentNullException(nameof(e.tool));
+            e.lastError.Value = null;
             var command = e.tool.Value.CreateCommand(e);
 
             if (command == null)
             {
-                if (e.lastError != null) return Fail(e.lastError.Value);
-                LastError = null;
+                if (e.lastError.Value != null)
+                    return Fail(e.lastError.Value);
+                e.lastError.Value = null;
                 Changed?.Invoke();
                 return true;
             }
@@ -68,7 +69,7 @@ namespace TileGrid.Build
             _redo.Clear();
             _undo.Add(command);
             if (_undo.Count > Mathf.Max(1, historyLimit)) _undo.RemoveAt(0);
-            LastError = null;
+            e.lastError.Value = null;
             Changed?.Invoke();
 
             return true;
@@ -86,7 +87,7 @@ namespace TileGrid.Build
             if (!success) return Fail("The command could not be restored.");
             from.RemoveAt(from.Count - 1);
             to.Add(command);
-            LastError = null;
+            gesture.lastError.Value = null;
 
             Changed?.Invoke();
             return true;
@@ -96,7 +97,7 @@ namespace TileGrid.Build
         {
             _undo.Clear();
             _redo.Clear();
-            LastError = null;
+            gesture.lastError.Value = null;
             Changed?.Invoke();
         }
 
@@ -118,7 +119,7 @@ namespace TileGrid.Build
 
         private bool Fail(string error)
         {
-            LastError = error;
+            gesture.lastError.Value = error;
             return false;
         }
     }

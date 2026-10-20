@@ -12,7 +12,7 @@ namespace TileGrid.Build
         IEnumerable<ISlot> GetItems(GestureArgs e)
         {
             foreach (var slot in e.bag.GetSlots<ITile>())
-                if (slot.Item is ITile t && ((int)t.LayerMask & e.layer.Value) > 0)
+                if (slot.Item is ITile t && ((int)t.LayerMask & (1 << e.layer.Value)) > 0)
                     yield return slot;
         }
 
