@@ -16,20 +16,20 @@ namespace TileGrid.Build
         [SerializeField, Min(1)] private int historyLimit = 64;
         [SerializeField, SO] private GridBuilderTools tools;
         [SerializeField] private string filePath;
+        [SerializeField] private GestureArgs gesture = new();
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
-        private readonly GestureArgs _opArgs = new();
 
-        public GridData Grid => _opArgs.grid;
-        public IBuildBag Bag => _opArgs.bag;
         public string LastError { get; private set; }
         public event Action Changed;
 
-        public LayerToolsConfig[] Tools => tools.LayerTools;
+        public GestureArgs Gesture => gesture;
+        public GridData Grid => gesture.grid;
+        public IBuildBag Bag => gesture.bag;
+        public IReadOnlyList<ToolConfig> Tools => tools.Tools;
         public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
-        public Vector3Int Origin => Grid.Bounds.position;
-        public bool IsInitialized => Grid != null;
+        public bool IsInitialized => Gesture.grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
         public ScriptableObject Material => material;
@@ -39,13 +39,13 @@ namespace TileGrid.Build
             if (!defaultMaps[0]) throw new ArgumentNullException(nameof(defaultMaps));
             if (!defaultMaps[0].layoutGrid) throw new ArgumentNullException(nameof(Tilemap.layoutGrid));
             if (!tools) throw new ArgumentNullException(nameof(tools));
-            _opArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
-            _opArgs.builder = this;
+            Gesture.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
+            Gesture.builder = this;
         }
 
         private void Start()
         {
-            _opArgs.grid = string.IsNullOrEmpty(filePath)
+            Gesture.grid = string.IsNullOrEmpty(filePath)
                 ? new(defaultMaps)
                 : new GridData(serializer, filePath);
         }
@@ -92,13 +92,6 @@ namespace TileGrid.Build
             return true;
         }
 
-        public Vector2Int WorldToCell(Vector3 world)
-        {
-            if (!IsInitialized) throw new InvalidOperationException("Grid is not initialized.");
-            var cell = defaultMaps[0].WorldToCell(world);
-            return new Vector2Int(cell.x - Grid.Bounds.x, cell.y - Grid.Bounds.y);
-        }
-
         public void Clear()
         {
             _undo.Clear();
@@ -119,7 +112,7 @@ namespace TileGrid.Build
         {
             if (string.IsNullOrEmpty(path))
                 throw new Exception("no filePath");
-            _opArgs.grid = new(serializer, filePath = path);
+            Gesture.grid = new(serializer, filePath = path);
             Clear();
         }
 

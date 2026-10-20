@@ -18,11 +18,8 @@ namespace TileGrid.Tiles
     public interface ITileEntry : ITile
     {
         TileBase Tile { get; }
-    }
-
-    public interface IRoofedTile
-    {
-        ITileEntry Roof { get; }
+        ITileEntry Roof => null;
+        bool CanReplace(ITileEntry other);
     }
 
     public interface IDecorationEntry : ITile

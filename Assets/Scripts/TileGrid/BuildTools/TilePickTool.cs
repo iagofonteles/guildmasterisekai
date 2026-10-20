@@ -11,8 +11,6 @@ namespace GuildMasterIsekai.TileGrid
     [Serializable, Preserve]
     public sealed class TilePickTool : IBuildTool
     {
-        [SerializeField] private Sprite icon;
-        public Sprite Icon => icon;
         public BuildLayerMask LayerMask => BuildLayerMask.All;
 
         public IEnumerable<ISlot> GetItems(GestureArgs e) => null;

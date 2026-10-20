@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Drafts;
 using Drafts.Localization;
+using TileGrid.Tiles;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -11,35 +12,29 @@ namespace TileGrid.Build
     public class GridBuilderTools : ScriptableObject
     {
         [SerializeReference, TypeInstance] private IBuildBrush[] bruhes;
-        [SerializeField] private LayerToolsConfig[] layerTools;
+        [SerializeField] private ToolConfig[] tools;
 
         public IReadOnlyList<IBuildBrush> Bushes => bruhes;
-        public LayerToolsConfig[] LayerTools => layerTools;
+        public ToolConfig[] Tools => tools;
     }
 
     [Serializable]
-    public class LayerToolsConfig
+    public class ToolConfig
     {
-        [SerializeField] private BuildLayer layer;
-        [SerializeReference, TypeInstance(true)] private IBuildTool altTool;
-        [SerializeField] private LayerToolConfig[] tools;
-
-        public BuildLayer Layer => layer;
-        public IBuildTool AltTool => altTool;
-        public LayerToolConfig[] Tools => tools;
-    }
-
-    [Serializable]
-    public class LayerToolConfig
-    {
+        [SerializeField] private BuildLayerMask layerMask;
         [SerializeField, Loc] private LocalizedString str;
         [SerializeField] private Sprite icon;
+        [SerializeField] private Sprite altIcon;
         [SerializeReference, TypeInstance(true)] private IBuildTool left;
         [SerializeReference, TypeInstance(true)] private IBuildTool right;
+        [SerializeReference, TypeInstance(true)] private IBuildTool altTool;
 
+        public BuildLayerMask Layers => layerMask;
         public string DisplayName => str.GetLocalizedString();
         public Sprite Icon => icon;
+        public Sprite AltIcon => altIcon;
         public IBuildTool Left => left;
         public IBuildTool Right => right;
+        public IBuildTool AltTool => altTool;
     }
 }

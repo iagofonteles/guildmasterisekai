@@ -21,9 +21,10 @@ namespace TileGrid.Tiles
         public string DisplayName => displayName.Localize(this);
         public string Description => description.Localize(this);
         public Sprite Icon => icon ? icon : m_DefaultSprite;
-        TileBase ITileEntry.Tile => this;
         public BuildLayerMask LayerMask => layerMask;
+        TileBase ITileEntry.Tile => this;
 
+        public bool CanReplace(ITileEntry other) => other is DbAutoTile;
         protected override bool IsMatch(TileBase other) => other is AutoTile;
 
         public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)

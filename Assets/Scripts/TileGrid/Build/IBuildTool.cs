@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using Drafts.Inventory;
 using TileGrid.Tiles;
-using UnityEngine;
 
 namespace TileGrid.Build
 {
     /// <summary>Prepares a grid command or performs a selection-only operation.</summary>
     public interface IBuildTool
     {
-        Sprite Icon => null;
         BuildLayerMask LayerMask { get; }
 
         IEnumerable<ISlot> GetItems(GestureArgs e)

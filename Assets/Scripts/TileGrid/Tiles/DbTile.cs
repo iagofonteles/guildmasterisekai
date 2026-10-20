@@ -14,18 +14,21 @@ namespace TileGrid.Tiles
         [SerializeField, Loc] private LocalizedString displayName;
         [SerializeField, Loc] private LocalizedString description;
         [SerializeField] private Sprite icon;
+        [SerializeField] private Vector2Int size = Vector2Int.one;
         [SerializeField] private BuildLayerMask layerMask;
 
         public uint Id => id;
         public string DisplayName => displayName.Localize(this);
         public string Description => description.Localize(this);
         public Sprite Icon => icon ? icon : sprite;
-        TileBase ITileEntry.Tile => this;
+        public Vector2Int Size => size;
         public BuildLayerMask LayerMask => layerMask;
+        TileBase ITileEntry.Tile => this;
+
+        public bool CanReplace(ITileEntry other) => other is DbTile t && t.size == size;
+        private void Reset() => flags = TileFlags.None;
 
         [ContextMenu("Reroll Id")]
         private void RerollId() => id = UIntGenerator.Instance.Generate();
-
-        private void Reset() => flags = TileFlags.None;
     }
 }
