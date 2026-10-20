@@ -8978,7 +8978,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.InfiniteBuildBag
   colors:
-    slots: []
+    slots:
+    - item: {r: 0.551, g: 0, b: 0, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0, g: 0.54, b: 0, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0, g: 0, b: 0.545, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0, g: 0, b: 0, a: 1}
+      amount: -1
+      favorite: 1
+    - item: {r: 0.551, g: 0.602, b: 0, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0.551, g: 0, b: 0.574, a: 0}
+      amount: -1
+      favorite: 1
+    - item: {r: 0.551, g: 0, b: 0, a: 0.5647059}
+      amount: -1
+      favorite: 1
 --- !u!114 &1886873622
 MonoBehaviour:
   m_ObjectHideFlags: 0

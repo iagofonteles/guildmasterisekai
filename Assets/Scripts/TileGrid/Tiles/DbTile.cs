@@ -10,7 +10,7 @@ namespace GuildMasterIsekai.TileGrid
     public class DbTile : Tile,ITileEntry
     {
         [SerializeField, ReadOnly] private uint id;
-        [SerializeField] private DatabaseEntrySo item;
+        [SerializeField] internal DatabaseEntrySo item;
 
         public uint Id => id;
         public DatabaseEntrySo Item => item;
@@ -23,6 +23,11 @@ namespace GuildMasterIsekai.TileGrid
             {
                 id = Game.Id.Generate();
             } while (Game.Tiles.Find(id) != null);
+        }
+
+        private void Reset()
+        {
+            flags = TileFlags.None;
         }
     }
 }

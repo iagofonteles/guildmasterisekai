@@ -10,6 +10,8 @@ namespace GuildMasterIsekai.TileGrid
     {
         [SerializeField, SO] private DbAutoTile floor;
         public DbAutoTile Floor => floor;
+        
+        public override Sprite Icon => icon ? icon : floor.m_DefaultSprite;
 
         public override IEnumerable<ITileEntry> GetEntries()
         {
@@ -19,8 +21,8 @@ namespace GuildMasterIsekai.TileGrid
         
         private void OnValidate()
         {
-            if (floor && (floor.Type != AutoTileType.Floor || floor.Item != this))
-                floor.__setup(this, AutoTileType.Floor);
+            floor?.EditorSet("item", this);
+            floor?.EditorSet("type", AutoTileType.Floor);
         }
     }
 }

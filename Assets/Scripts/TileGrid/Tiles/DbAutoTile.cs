@@ -11,23 +11,17 @@ namespace GuildMasterIsekai.TileGrid
         [SerializeField, ReadOnly] private uint id;
         [SerializeField] private BaseTileSo item;
         [SerializeField] private AutoTileType type;
+        [SerializeField] private TileFlags flags = TileFlags.LockTransform;
 
         public uint Id => id;
         public BaseTileSo Item => item;
         public AutoTileType Type => type;
         TileBase ITileEntry.Tile => this;
 
-        public int Cost => type switch
+        public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
         {
-            AutoTileType.Floor => 1,
-            AutoTileType.Wall => 1,
-            _ => 0
-        };
-
-        public void __setup(BaseTileSo i, AutoTileType t)
-        {
-            item = i;
-            type = t;
+            base.GetTileData(position, tilemap, ref tileData);
+            tileData.flags = flags;
         }
 
         protected override bool IsMatch(TileBase other)

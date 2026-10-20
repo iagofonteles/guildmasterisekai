@@ -79,7 +79,8 @@ Shader "Custom/TilemapHueMask"
             half4 frag(Varyings i) : SV_Target
             {
                 half4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                float3 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv).rgb;
+                float4 maskSample = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
+                float3 mask = maskSample.rgb;
                 float3 deltaR = mask - _MaskColorR.rgb;
                 float3 deltaG = mask - _MaskColorG.rgb;
                 float3 deltaB = mask - _MaskColorB.rgb;
@@ -90,6 +91,8 @@ Shader "Custom/TilemapHueMask"
                 float4 regions = 1.0 - step(_MaskTolerance * _MaskTolerance, distanceSquared);
                 // Normalize overlapping matches; unmatched pixels keep their original color.
                 regions /= max(1.0, dot(regions, float4(1, 1, 1, 1)));
+                // Transparent mask pixels are unmasked, even when import padding fills their RGB.
+                regions *= saturate(maskSample.a);
                 float coverage = dot(regions, float4(1, 1, 1, 1));
                 float shiftSin = dot(regions, i.shiftSin);
                 float shiftCos = 1.0 - coverage + dot(regions, i.shiftCos);
