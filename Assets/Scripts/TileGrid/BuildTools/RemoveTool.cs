@@ -7,7 +7,7 @@ using TileGrid.Tiles;
 using UnityEngine;
 using UnityEngine.Scripting;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.BuildTools
 {
     [Preserve, Serializable]
     public sealed class RemoveTool : IBuildTool

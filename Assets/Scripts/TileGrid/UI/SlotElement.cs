@@ -1,9 +1,8 @@
 using Drafts.Inventory;
-using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.UI
 {
     public sealed class SlotElement : Button
     {

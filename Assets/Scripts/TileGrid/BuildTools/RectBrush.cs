@@ -3,7 +3,7 @@ using TileGrid.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.BuildTools
 {
     [Serializable]
     public sealed class RectBrush : IBuildBrush

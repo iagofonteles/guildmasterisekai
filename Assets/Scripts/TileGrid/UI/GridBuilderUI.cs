@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using Drafts.Inventory;
-using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.UI
 {
     [DisallowMultipleComponent]
     public sealed class GridBuilderUI : MonoBehaviour

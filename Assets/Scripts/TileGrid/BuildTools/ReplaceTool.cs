@@ -4,7 +4,7 @@ using TileGrid.Data;
 using TileGrid.Tiles;
 using UnityEngine.Scripting;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.BuildTools
 {
     [Serializable, Preserve]
     public sealed class ReplaceTool : IBuildTool
