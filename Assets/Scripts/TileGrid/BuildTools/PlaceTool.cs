@@ -16,7 +16,7 @@ namespace TileGrid.BuildTools
         {
             if (e.item is not ITileEntry tile)
                 return e.Error("not ITileEntry");
-            if (((int)tile.LayerMask & e.layer) == 0)
+            if (((int)tile.LayerMask & e.layer.Value) == 0)
                 return e.Error("incompatible layer");
 
             if (tile is DbTile t && t.Size != Vector2Int.one)
@@ -28,14 +28,14 @@ namespace TileGrid.BuildTools
             foreach (var p in e.area.allPositionsWithin)
             {
                 var cell = e.grid[p.x, p.y];
-                var curr = cell.Tiles[e.layer];
+                var curr = cell.Tiles[e.layer.Value];
                 if (curr == tile) continue;
 
                 var after = cell.Clone();
-                after.Tiles[e.layer] = tile;
-                after.Colors[e.layer] = e.color;
+                after.Tiles[e.layer.Value] = tile;
+                after.Colors[e.layer.Value] = e.color.Value;
                 after.Tiles[BuildLayer2.Roof] = tile.Roof;
-                after.Colors[BuildLayer2.Roof] = e.color;
+                after.Colors[BuildLayer2.Roof] = e.color.Value;
 
                 cmd.after.Add(after);
                 cmd.before.Add(cell.Clone());

@@ -19,10 +19,10 @@ namespace TileGrid.BuildTools
         {
             var pos = e.area.max - Vector2Int.one;
             var cell = e.grid[pos.x, pos.y];
-            var curr = cell.Tiles[e.layer];
+            var curr = cell.Tiles[e.layer.Value];
             if (curr == null) return null;
 
-            e.item = curr;
+            e.item.Value = curr;
             return null;
         }
     }

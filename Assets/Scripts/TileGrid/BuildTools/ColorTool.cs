@@ -17,20 +17,20 @@ namespace TileGrid.BuildTools
 
         public IBuildCommand CreateCommand(GestureArgs e)
         {
-            if (e.item is Color color)
-                e.color = color;
+            if (e.item.Value is Color color)
+                e.color.Value = color;
 
             var cmd = new CellCommand(e.builder);
 
             foreach (var p in e.area.allPositionsWithin)
             {
                 var cell = e.grid[p.x, p.y];
-                var curr = cell.Tiles[e.layer];
+                var curr = cell.Tiles[e.layer.Value];
                 if (curr == null) continue;
 
                 var after = cell.Clone();
-                after.Colors[e.layer] = e.color;
-                after.Colors[BuildLayer2.Roof] = e.color;
+                after.Colors[e.layer.Value] = e.color.Value;
+                after.Colors[BuildLayer2.Roof] = e.color.Value;
             }
 
             if (cmd.after.Count == 0)

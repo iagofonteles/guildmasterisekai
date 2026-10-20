@@ -54,11 +54,11 @@ namespace TileGrid.Build
         public bool TryUseTool(GestureArgs e)
         {
             if (e.tool == null) throw new ArgumentNullException(nameof(e.tool));
-            var command = e.tool.CreateCommand(e);
+            var command = e.tool.Value.CreateCommand(e);
 
             if (command == null)
             {
-                if (e.lastError != null) return Fail(e.lastError);
+                if (e.lastError != null) return Fail(e.lastError.Value);
                 LastError = null;
                 Changed?.Invoke();
                 return true;

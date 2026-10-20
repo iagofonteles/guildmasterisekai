@@ -23,11 +23,11 @@ namespace TileGrid.BuildTools
             foreach (var p in e.area.allPositionsWithin)
             {
                 var cell = e.grid[p.x, p.y];
-                if (cell.Tiles[e.layer] == null) continue;
+                if (cell.Tiles[e.layer.Value] == null) continue;
 
                 var after = cell.Clone();
-                after.Tiles[e.layer] = null;
-                after.Colors[e.layer] = Color.clear;
+                after.Tiles[e.layer.Value] = null;
+                after.Colors[e.layer.Value] = Color.clear;
                 after.Tiles[BuildLayer2.Roof] = null;
                 after.Colors[BuildLayer2.Roof] = Color.clear;
 

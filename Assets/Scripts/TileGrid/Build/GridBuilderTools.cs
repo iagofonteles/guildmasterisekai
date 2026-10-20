@@ -21,7 +21,6 @@ namespace TileGrid.Build
     [Serializable]
     public class ToolConfig
     {
-        [SerializeField] private BuildLayerMask layerMask;
         [SerializeField, Loc] private LocalizedString str;
         [SerializeField] private Sprite icon;
         [SerializeField] private Sprite altIcon;
@@ -29,7 +28,7 @@ namespace TileGrid.Build
         [SerializeReference, TypeInstance(true)] private IBuildTool right;
         [SerializeReference, TypeInstance(true)] private IBuildTool altTool;
 
-        public BuildLayerMask Layers => layerMask;
+        public BuildLayerMask Layers => left.LayerMask;
         public string DisplayName => str.GetLocalizedString();
         public Sprite Icon => icon;
         public Sprite AltIcon => altIcon;

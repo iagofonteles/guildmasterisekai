@@ -10,14 +10,14 @@ namespace TileGrid.Build
         public GridBuilder builder;
         public GridData grid;
         public IBuildBag bag;
-        public IBuildBrush brush;
-        public IBuildTool tool;
-        public int layer;
-        public object item;
-        public Color color;
+        public Watcher<IBuildBrush> brush = new();
+        public Watcher<IBuildTool> tool = new();
+        public Watcher<int> layer = new();
+        public Watcher<object> item;
+        public Watcher<Color> color;
         public RectInt area;
         public MouseButton button;
-        public string lastError;
+        public Watcher<string> lastError;
 
         public void Validate2()
         {
@@ -29,7 +29,7 @@ namespace TileGrid.Build
 
         public IBuildCommand Error(string message)
         {
-            lastError = message;
+            lastError.Value = message;
             return null;
         }
     }
