@@ -1,28 +1,20 @@
 using System.IO;
 using GuildMasterIsekai.Systems;
+using TileGrid.Data;
+using TileGrid.Tiles;
 
 namespace GuildMasterIsekai.TileGrid
 {
     public class GameGridSerializer : IGridSerializer
     {
-        public void WriteTile(BinaryWriter writer, ITileEntry tile)
+        public void WriteTile(BinaryWriter writer, ITile tile)
         {
             writer.Write(tile?.Id ?? 0);
         }
 
-        public void WriteItem(BinaryWriter writer, IDbTile item)
-        {
-            writer.Write(item?.Id ?? 0);
-        }
-
-        public ITileEntry ReadTile(BinaryReader reader)
+        public ITile ReadTile(BinaryReader reader)
         {
             return Game.Tiles.Find(reader.ReadUInt32());
-        }
-
-        public T ReadItem<T>(BinaryReader reader)
-        {
-            return Game.Database.Find<T>(reader.ReadUInt32());
         }
 
         public BinaryWriter GetWriter(string key)

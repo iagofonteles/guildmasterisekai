@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using Drafts.Database;
 using Drafts.SaveData;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace GuildMasterIsekai.Systems
 {
@@ -30,8 +30,7 @@ namespace GuildMasterIsekai.Systems
         public static void RefreshDatabase()
         {
             Game.Database.FetchItemsFromAssets();
-            var field = typeof(Game).GetField("_tiles", BindingFlags.Static | BindingFlags.NonPublic);
-            field!.SetValue(null, null);
+            Game.Tiles.FetchItemsFromAssets<TileBase>();
         }
 #endif
     }

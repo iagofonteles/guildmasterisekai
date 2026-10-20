@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Drafts.Database;
 using Drafts.Inventory;
-using GuildMasterIsekai.Systems;
+using TileGrid.Build;
 using UnityEngine;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.BuildBag
 {
     /// <summary>Optional scene dependency for testing without an inventory.</summary>
     public sealed class InfiniteBuildBag : MonoBehaviour, IBuildBag
@@ -13,13 +13,13 @@ namespace GuildMasterIsekai.TileGrid
         [SerializeField] private ScriptableObject database;
         public int GetBuildingMaterials() => int.MaxValue;
 
-        private ListInventory<IDbTile> _inventory;
+        private ListInventory<IDatabaseItem> _inventory;
         public ListInventory<Color> colors;
 
-        private IEnumerable<Slot<IDbTile>> FetchItems()
-            => ((IDatabase)database).GetAll<IDbTile>().Select(i => new Slot<IDbTile>(i, -1, true));
+        private IEnumerable<Slot<IDatabaseItem>> FetchItems()
+            => ((IDatabase)database).GetAll<IDatabaseItem>().Select(i => new Slot<IDatabaseItem>(i, -1, true));
 
-        public IEnumerable<ISlot> GetItems<T>()
+        public IEnumerable<ISlot> GetSlots<T>()
         {
             if (typeof(T) == typeof(Color))
             {

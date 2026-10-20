@@ -1,2 +1,27 @@
-change toppings logic to the following
+ignore BuildTools and UI folder
 
+review TileGrid scripts and append here possible errors, modify nothing
+Review report - 2026-10-20
+
+Summary:
+Reviewed TileGrid C# sources, excluding BuildTools and UI as instructed. No implementation changes were made. Findings below are based on static code inspection, ordered by impact.
+
+Completed work / possible errors:
+3. [High] The editor assembly is not restricted to Editor (Editor/TileGridEditor.asmdef, includePlatforms is empty). Its scripts directly use UnityEditor APIs and reference editor-only tilemap assemblies. Player compilation can fail because TileGridEditor is included without its editor dependencies. Restrict this assembly to Editor. This is a configuration finding; no player build was run.
+4. [Medium] The autotile inspector targets removed/missing properties and hides current metadata (Editor/DbAutoTileEditor.cs:15-21; Tiles/DbAutoTile.cs:13-18; Tiles/WallTile.cs:10). Neither DbAutoTile nor its AutoTile base declares item or type. Those PropertyFields cannot bind valid data. The custom inspector also does not expose id, displayName, description, icon, layerMask, or the WallTile roof field; the base inspector renders only AutoTile controls. Current metadata and roof assignments cannot be configured through this inspector.
+5. [Medium] Grid import uses only layer zero's bounds (Data/GridData.BuildFrom.cs:17-23). Tiles in other supplied layers outside those bounds never enter the snapshot or save file. An empty first map can produce an empty grid despite populated upper layers. Use the union of the relevant layer bounds if independent extents are supported.
+6. [Medium] Commands are not atomic when applying a snapshot fails (Data/CellCommand.cs:18-22,29-33; Data/GridData.cs:43-47). Inventory is changed before all target cells are validated/applied. An invalid coordinate or malformed state can throw after payment/refund and partial cell updates, leaving _done unchanged and history inconsistent. Validate the whole operation before changing inventory/grid, or roll back on failure.
+7. [Medium] Runtime maps omit source colliders (Build/GridRenderer.cs:124-147). CreateMap copies Tilemap and renderer settings but creates no TilemapCollider2D or associated physics setup. For source layers that rely on tilemap collision, runtime edits have no matching collider; any retained source collider continues to describe the original tiles. This is conditional on collision being required for those layers.
+8. [Medium] Decoration colors are ignored by rendering (Data/CellTopping.cs:11,17,24; Build/GridRenderer.cs:173-193). The color is stored and serialized, but RenderToppings applies only position. Changing decoration tint cannot change the displayed prefab through this renderer.
+9. [Medium] Negative decoration counts are accepted in saved data (Data/GridData.Save.cs:75-77). A negative count silently skips the collection rather than rejecting the file. In a multi-cell file, any following decoration payload is then interpreted as the next cell, potentially causing misreads or incorrect state. Validate the count before reading entries; reasonable upper bounds would also avoid excessive allocation/work on corrupt files.
+10. [Low] Awake indexes defaultMaps before checking its size/null state (Build/GridBuilder.cs:42). An unassigned or empty array throws NullReferenceException/IndexOutOfRangeException instead of the intended configuration error. Validate the array before accessing element zero.
+
+Validation results:
+Static inspection of the included TileGrid scripts, assembly definitions, local AutoTile implementation/inspector, and the game serializer/database integration. No builds, automated tests, or Unity runtime checks were performed. Existing working-tree changes were left untouched; only this report was appended.
+
+Limitations:
+BuildTools and UI were excluded. Scene/prefab configuration, unsaved Editor state, actual inventory implementations, and runtime reproduction were not inspected. Conditional findings are identified above. This is not a claim that all possible defects were found.
+
+Modified assets / files:
+- Assets/Scripts/TileGrid/GridBuilding task.txt (appended review report only).
+Existing unrelated added, modified, renamed, and deleted files were present before this review and are not changes made by this task.

@@ -1,9 +1,9 @@
 using System;
-using GuildMasterIsekai.Systems;
+using TileGrid.Tiles;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     public sealed partial class GridData
     {

@@ -1,8 +1,7 @@
 using System.IO;
-using GuildMasterIsekai.Systems;
-using UnityEngine;
+using TileGrid.Tiles;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     public sealed partial class GridData
     {
@@ -68,7 +67,7 @@ namespace GuildMasterIsekai.TileGrid
                 };
 
                 for (var t = 0; t < LayerCount; t++)
-                    cell.Tiles[t] = serializer.ReadTile(reader);
+                    cell.Tiles[t] = (ITileEntry)serializer.ReadTile(reader);
                 for (var c = 0; c < LayerCount; c++)
                     cell.Colors[c] = serializer.ReadColor(reader);
 

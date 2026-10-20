@@ -3,19 +3,15 @@ using System.IO;
 using Drafts.Database;
 using Drafts.SaveData;
 using GuildMasterIsekai.TileGrid;
+using TileGrid.Tiles;
+using UnityEngine;
 
 namespace GuildMasterIsekai.Systems
 {
-    public class TileDatabase : RuntimeDatabase<ITileEntry>
+    [CreateAssetMenu(menuName = "Game/TileDatabase")]
+    public class TileDatabase : FlexibleDatabaseSO<ITile>
     {
-        public TileDatabase(Database db) : base(GetTileEntries(db)) { }
-
-        private static IEnumerable<ITileEntry> GetTileEntries(Database db)
-        {
-            foreach (var tileSo in db.GetAll<ITileProvider>())
-            foreach (var entry in tileSo.GetEntries())
-                yield return entry;
-        }
+        
     }
 
     public static class TileDatabaseExtensions

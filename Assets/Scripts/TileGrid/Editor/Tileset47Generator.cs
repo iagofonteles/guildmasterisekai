@@ -7,7 +7,7 @@ using UnityEditor.U2D.Sprites;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace GuildMasterIsekai.TileGrid.Editor
+namespace TileGrid.Editor
 {
     /// <summary>Expands one RPG Maker-style two-column, three-row compact block into 47 blob tiles.</summary>
     public static class Tileset47Generator

@@ -1,13 +1,27 @@
-namespace GuildMasterIsekai.TileGrid
+using System;
+
+namespace TileGrid.Tiles
 {
-    // floor 0/1/2 are interchangeable
-    public enum BuildLayer
+    public static class BuildLayer2
     {
-        Default, // water or hole
-        Floor0, // ground
-        Floor1, // floor
-        Floor2, // carpet
-        World, // wall/furniture
-        Roof
+        public const int Default = 0;
+        public const int Ground = 1;
+        public const int Floor = 2;
+        public const int Carpet = 3;
+        public const int World = 4;
+        public const int Roof = 5;
+        public const int Count = 6;
+    }
+
+    [Flags]
+    public enum BuildLayerMask
+    {
+        Default = 1, // water/hole
+        Ground = 2, // dirt/sand
+        Floor = 4, // floor/grass
+        Carpet = 8, // carpet
+        World = 16, // wall/furniture
+        Roof = 32, // roof
+        All = 63,
     }
 }

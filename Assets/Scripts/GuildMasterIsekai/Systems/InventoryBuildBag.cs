@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Drafts.Inventory;
 using GuildMasterIsekai.Systems;
+using TileGrid.Build;
 using UnityEngine;
 
 namespace GuildMasterIsekai.TileGrid
@@ -20,7 +21,7 @@ namespace GuildMasterIsekai.TileGrid
 
         public int GetBuildingMaterials() => inventory.Count(buildingMaterial);
 
-        public IEnumerable<ISlot> GetItems<T>()
+        public IEnumerable<ISlot> GetSlots<T>()
         {
             if (typeof(T) == typeof(Color))
             {

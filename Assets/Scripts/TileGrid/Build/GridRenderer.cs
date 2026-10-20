@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using GuildMasterIsekai.Systems;
+using TileGrid.Data;
+using TileGrid.Tiles;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     public sealed class GridRenderer : MonoBehaviour
     {
@@ -18,10 +19,10 @@ namespace GuildMasterIsekai.TileGrid
 
         private sealed class RenderedTopping
         {
-            public IPrefabTile tile;
+            public IDecorationEntry tile;
             public GameObject instance;
 
-            public RenderedTopping(IPrefabTile tile, GameObject instance)
+            public RenderedTopping(IDecorationEntry tile, GameObject instance)
             {
                 this.tile = tile;
                 this.instance = instance;

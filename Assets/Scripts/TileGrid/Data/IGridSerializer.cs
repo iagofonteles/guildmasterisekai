@@ -1,15 +1,13 @@
 using System.IO;
-using GuildMasterIsekai.Systems;
+using TileGrid.Tiles;
 using UnityEngine;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     public interface IGridSerializer
     {
-        void WriteTile(BinaryWriter writer, ITileEntry tile);
-        void WriteItem(BinaryWriter writer, IDbTile item);
-        ITileEntry ReadTile(BinaryReader reader);
-        T ReadItem<T>(BinaryReader reader);
+        void WriteTile(BinaryWriter writer, ITile tile);
+        ITile ReadTile(BinaryReader reader);
         BinaryWriter GetWriter(string key);
         BinaryReader GetReader(string key);
 

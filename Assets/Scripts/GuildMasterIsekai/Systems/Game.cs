@@ -14,7 +14,7 @@ namespace GuildMasterIsekai.Systems
         private static SaveManager _save;
 
         public static Database Database => Load(ref _database);
-        public static TileDatabase Tiles => _tiles ??= new(Database);
+        public static TileDatabase Tiles => Load(ref _tiles);
         public static SaveManager SaveMngr { get; } = new("Save", "Default", new SaveFileParser());
         public static SaveFileParser SaveParser { get; } = new();
         public static UIntGenerator Id { get; } = new();

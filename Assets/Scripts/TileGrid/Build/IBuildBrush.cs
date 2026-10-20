@@ -1,18 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     public interface IBuildBrush
     {
-        GridBuilder Builder { set; }
         Sprite Icon { get; }
-        bool IsPixel { get; }
+        bool HasDrag { get; }
 
-        void OnMouseDown(IBuildTool tool, Vector2Int pos, MouseButton button);
-        void OnMouseDrag(IBuildTool tool, Vector2Int pos, MouseButton button);
-        void OnMouseUp(IBuildTool tool, Vector2Int pos, MouseButton button);
+        void OnMouseDown(GestureArgs e, Vector2Int pos);
+        void OnMouseDrag(GestureArgs e, Vector2Int pos);
+        void OnMouseUp(GestureArgs e, Vector2Int pos);
         void OnKeyDown(Vector2Int pos, Key key);
         void OnKeyUp(Vector2Int pos, Key key);
     }

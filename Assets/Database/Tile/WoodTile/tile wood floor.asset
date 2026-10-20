@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
+  m_Name: tile wood floor
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.DbAutoTile
+  m_DefaultSprite: {fileID: -1966341947, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 0
+  m_MaskType: 0
+  m_Random: 0
+  m_PhysicsShapeCheck: 0
+  m_AutoTileDictionary:
+    keyData: 
+    valueData: []
+  m_TextureList: []
+  m_TextureScaleList: []
+  id: 0
+  item: {fileID: 11400000, guid: 61acc7612b198384380762d2dcfe6209, type: 2}
+  type: 2
+  flags: 2

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     /// <summary>Authoritative grid snapshot. Loading replaces state only after full validation.</summary>
     public sealed partial class GridData

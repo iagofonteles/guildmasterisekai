@@ -5,7 +5,7 @@ using Drafts.Localization;
 using UnityEngine;
 using UnityEngine.Localization;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     /// <summary>Runtime building API. Input controllers call the brush methods in cell coordinates.</summary>
     public class GridBuilderTools : ScriptableObject

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using GuildMasterIsekai.Systems;
+using TileGrid.Tiles;
 using UnityEngine;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     public interface IGridCell
     {

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using GuildMasterIsekai.TileGrid;
+using TileGrid.Build;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     public sealed class CellCommand : IBuildCommand
     {

@@ -1,24 +1,30 @@
 using Drafts;
 using Drafts.Database;
-using GuildMasterIsekai.Systems;
-using TileGrid.Tiles;
+using Drafts.Localization;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Tiles
 {
     [CreateAssetMenu(menuName = "Tiles/DbAutoTile")]
     public class DbAutoTile : AutoTile, ITileEntry
     {
         [SerializeField, ReadOnly] private uint id;
-        [SerializeField] private ScriptableObject item;
-        [SerializeField] private AutoTileType type;
+        [SerializeField, Loc] private LocalizedString displayName;
+        [SerializeField, Loc] private LocalizedString description;
+        [SerializeField] private Sprite icon;
+        [SerializeField] private BuildLayerMask layerMask;
         [SerializeField] private TileFlags flags = TileFlags.LockTransform;
 
         public uint Id => id;
-        public ITileSo Item => (ITileSo)item;
-        public AutoTileType Type => type;
+        public string DisplayName => displayName.Localize(this);
+        public string Description => description.Localize(this);
+        public Sprite Icon => icon ? icon : m_DefaultSprite;
         TileBase ITileEntry.Tile => this;
+        public BuildLayerMask LayerMask => layerMask;
+
+        protected override bool IsMatch(TileBase other) => other is AutoTile;
 
         public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
         {
@@ -26,15 +32,7 @@ namespace GuildMasterIsekai.TileGrid
             tileData.flags = flags;
         }
 
-        protected override bool IsMatch(TileBase other)
-        {
-            return other is DbAutoTile a && a.type == type;
-        }
-
         [ContextMenu("Reroll Id")]
-        private void RerollId()
-        {
-            id = UIntGenerator.Instance.Generate();
-        }
+        private void RerollId() => id = UIntGenerator.Instance.Generate();
     }
 }

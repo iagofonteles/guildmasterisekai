@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Drafts;
-using GuildMasterIsekai.Systems;
+using TileGrid.Data;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     public sealed class GridBuilder : MonoBehaviour
     {
@@ -19,18 +19,15 @@ namespace GuildMasterIsekai.TileGrid
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
-        private readonly OperationArgs _opArgs = new();
+        private readonly GestureArgs _opArgs = new();
 
         public GridData Grid => _opArgs.grid;
         public IBuildBag Bag => _opArgs.bag;
-        public LayerToolConfig CurrentTool { get; set; }
-        public IBuildBrush CurrentBrush { get; set; }
         public string LastError { get; private set; }
         public event Action Changed;
 
         public LayerToolsConfig[] Tools => tools.LayerTools;
         public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
-        public object SelectedItem { get => _opArgs.item; set => _opArgs.item = value; }
         public Vector3Int Origin => Grid.Bounds.position;
         public bool IsInitialized => Grid != null;
         public bool CanUndo => _undo.Count > 0;
@@ -54,21 +51,14 @@ namespace GuildMasterIsekai.TileGrid
         }
 
         /// <summary>Runs a tool through inventory checks, atomic commit, rendering and undo history.</summary>
-        public bool TryUseTool(RectInt area, IBuildTool tool, int slot = -1,
-            Vector2Int delta = default, Func<Vector2Int, int> nearestSlot = null)
+        public bool TryUseTool(GestureArgs e)
         {
-            if (tool == null) throw new ArgumentNullException(nameof(tool));
-
-            _opArgs.area = area;
-            _opArgs.slot = slot;
-            _opArgs.delta = delta;
-            _opArgs.nearestSlot = nearestSlot;
-
-            var command = tool.CreateCommand(_opArgs, out var error);
+            if (e.tool == null) throw new ArgumentNullException(nameof(e.tool));
+            var command = e.tool.CreateCommand(e);
 
             if (command == null)
             {
-                if (error != null) return Fail(error);
+                if (e.lastError != null) return Fail(e.lastError);
                 LastError = null;
                 Changed?.Invoke();
                 return true;
@@ -130,6 +120,7 @@ namespace GuildMasterIsekai.TileGrid
             if (string.IsNullOrEmpty(path))
                 throw new Exception("no filePath");
             _opArgs.grid = new(serializer, filePath = path);
+            Clear();
         }
 
         private bool Fail(string error)
