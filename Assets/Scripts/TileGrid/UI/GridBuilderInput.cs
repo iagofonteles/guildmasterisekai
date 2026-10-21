@@ -10,7 +10,7 @@ namespace TileGrid.UI
     {
         [SerializeField] private GridBuilder builder;
         [SerializeField] private PanelRenderer document;
-        private BuildArgs Args => builder.Build;
+        private BuildArgs Args => builder.BuildArgs;
 
         private VisualElement _outline;
         private Image _cursorIcon;

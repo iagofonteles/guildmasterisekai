@@ -13968,7 +13968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47474a355f15b2d48992891e714fb160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.InfiniteBuildBag
-  database: {fileID: 0}
+  database: {fileID: 11400000, guid: 11084b9d1bf8cbf49b05dd7e6e1e371f, type: 2}
   colors:
     slots:
     - item: {r: 0.551, g: 0, b: 0, a: 0}

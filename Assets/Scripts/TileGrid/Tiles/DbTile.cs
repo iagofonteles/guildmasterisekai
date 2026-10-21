@@ -21,7 +21,7 @@ namespace TileGrid.Tiles
         public uint Id => id;
         public string DisplayName => displayName.Localize(this);
         public string Description => description.Localize(this);
-        public Sprite Icon => icon ? icon : sprite;
+        public Sprite Icon => icon ? icon : rotations[0];
         public Vector2Int Size => size;
         public BuildLayerMask LayerMask => layerMask;
         TileBase ITileEntry.Tile => this;

@@ -17,7 +17,7 @@ namespace TileGrid.Build
         public readonly Watcher<IBuildBrush> brush = new();
         public readonly Watcher<IBuildTool> tool = new();
         public readonly Watcher<object> item = new();
-        public readonly Watcher<Color> color = new(Color.white);
+        public readonly Watcher<Color> color = new();
         public readonly Watcher<string> lastError = new();
 
         public void Validate2()

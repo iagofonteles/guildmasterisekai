@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TileGrid.Build;
 using System.Collections.Generic;
+using System.Linq;
 using Drafts;
 using TileGrid.Tiles;
 using Drafts.Inventory;
@@ -46,8 +47,7 @@ namespace TileGrid.UI
             root.pickingMode = PickingMode.Ignore;
             root.Q("toolbar").RegisterCallback<WheelEvent>(e => e.StopPropagation());
 
-            foreach (var child in root.Children())
-                child.pickingMode = PickingMode.Ignore;
+            b.BuildArgs.brush.Value = gridTools.Brushes[0];
 
             undo.clicked += b.Undo;
             redo.clicked += b.Redo;
@@ -57,10 +57,13 @@ namespace TileGrid.UI
             _unsubscribe += () => redo.clicked -= b.Redo;
             _unsubscribe += () => b.Changed -= RefreshStatus;
 
-            _unsubscribe += DrawLayers(root, b.Build, gridTools.Layers);
-            _unsubscribe += DrawBrushes(root, b.Build, gridTools.Brushes);
-            _unsubscribe += DrawTools(root, b.Build, gridTools.Tools);
-            _unsubscribe += DrawTiles(root, b.Build);
+            _unsubscribe += DrawLayers(root, b.BuildArgs, gridTools);
+            _unsubscribe += DrawBrushes(root, b.BuildArgs, gridTools);
+            _unsubscribe += DrawTools(root, b.BuildArgs, gridTools);
+            _unsubscribe += DrawTiles(root, b.BuildArgs);
+
+            foreach (var child in root.Children())
+                child.pickingMode = PickingMode.Ignore;
 
             void RefreshStatus()
             {
@@ -70,10 +73,13 @@ namespace TileGrid.UI
             }
         }
 
-        private static Action DrawLayers(VisualElement root, BuildArgs e, IReadOnlyList<LayerConfig> list)
+        private static Action DrawLayers(VisualElement root, BuildArgs e, GridBuilderTools toolsSo)
         {
+            var list = toolsSo.Layers;
             var layers = root.Q("layers");
+            layers.Clear();
             var buttons = new List<Button>(list.Count);
+            e.layer.Value = list[0].Index;
 
             foreach (var layer in list)
             {
@@ -94,11 +100,19 @@ namespace TileGrid.UI
             {
                 foreach (var button in buttons)
                     button.EnableInClassList("selected", (int)button.userData == i);
+
+                var tMask = e.tool.Value?.LayerMask ?? 0;
+                var iMask = (BuildLayerMask)(1 << i);
+
+                if ((iMask & tMask) == 0)
+                    e.tool.Value = toolsSo.Tools.First(t => (t.LayerMask & iMask) > 0);
+                else e.tool.Value = e.tool.Value;
             }
         }
 
-        private static Action DrawBrushes(VisualElement root, BuildArgs e, IReadOnlyList<IBuildBrush> list)
+        private static Action DrawBrushes(VisualElement root, BuildArgs e, GridBuilderTools toolsSo)
         {
+            var list = toolsSo.Brushes;
             var brushes = root.Q("brushes");
             var buttons = new List<Button>(list.Count);
 
@@ -133,8 +147,9 @@ namespace TileGrid.UI
             }
         }
 
-        private static Action DrawTools(VisualElement root, BuildArgs e, IReadOnlyList<IBuildTool> list)
+        private static Action DrawTools(VisualElement root, BuildArgs e, GridBuilderTools toolsSo)
         {
+            var list = toolsSo.Tools;
             var tools = root.Q("tools");
             var buttons = new List<Button>(list.Count);
 
@@ -149,67 +164,88 @@ namespace TileGrid.UI
                 buttons.Add(button);
             }
 
-            e.layer.OnChanged += Refresh;
+            e.layer.OnChanged += Show;
             e.tool.OnChanged += Refresh;
-            Refresh(0);
+            Show(e.layer.Value);
+            Refresh(e.tool.Value);
 
             return () =>
             {
-                e.layer.OnChanged -= Refresh;
+                e.layer.OnChanged -= Show;
                 e.tool.OnChanged -= Refresh;
             };
 
-            void Refresh<T>(T value)
+            void Show(int layer)
             {
                 foreach (var button in buttons)
                 {
                     var tool = (IBuildTool)button.userData;
+                    button.visible = ((int)tool.LayerMask & (1 << layer)) > 0;
+                }
+            }
 
-                    if (value is int layer)
-                        button.visible = ((int)tool.LayerMask & (1 << layer)) > 0;
-
-                    if (value is IBuildTool t)
-                        button.EnableInClassList("selected", tool == t);
+            void Refresh(IBuildTool curr)
+            {
+                foreach (var button in buttons)
+                {
+                    var tool = (IBuildTool)button.userData;
+                    button.EnableInClassList("selected", tool == curr);
                 }
             }
         }
 
-        private Action DrawTiles(VisualElement root, BuildArgs e)
+        private static Action DrawTiles(VisualElement root, BuildArgs e)
         {
             var tiles = root.Q<ScrollView>("tiles");
+            var elements = new List<SlotElement>();
             Refresh(e.tool.Value);
+
             e.tool.OnChanged += Refresh;
-            return () => e.tool.OnChanged -= Refresh;
+            e.item.OnChanged += RefreshSelection;
+            e.color.OnChanged += RefreshSelection;
+
+            return () =>
+            {
+                e.tool.OnChanged -= Refresh;
+                e.item.OnChanged -= RefreshSelection;
+                e.color.OnChanged -= RefreshSelection;
+            };
+
+            void RefreshSelection<T>(T _)
+            {
+                foreach (var element in elements)
+                    element.SelectedItem = e.item.Value;
+            }
 
             void Refresh(IBuildTool tool)
             {
                 tiles.Clear();
-                AddItems(tiles, e, e.tool.Value?.GetItems(e));
+                elements.Clear();
+                AddItems(tiles, e, tool.GetItems(e), elements);
 
                 if (tiles.contentContainer.childCount == 0)
                     tiles.Add(new Label("No available tiles on this layer."));
             }
         }
 
-        private static void AddItems(ScrollView tiles, BuildArgs e, IEnumerable<ISlot> slots)
+        private static void AddItems(ScrollView tiles, BuildArgs e, IEnumerable<ISlot> slots, List<SlotElement> elements)
         {
             if (slots == null) return;
 
             foreach (var slot in slots)
             {
                 if (slot == null) continue;
-                if (slot.Item is not Color && slot.Item is not ITile) continue;
                 var element = new SlotElement
                 {
                     Slot = slot,
-                    SelectedItem = slot.Item is Color ? e.color.Value : e.item.Value
+                    SelectedItem = e.item.Value
                 };
 
-                if (element.Slot.Item is Color color)
+                if (slot.Item is Color color)
                     element.clicked += () => e.color.Value = color;
-                if (element.Slot.Item is ITile selected)
-                    element.clicked += () => e.item.Value = selected;
+                element.clicked += () => e.item.Value = slot.Item;
 
+                elements.Add(element);
                 tiles.Add(element);
             }
         }

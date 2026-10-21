@@ -15,17 +15,16 @@ namespace TileGrid.Build
         [SerializeField] private ScriptableObject material;
         [SerializeField, Min(1)] private int historyLimit = 64;
         [SerializeField] private string filePath;
-        private readonly BuildArgs _build = new();
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
 
         public event Action Changed;
 
-        public BuildArgs Build => _build;
-        public GridData Grid => _build.grid;
-        public IBuildBag Bag => _build.bag;
-        public bool IsInitialized => Build.grid != null;
+        public BuildArgs BuildArgs { get; } = new();
+        public GridData Grid => BuildArgs.grid;
+        public IBuildBag Bag => BuildArgs.bag;
+        public bool IsInitialized => BuildArgs.grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
         public ScriptableObject Material => material;
@@ -34,13 +33,13 @@ namespace TileGrid.Build
         {
             if (!defaultMaps[0]) throw new ArgumentNullException(nameof(defaultMaps));
             if (!defaultMaps[0].layoutGrid) throw new ArgumentNullException(nameof(Tilemap.layoutGrid));
-            Build.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
-            Build.builder = this;
+            BuildArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
+            BuildArgs.builder = this;
         }
 
         private void Start()
         {
-            Build.grid = string.IsNullOrEmpty(filePath)
+            BuildArgs.grid = string.IsNullOrEmpty(filePath)
                 ? new(defaultMaps)
                 : new GridData(serializer, filePath);
         }
@@ -83,7 +82,7 @@ namespace TileGrid.Build
             if (!success) return Fail("The command could not be restored.");
             from.RemoveAt(from.Count - 1);
             to.Add(command);
-            _build.lastError.Value = null;
+            BuildArgs.lastError.Value = null;
 
             Changed?.Invoke();
             return true;
@@ -93,7 +92,7 @@ namespace TileGrid.Build
         {
             _undo.Clear();
             _redo.Clear();
-            _build.lastError.Value = null;
+            BuildArgs.lastError.Value = null;
             Changed?.Invoke();
         }
 
@@ -109,13 +108,13 @@ namespace TileGrid.Build
         {
             if (string.IsNullOrEmpty(path))
                 throw new Exception("no filePath");
-            Build.grid = new(serializer, filePath = path);
+            BuildArgs.grid = new(serializer, filePath = path);
             Clear();
         }
 
         private bool Fail(string error)
         {
-            _build.lastError.Value = error;
+            BuildArgs.lastError.Value = error;
             return false;
         }
     }
