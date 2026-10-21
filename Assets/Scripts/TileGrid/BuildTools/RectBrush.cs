@@ -22,15 +22,15 @@ namespace TileGrid.BuildTools
 
         public void CancelGesture() => _cancel = true;
 
-        public void OnMouseDown(GestureArgs e, Vector2Int pos)
+        public void OnMouseDown(BuildArgs e, Vector2Int pos)
         {
             _cancel = false;
             _first = _last = pos;
         }
 
-        public void OnMouseDrag(GestureArgs e, Vector2Int pos) => _last = pos;
+        public void OnMouseDrag(BuildArgs e, Vector2Int pos) => _last = pos;
 
-        public void OnMouseUp(GestureArgs e, Vector2Int pos)
+        public void OnMouseUp(BuildArgs e, Vector2Int pos)
         {
             if (_cancel) return;
             _last = pos;

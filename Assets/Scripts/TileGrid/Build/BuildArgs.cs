@@ -5,13 +5,14 @@ using UnityEngine.UIElements;
 
 namespace TileGrid.Build
 {
-    public sealed class GestureArgs
+    public sealed class BuildArgs
     {
         public GridBuilder builder;
         public GridData grid;
         public IBuildBag bag;
         public RectInt area;
         public MouseButton button;
+        public bool alt;
         public readonly Watcher<int> layer = new();
         public readonly Watcher<IBuildBrush> brush = new();
         public readonly Watcher<IBuildTool> tool = new();

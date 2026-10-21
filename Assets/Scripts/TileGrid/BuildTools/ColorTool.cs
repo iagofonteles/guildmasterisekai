@@ -13,9 +13,9 @@ namespace TileGrid.BuildTools
     public sealed class ColorTool : IBuildTool
     {
         public BuildLayerMask LayerMask => BuildLayerMask.All;
-        public IEnumerable<ISlot> GetItems(GestureArgs e) => e.bag.GetSlots<Color>();
+        public IEnumerable<ISlot> GetItems(BuildArgs e) => e.bag.GetSlots<Color>();
 
-        public IBuildCommand CreateCommand(GestureArgs e)
+        public IBuildCommand CreateCommand(BuildArgs e)
         {
             if (e.item.Value is Color color)
                 e.color.Value = color;

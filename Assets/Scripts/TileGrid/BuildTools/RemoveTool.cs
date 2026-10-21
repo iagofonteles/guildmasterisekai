@@ -1,22 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Drafts.Inventory;
 using TileGrid.Build;
 using TileGrid.Data;
 using TileGrid.Tiles;
 using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace TileGrid.BuildTools
 {
-    [Preserve, Serializable]
-    public sealed class RemoveTool : IBuildTool
+    public sealed class RemoveTool
     {
-        public BuildLayerMask LayerMask => BuildLayerMask.All;
-
-        public IEnumerable<ISlot> GetItems(GestureArgs e) => null;
-
-        public IBuildCommand CreateCommand(GestureArgs e)
+        public IBuildCommand CreateCommand(BuildArgs e)
         {
             var cmd = new CellCommand(e.builder);
 

@@ -1,7 +1,10 @@
 using System;
+using Drafts.Localization;
 using TileGrid.Build;
 using TileGrid.Data;
 using TileGrid.Tiles;
+using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Scripting;
 
 namespace TileGrid.BuildTools
@@ -9,9 +12,19 @@ namespace TileGrid.BuildTools
     [Serializable, Preserve]
     public sealed class ReplaceTool : IBuildTool
     {
-        public BuildLayerMask LayerMask => BuildLayerMask.All;
+        [SerializeField, Loc] private LocalizedString str;
+        [SerializeField] private Sprite icon;
+        [SerializeField] private Sprite altIcon;
 
-        public IBuildCommand CreateCommand(GestureArgs e)
+        private RemoveTool _remove = new();
+        private TilePickTool _pick = new();
+
+        public BuildLayerMask LayerMask => BuildLayerMask.All;
+        public string DisplayName => str.GetLocalizedString();
+        public Sprite Icon => icon;
+        public Sprite AltIcon => altIcon;
+
+        public IBuildCommand CreateCommand(BuildArgs e)
         {
             if (e.item.Value is not ITileEntry tile)
                 return e.Error("not ITileEntry");

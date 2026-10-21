@@ -31,6 +31,10 @@ MonoBehaviour:
     m_Key: tool_color
     m_Metadata:
       m_Items: []
+  - m_Id: 851144162480128
+    m_Key: new entry 437
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

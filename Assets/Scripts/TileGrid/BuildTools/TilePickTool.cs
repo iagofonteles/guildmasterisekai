@@ -1,21 +1,11 @@
-using System;
-using System.Collections.Generic;
-using Drafts.Inventory;
 using TileGrid.Build;
-using TileGrid.Tiles;
 using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace TileGrid.BuildTools
 {
-    [Serializable, Preserve]
-    public sealed class TilePickTool : IBuildTool
+    public sealed class TilePickTool
     {
-        public BuildLayerMask LayerMask => BuildLayerMask.All;
-
-        public IEnumerable<ISlot> GetItems(GestureArgs e) => null;
-
-        public IBuildCommand CreateCommand(GestureArgs e)
+        public IBuildCommand CreateCommand(BuildArgs e)
         {
             var pos = e.area.max - Vector2Int.one;
             var cell = e.grid[pos.x, pos.y];

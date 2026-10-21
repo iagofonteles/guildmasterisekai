@@ -11,88 +11,30 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14c1d1051f6c4f9ab150384ea6224ba6, type: 3}
   m_Name: Grid Tools
-  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.GridBuilderTools
-  bruhes:
-  - rid: 8997147942040371332
-  - rid: 8997147942040371333
-  layerTools:
-  - layer: 0
-    altTool:
-      rid: 8997147944345141541
-    tools:
-    - str:
-        m_TableReference:
-          m_TableCollectionName: General
-        m_TableEntryReference:
-          m_KeyId: 96082399232
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-      icon: {fileID: 0}
-      left:
-        rid: 8997147944345141542
-      right:
-        rid: 8997147944345141543
-    - str:
-        m_TableReference:
-          m_TableCollectionName: General
-        m_TableEntryReference:
-          m_KeyId: 1465728176128
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-      icon: {fileID: 0}
-      left:
-        rid: 8997147944345141544
-      right:
-        rid: 8997147944345141545
-    - str:
-        m_TableReference:
-          m_TableCollectionName: General
-        m_TableEntryReference:
-          m_KeyId: 121213560360960
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-      icon: {fileID: 0}
-      left:
-        rid: 8997147951574024298
-      right:
-        rid: 8997147951574024299
+  m_EditorClassIdentifier: TileGrid::TileGrid.Build.GridBuilderTools
+  layers:
+  - str:
+      m_TableReference:
+        m_TableCollectionName: General
+      m_TableEntryReference:
+        m_KeyId: 851144162480128
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 0}
+  - str:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 0}
+  bruhes: []
+  tools: []
   references:
     version: 2
-    RefIds:
-    - rid: 8997147942040371332
-      type: {class: BuildPixelBrush, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data:
-        icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-    - rid: 8997147942040371333
-      type: {class: BuildRectBrush, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data:
-        icon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-    - rid: 8997147944345141541
-      type: {class: BaseLayerPickTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data:
-        icon: {fileID: 21300000, guid: f26fa8880b3aeef4b8516c82dc12f2a5, type: 3}
-    - rid: 8997147944345141542
-      type: {class: BaseLayerPlaceTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data: 
-    - rid: 8997147944345141543
-      type: {class: BaseLayerRemoveTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data: 
-    - rid: 8997147944345141544
-      type: {class: BaseLayerPaintTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data: 
-    - rid: 8997147944345141545
-      type: {class: BaseLayerPickTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data:
-        icon: {fileID: 21300000, guid: f26fa8880b3aeef4b8516c82dc12f2a5, type: 3}
-    - rid: 8997147951574024298
-      type: {class: BaseLayerColorTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data: 
-    - rid: 8997147951574024299
-      type: {class: BaseLayerColorPickTool, ns: GuildMasterIsekai.TileGrid, asm: GuildMasterIsekai}
-      data: 
+    RefIds: []

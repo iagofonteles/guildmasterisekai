@@ -19,19 +19,19 @@ namespace TileGrid.BuildTools
 
         public void CancelGesture() { }
 
-        public void OnMouseDown(GestureArgs e, Vector2Int pos)
+        public void OnMouseDown(BuildArgs e, Vector2Int pos)
         {
             e.area = new(pos, Vector2Int.one);
             e.builder.TryUseTool(e);
         }
 
-        public void OnMouseDrag(GestureArgs e, Vector2Int pos)
+        public void OnMouseDrag(BuildArgs e, Vector2Int pos)
         {
             e.area = new(pos, Vector2Int.one);
             e.builder.TryUseTool(e);
         }
 
-        public void OnMouseUp(GestureArgs e, Vector2Int pos) { }
+        public void OnMouseUp(BuildArgs e, Vector2Int pos) { }
         public void OnKeyDown(Vector2Int pos, Key key) { }
         public void OnKeyUp(Vector2Int pos, Key key) { }
     }

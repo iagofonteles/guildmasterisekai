@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TileGrid.Build;
 using System.Collections.Generic;
@@ -13,103 +14,100 @@ namespace TileGrid.UI
     public sealed class GridBuilderUI : MonoBehaviour
     {
         [SerializeField] private GridBuilder builder;
-        [SerializeField] private UIDocument document;
+        [SerializeField] private PanelRenderer panel;
         [SerializeField, SO] private GridBuilderTools gridTools;
-        public GestureArgs Args => builder.Gesture;
 
-        private VisualElement _root;
-        private ScrollView _tiles;
-        private Button _undo, _redo;
+        private Action _unsubscribe;
 
         private IEnumerator Start()
         {
-            document.sortingOrder = 100;
+            panel.panelSettings.sortingOrder = 100;
             while (!builder.IsInitialized)
                 yield return null;
             yield return null;
-            Bind();
-            Subscribe();
-            Refresh();
+            panel.RegisterUIReloadCallback(Subscribe);
         }
 
         private void OnDestroy()
         {
             StopAllCoroutines();
-            Unsubscribe();
+            panel.UnregisterUIReloadCallback(Subscribe);
+            _unsubscribe?.Invoke();
         }
 
-        private void Subscribe()
+        private void Subscribe(PanelRenderer renderer, VisualElement root)
         {
-            Args.layer.OnChanged += RefreshValue;
-            Args.tool.OnChanged += RefreshValue;
-            Args.brush.OnChanged += RefreshValue;
-            Args.item.OnChanged += RefreshValue;
-            Args.color.OnChanged += RefreshValue;
-            Args.lastError.OnChanged += RefreshError;
-            builder.Changed += Refresh;
-        }
+            _unsubscribe?.Invoke();
+            var b = builder ?? throw new NullReferenceException(nameof(builder));
+            var undo = root.Q<Button>("undo");
+            var redo = root.Q<Button>("redo");
 
-        private void Unsubscribe()
-        {
-            Args.layer.OnChanged -= RefreshValue;
-            Args.tool.OnChanged -= RefreshValue;
-            Args.brush.OnChanged -= RefreshValue;
-            Args.item.OnChanged -= RefreshValue;
-            Args.color.OnChanged -= RefreshValue;
-            Args.lastError.OnChanged -= RefreshError;
-            builder.Changed -= Refresh;
-        }
+            root.AddToClassList("build-document");
+            root.pickingMode = PickingMode.Ignore;
+            root.Q("toolbar").RegisterCallback<WheelEvent>(e => e.StopPropagation());
 
-        private void Bind()
-        {
-            _root = document.rootVisualElement;
-            _root.Clear();
-            document.visualTreeAsset.CloneTree(_root);
-
-            _root.AddToClassList("build-document");
-            _root.pickingMode = PickingMode.Ignore;
-
-            foreach (var child in _root.Children())
+            foreach (var child in root.Children())
                 child.pickingMode = PickingMode.Ignore;
 
-            _tiles = _root.Q<ScrollView>("tiles");
+            undo.clicked += b.Undo;
+            redo.clicked += b.Redo;
+            b.Changed += RefreshStatus;
 
-            _undo = _root.Q<Button>("undo");
-            _redo = _root.Q<Button>("redo");
-            _undo.clicked += builder.Undo;
-            _redo.clicked += builder.Redo;
+            _unsubscribe += () => undo.clicked -= b.Undo;
+            _unsubscribe += () => redo.clicked -= b.Redo;
+            _unsubscribe += () => b.Changed -= RefreshStatus;
 
-            _root.Q("toolbar").RegisterCallback<WheelEvent>(e => e.StopPropagation());
+            _unsubscribe += DrawLayers(root, b.Build, gridTools.Layers);
+            _unsubscribe += DrawBrushes(root, b.Build, gridTools.Brushes);
+            _unsubscribe += DrawTools(root, b.Build, gridTools.Tools);
+            _unsubscribe += DrawTiles(root, b.Build);
 
-            DrawLayers(_root);
-            DrawBrushes(_root.Q("brushes"));
-            DrawTools(_root, Args.layer.Value);
-        }
-
-        private void DrawLayers(VisualElement root)
-        {
-            var layers = root.Q("layers");
-            layers.Clear();
-
-            for (var i = 0; i < gridTools.Layers.Count; i++)
+            void RefreshStatus()
             {
-                var lName = gridTools.Layers[i].DisplayName;
-                var layer = i;
-                var button = new Button(() => Args.layer.Value = layer) { text = lName };
-                //button.SetEnabled(true);
-                button.EnableInClassList("selected", Args.layer.Value == layer);
-                layers.Add(button);
+                var ready = builder && builder.IsInitialized;
+                undo.SetEnabled(ready && builder.CanUndo);
+                redo.SetEnabled(ready && builder.CanRedo);
             }
         }
 
-        private void DrawBrushes(VisualElement brushes)
+        private static Action DrawLayers(VisualElement root, BuildArgs e, IReadOnlyList<LayerConfig> list)
         {
-            foreach (var brush in gridTools.Brushes)
+            var layers = root.Q("layers");
+            var buttons = new List<Button>(list.Count);
+
+            foreach (var layer in list)
+            {
+                var lName = layer.DisplayName;
+                var button = new Button(() => e.layer.Value = layer.Index) { text = lName };
+                //button.SetEnabled(true);
+                button.EnableInClassList("selected", e.layer.Value == layer.Index);
+                button.userData = layer.Index;
+                layers.Add(button);
+                buttons.Add(button);
+            }
+
+            Refresh(e.layer.Value);
+            e.layer.OnChanged += Refresh;
+            return () => e.layer.OnChanged -= Refresh;
+
+            void Refresh(int i)
+            {
+                foreach (var button in buttons)
+                    button.EnableInClassList("selected", (int)button.userData == i);
+            }
+        }
+
+        private static Action DrawBrushes(VisualElement root, BuildArgs e, IReadOnlyList<IBuildBrush> list)
+        {
+            var brushes = root.Q("brushes");
+            var buttons = new List<Button>(list.Count);
+
+            foreach (var brush in list)
             {
                 if (brush == null) continue;
-                var button = new Button(() => Args.brush.Value = brush) { tooltip = brush.DisplayName };
+                var button = new Button(() => e.brush.Value = brush) { tooltip = brush.DisplayName };
                 button.AddToClassList("brush-choice");
-                button.EnableInClassList("selected", ReferenceEquals(Args.brush.Value, brush));
+                button.EnableInClassList("selected", e.brush.Value == brush);
 
                 if (brush.Icon)
                 {
@@ -120,38 +118,80 @@ namespace TileGrid.UI
                 }
                 else button.text = brush.DisplayName;
 
+                button.userData = brush;
                 brushes.Add(button);
+                buttons.Add(button);
+            }
+
+            e.brush.OnChanged += Refresh;
+            return () => e.brush.OnChanged -= Refresh;
+
+            void Refresh(IBuildBrush b)
+            {
+                foreach (var button in buttons)
+                    button.EnableInClassList("selected", ReferenceEquals(button.userData, b));
             }
         }
 
-        private void DrawTools(VisualElement root, int layer)
+        private static Action DrawTools(VisualElement root, BuildArgs e, IReadOnlyList<IBuildTool> list)
         {
             var tools = root.Q("tools");
-            tools.Clear();
+            var buttons = new List<Button>(list.Count);
 
-            foreach (var tool in gridTools.Tools)
+            foreach (var tool in list)
             {
-                if (((int)tool.Layers & (1 << layer)) == 0) continue;
-                var button = new Button(() => Args.tool.Value = tool.Left) { text = tool.DisplayName };
-                button.EnableInClassList("selected", Args.tool.Value == tool.Left);
-                button.SetEnabled(tool.Left != null || tool.Right != null);
+                var button = new Button(() => e.tool.Value = tool)
+                {
+                    text = tool.DisplayName,
+                    userData = tool
+                };
                 tools.Add(button);
+                buttons.Add(button);
+            }
+
+            e.layer.OnChanged += Refresh;
+            e.tool.OnChanged += Refresh;
+            Refresh(0);
+
+            return () =>
+            {
+                e.layer.OnChanged -= Refresh;
+                e.tool.OnChanged -= Refresh;
+            };
+
+            void Refresh<T>(T value)
+            {
+                foreach (var button in buttons)
+                {
+                    var tool = (IBuildTool)button.userData;
+
+                    if (value is int layer)
+                        button.visible = ((int)tool.LayerMask & (1 << layer)) > 0;
+
+                    if (value is IBuildTool t)
+                        button.EnableInClassList("selected", tool == t);
+                }
             }
         }
 
-        private void RefreshValue<T>(T value) => Refresh();
-        private void RefreshError(string value) => RefreshStatus();
-
-        public void Refresh()
+        private Action DrawTiles(VisualElement root, BuildArgs e)
         {
-            _tiles.Clear();
-            if (builder && builder.IsInitialized)
-                AddItems(Args.tool.Value?.GetItems(Args));
-            if (_tiles.contentContainer.childCount == 0) _tiles.Add(new Label("No available tiles on this layer."));
-            RefreshStatus();
+            var tiles = root.Q<ScrollView>("tiles");
+            Refresh(e.tool.Value);
+            e.tool.OnChanged += Refresh;
+            return () => e.tool.OnChanged -= Refresh;
+
+            void Refresh(IBuildTool tool)
+            {
+                tiles.Clear();
+                AddItems(tiles, e, e.tool.Value?.GetItems(e));
+
+                if (tiles.contentContainer.childCount == 0)
+                    tiles.Add(new Label("No available tiles on this layer."));
+            }
         }
 
-        private void AddItems(IEnumerable<ISlot> slots)
+        private static void AddItems(ScrollView tiles, BuildArgs e, IEnumerable<ISlot> slots)
         {
             if (slots == null) return;
 
@@ -162,23 +202,16 @@ namespace TileGrid.UI
                 var element = new SlotElement
                 {
                     Slot = slot,
-                    SelectedItem = slot.Item is Color ? Args.color.Value : Args.item.Value
+                    SelectedItem = slot.Item is Color ? e.color.Value : e.item.Value
                 };
 
                 if (element.Slot.Item is Color color)
-                    element.clicked += () => Args.color.Value = color;
+                    element.clicked += () => e.color.Value = color;
                 if (element.Slot.Item is ITile selected)
-                    element.clicked += () => Args.item.Value = selected;
+                    element.clicked += () => e.item.Value = selected;
 
-                _tiles.Add(element);
+                tiles.Add(element);
             }
-        }
-
-        public void RefreshStatus()
-        {
-            var ready = builder && builder.IsInitialized;
-            _undo.SetEnabled(ready && builder.CanUndo);
-            _redo.SetEnabled(ready && builder.CanRedo);
         }
     }
 }

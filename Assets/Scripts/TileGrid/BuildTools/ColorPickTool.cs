@@ -13,9 +13,9 @@ namespace TileGrid.BuildTools
     {
         public BuildLayerMask LayerMask => BuildLayerMask.All;
 
-        public IEnumerable<ISlot> GetItems(GestureArgs e) => null;
+        public IEnumerable<ISlot> GetItems(BuildArgs e) => null;
 
-        public IBuildCommand CreateCommand(GestureArgs e)
+        public IBuildCommand CreateCommand(BuildArgs e)
         {
             var pos = e.area.max - Vector2Int.one;
             var cell = e.grid[pos.x, pos.y];

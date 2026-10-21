@@ -15,17 +15,17 @@ namespace TileGrid.Build
         [SerializeField] private ScriptableObject material;
         [SerializeField, Min(1)] private int historyLimit = 64;
         [SerializeField] private string filePath;
-        private readonly GestureArgs _gesture = new();
+        private readonly BuildArgs _build = new();
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
 
         public event Action Changed;
 
-        public GestureArgs Gesture => _gesture;
-        public GridData Grid => _gesture.grid;
-        public IBuildBag Bag => _gesture.bag;
-        public bool IsInitialized => Gesture.grid != null;
+        public BuildArgs Build => _build;
+        public GridData Grid => _build.grid;
+        public IBuildBag Bag => _build.bag;
+        public bool IsInitialized => Build.grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
         public ScriptableObject Material => material;
@@ -34,19 +34,19 @@ namespace TileGrid.Build
         {
             if (!defaultMaps[0]) throw new ArgumentNullException(nameof(defaultMaps));
             if (!defaultMaps[0].layoutGrid) throw new ArgumentNullException(nameof(Tilemap.layoutGrid));
-            Gesture.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
-            Gesture.builder = this;
+            Build.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
+            Build.builder = this;
         }
 
         private void Start()
         {
-            Gesture.grid = string.IsNullOrEmpty(filePath)
+            Build.grid = string.IsNullOrEmpty(filePath)
                 ? new(defaultMaps)
                 : new GridData(serializer, filePath);
         }
 
         /// <summary>Runs a tool through inventory checks, atomic commit, rendering and undo history.</summary>
-        public bool TryUseTool(GestureArgs e)
+        public bool TryUseTool(BuildArgs e)
         {
             if (e.tool == null) throw new ArgumentNullException(nameof(e.tool));
             e.lastError.Value = null;
@@ -83,7 +83,7 @@ namespace TileGrid.Build
             if (!success) return Fail("The command could not be restored.");
             from.RemoveAt(from.Count - 1);
             to.Add(command);
-            _gesture.lastError.Value = null;
+            _build.lastError.Value = null;
 
             Changed?.Invoke();
             return true;
@@ -93,7 +93,7 @@ namespace TileGrid.Build
         {
             _undo.Clear();
             _redo.Clear();
-            _gesture.lastError.Value = null;
+            _build.lastError.Value = null;
             Changed?.Invoke();
         }
 
@@ -109,13 +109,13 @@ namespace TileGrid.Build
         {
             if (string.IsNullOrEmpty(path))
                 throw new Exception("no filePath");
-            Gesture.grid = new(serializer, filePath = path);
+            Build.grid = new(serializer, filePath = path);
             Clear();
         }
 
         private bool Fail(string error)
         {
-            _gesture.lastError.Value = error;
+            _build.lastError.Value = error;
             return false;
         }
     }
