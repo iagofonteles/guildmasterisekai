@@ -14,20 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.System.Database
   items:
   - {fileID: 0}
-  - {fileID: 11400000, guid: d5876faa5509e7248a9f8d2b1290f7ca, type: 2}
-  - {fileID: 11400000, guid: 5be3c61f36fdad2448d92f5d021bd8f0, type: 2}
-  - {fileID: 11400000, guid: 7013a5dc92192d14d9787ab6cc388747, type: 2}
-  - {fileID: 11400000, guid: 8eacfdd4866998549ac7be07c22d5c80, type: 2}
-  - {fileID: 11400000, guid: 34900974ce5e4c0448f87b6057b37b68, type: 2}
-  - {fileID: 11400000, guid: 908380d92d6e4024e8ccd87903fa9fb4, type: 2}
-  - {fileID: 11400000, guid: 4a1263d984848fa46ad964dec428b392, type: 2}
-  - {fileID: 11400000, guid: 4736322fd9c6478498a15a493ce953e8, type: 2}
-  - {fileID: 11400000, guid: 8383422a47928ea4e967abbde7ace99e, type: 2}
-  - {fileID: 11400000, guid: 0b1d02a3eb2892f43ac110fdbc1cc1a6, type: 2}
-  - {fileID: 11400000, guid: 4949b18dbd5f4a34291daa7d17a5da57, type: 2}
-  - {fileID: 11400000, guid: c773c259709e2bf458a19a87abd386b4, type: 2}
-  - {fileID: 11400000, guid: 61acc7612b198384380762d2dcfe6209, type: 2}
-  - {fileID: 11400000, guid: 1a7ec6e38507b4e4f80a1fbfd023b321, type: 2}
   - {fileID: 11400000, guid: 8e3e6c5f6e3fd1e46821b4750d33c6ff, type: 2}
   - {fileID: 11400000, guid: 806d0044f2d58914bb8cf583274d078d, type: 2}
   - {fileID: 11400000, guid: 2164f8be5679160418fafd87c9d4b615, type: 2}

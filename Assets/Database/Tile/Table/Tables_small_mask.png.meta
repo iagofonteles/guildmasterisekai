@@ -1,79 +1,79 @@
 fileFormatVersion: 2
-guid: 12ceae8287478914baf12daa5dab01e7
+guid: be6ce826b3c6cb94d95be6942ccd223e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4063569905338903632
-    second: Tables_small_0
+      213: -8402642758031167349
+    second: Tables_small_mask_0
   - first:
-      213: 4378497521325460875
-    second: Tables_small_1
+      213: 2323767830528750421
+    second: Tables_small_mask_1
   - first:
-      213: -1424503570892728094
-    second: Tables_small_2
+      213: 2578445717878677523
+    second: Tables_small_mask_2
   - first:
-      213: -5076563782861420374
-    second: Tables_small_3
+      213: 661199287203210259
+    second: Tables_small_mask_3
   - first:
-      213: 713194371430435778
-    second: Tables_small_4
+      213: -6143120822875283373
+    second: Tables_small_mask_4
   - first:
-      213: -8177916314273762020
-    second: Tables_small_5
+      213: 5214060621165564325
+    second: Tables_small_mask_5
   - first:
-      213: 9200454961311756555
-    second: Tables_small_6
+      213: 8252992242672275242
+    second: Tables_small_mask_6
   - first:
-      213: -801288576702296783
-    second: Tables_small_7
+      213: -3923304195931589911
+    second: Tables_small_mask_7
   - first:
-      213: -5535749186398216306
-    second: Tables_small_8
+      213: -566137016898978356
+    second: Tables_small_mask_8
   - first:
-      213: 315511291330864780
-    second: Tables_small_9
+      213: -7525868479959733127
+    second: Tables_small_mask_9
   - first:
-      213: -4351605876939726005
-    second: Tables_small_10
+      213: -1971836378738196512
+    second: Tables_small_mask_10
   - first:
-      213: 506086855946290484
-    second: Tables_small_11
+      213: 1004552644790855276
+    second: Tables_small_mask_11
   - first:
-      213: -3470898622255923669
-    second: Tables_small_12
+      213: 4879821320921295348
+    second: Tables_small_mask_12
   - first:
-      213: 6910293288921668780
-    second: Tables_small_13
+      213: 6407736657590077587
+    second: Tables_small_mask_13
   - first:
-      213: -5953388506780920751
-    second: Tables_small_14
+      213: 3919798250515611897
+    second: Tables_small_mask_14
   - first:
-      213: 8970983882402744856
-    second: Tables_small_15
+      213: -4929497325864045785
+    second: Tables_small_mask_15
   - first:
-      213: 4630686744314604569
-    second: Tables_small_16
+      213: 8340938322181985793
+    second: Tables_small_mask_16
   - first:
-      213: -2402935866344402064
-    second: Tables_small_17
+      213: 7385639959060725714
+    second: Tables_small_mask_17
   - first:
-      213: -7569294910511772919
-    second: Tables_small_18
+      213: 7155276449521010459
+    second: Tables_small_mask_18
   - first:
-      213: 396625583566412619
-    second: Tables_small_19
+      213: -798413075917702592
+    second: Tables_small_mask_19
   - first:
-      213: 2434621470831230635
-    second: Tables_small_20
+      213: 5812061734013981809
+    second: Tables_small_mask_20
   - first:
-      213: -4498844167977734534
-    second: Tables_small_21
+      213: 3542934470465175615
+    second: Tables_small_mask_21
   - first:
-      213: -2077846038957340559
-    second: Tables_small_22
+      213: 8528237402113085593
+    second: Tables_small_mask_22
   - first:
-      213: 6515904934589174945
-    second: Tables_small_23
+      213: -3703595982690569141
+    second: Tables_small_mask_23
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -117,12 +117,12 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -182,7 +182,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tables_small_0
+      name: Tables_small_mask_0
       rect:
         serializedVersion: 2
         x: 0
@@ -197,14 +197,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0b39e4863bc4b97c0800000000000000
-      internalID: -4063569905338903632
+      spriteID: b803b014ee0d36b80800000000000000
+      internalID: -8402642758031167349
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_1
+      name: Tables_small_mask_1
       rect:
         serializedVersion: 2
         x: 32
@@ -219,14 +219,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b8d48802c4c83cc30800000000000000
-      internalID: 4378497521325460875
+      spriteID: 553752fa78eaf3020800000000000000
+      internalID: 2323767830528750421
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_2
+      name: Tables_small_mask_2
       rect:
         serializedVersion: 2
         x: 64
@@ -241,14 +241,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2e8d9a3bc852b3ce0800000000000000
-      internalID: -1424503570892728094
+      spriteID: 31029ce18ba78c320800000000000000
+      internalID: 2578445717878677523
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_3
+      name: Tables_small_mask_3
       rect:
         serializedVersion: 2
         x: 96
@@ -263,14 +263,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aa88ee2e22c6c89b0800000000000000
-      internalID: -5076563782861420374
+      spriteID: 3142d7f9f3d0d2900800000000000000
+      internalID: 661199287203210259
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_4
+      name: Tables_small_mask_4
       rect:
         serializedVersion: 2
         x: 128
@@ -285,14 +285,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2cb4bec8086c5e900800000000000000
-      internalID: 713194371430435778
+      spriteID: 350a634c8204fbaa0800000000000000
+      internalID: -6143120822875283373
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_5
+      name: Tables_small_mask_5
       rect:
         serializedVersion: 2
         x: 160
@@ -307,14 +307,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c1537dcc074328e80800000000000000
-      internalID: -8177916314273762020
+      spriteID: 5a11de972801c5840800000000000000
+      internalID: 5214060621165564325
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_6
+      name: Tables_small_mask_6
       rect:
         serializedVersion: 2
         x: 192
@@ -329,14 +329,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b01b7fc8a059eaf70800000000000000
-      internalID: 9200454961311756555
+      spriteID: a2f098ee7b4888270800000000000000
+      internalID: 8252992242672275242
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_7
+      name: Tables_small_mask_7
       rect:
         serializedVersion: 2
         x: 224
@@ -351,14 +351,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 13dc41fe84041e4f0800000000000000
-      internalID: -801288576702296783
+      spriteID: 9e2b2bfce9f9d89c0800000000000000
+      internalID: -3923304195931589911
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_8
+      name: Tables_small_mask_8
       rect:
         serializedVersion: 2
         x: 0
@@ -373,14 +373,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e8f9313d1711d23b0800000000000000
-      internalID: -5535749186398216306
+      spriteID: ccd7985f16da428f0800000000000000
+      internalID: -566137016898978356
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_9
+      name: Tables_small_mask_9
       rect:
         serializedVersion: 2
         x: 32
@@ -395,14 +395,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c86a66a09dbe06400800000000000000
-      internalID: 315511291330864780
+      spriteID: 97ce0b1cd7ebe8790800000000000000
+      internalID: -7525868479959733127
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_10
+      name: Tables_small_mask_10
       rect:
         serializedVersion: 2
         x: 64
@@ -417,14 +417,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b43618eb28dfb93c0800000000000000
-      internalID: -4351605876939726005
+      spriteID: 0effd12c241a2a4e0800000000000000
+      internalID: -1971836378738196512
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_11
+      name: Tables_small_mask_11
       rect:
         serializedVersion: 2
         x: 96
@@ -439,14 +439,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4354c2a605bf50700800000000000000
-      internalID: 506086855946290484
+      spriteID: c6620fede43e0fd00800000000000000
+      internalID: 1004552644790855276
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_12
+      name: Tables_small_mask_12
       rect:
         serializedVersion: 2
         x: 128
@@ -461,14 +461,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b2efa09b714e4dfc0800000000000000
-      internalID: -3470898622255923669
+      spriteID: 4f924e013ab98b340800000000000000
+      internalID: 4879821320921295348
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_13
+      name: Tables_small_mask_13
       rect:
         serializedVersion: 2
         x: 160
@@ -483,14 +483,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cac11fb422b46ef50800000000000000
-      internalID: 6910293288921668780
+      spriteID: 398c7e95a8adce850800000000000000
+      internalID: 6407736657590077587
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_14
+      name: Tables_small_mask_14
       rect:
         serializedVersion: 2
         x: 192
@@ -505,14 +505,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1541e6b02b0516da0800000000000000
-      internalID: -5953388506780920751
+      spriteID: 9f04e29adbbe56630800000000000000
+      internalID: 3919798250515611897
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_15
+      name: Tables_small_mask_15
       rect:
         serializedVersion: 2
         x: 224
@@ -527,14 +527,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 81ace5c8f465f7c70800000000000000
-      internalID: 8970983882402744856
+      spriteID: 723b2aabc48e69bb0800000000000000
+      internalID: -4929497325864045785
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_16
+      name: Tables_small_mask_16
       rect:
         serializedVersion: 2
         x: 0
@@ -547,16 +547,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2882215457c7a424d8de88d9b7240607
-      internalID: 1797842733
+      spriteID: 106991b3637f0c370800000000000000
+      internalID: 8340938322181985793
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_17
+      name: Tables_small_mask_17
       rect:
         serializedVersion: 2
         x: 32
@@ -569,16 +569,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: dc846e15755fa3c42b433228807e3992
-      internalID: -1976492532
+      spriteID: 2dfbeb679601f7660800000000000000
+      internalID: 7385639959060725714
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_18
+      name: Tables_small_mask_18
       rect:
         serializedVersion: 2
         x: 64
@@ -591,16 +591,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e50b75eb6a0eab7478cd8ebcc7fee921
-      internalID: 1641985991
+      spriteID: b170b634506ac4360800000000000000
+      internalID: 7155276449521010459
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_19
+      name: Tables_small_mask_19
       rect:
         serializedVersion: 2
         x: 96
@@ -613,16 +613,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: cee1e3e700b354c47922df4627d1e670
-      internalID: -1679444883
+      spriteID: 04af5e1a9877be4f0800000000000000
+      internalID: -798413075917702592
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_20
+      name: Tables_small_mask_20
       rect:
         serializedVersion: 2
         x: 128
@@ -635,16 +635,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 28265030864d95f4f9d4a608a42b5f5e
-      internalID: 1053155099
+      spriteID: 1745b8c7a5798a050800000000000000
+      internalID: 5812061734013981809
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_21
+      name: Tables_small_mask_21
       rect:
         serializedVersion: 2
         x: 160
@@ -657,16 +657,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: ab489bd72f2d9014d8efe71c80a9adb0
-      internalID: -869307359
+      spriteID: f30409e21280b2130800000000000000
+      internalID: 3542934470465175615
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_22
+      name: Tables_small_mask_22
       rect:
         serializedVersion: 2
         x: 192
@@ -679,16 +679,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d07968444f423134d8a006f42605bcd0
-      internalID: -2069933114
+      spriteID: 99096219bb26a5670800000000000000
+      internalID: 8528237402113085593
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tables_small_23
+      name: Tables_small_mask_23
       rect:
         serializedVersion: 2
         x: 224
@@ -701,10 +701,10 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: fabe4cb49e2c1c84c8ef697b95bf5dd4
-      internalID: -1454820497
+      spriteID: b443a24831f2a9cc0800000000000000
+      internalID: -3703595982690569141
       vertices: []
       indices: 
       edges: []
@@ -713,7 +713,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0504f0c87a15ac44dbe6877d7d8d6bd8
+    spriteID: d66533571bb22f940a062d67a7a08c72
     internalID: 0
     vertices: []
     indices: 
@@ -725,30 +725,30 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.10000000149011612},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":9,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Tables_small_0: -4063569905338903632
-      Tables_small_1: 4378497521325460875
-      Tables_small_10: -4351605876939726005
-      Tables_small_11: 506086855946290484
-      Tables_small_12: -3470898622255923669
-      Tables_small_13: 6910293288921668780
-      Tables_small_14: -5953388506780920751
-      Tables_small_15: 8970983882402744856
-      Tables_small_16: 1797842733
-      Tables_small_17: -1976492532
-      Tables_small_18: 1641985991
-      Tables_small_19: -1679444883
-      Tables_small_2: -1424503570892728094
-      Tables_small_20: 1053155099
-      Tables_small_21: -869307359
-      Tables_small_22: -2069933114
-      Tables_small_23: -1454820497
-      Tables_small_3: -5076563782861420374
-      Tables_small_4: 713194371430435778
-      Tables_small_5: -8177916314273762020
-      Tables_small_6: 9200454961311756555
-      Tables_small_7: -801288576702296783
-      Tables_small_8: -5535749186398216306
-      Tables_small_9: 315511291330864780
+      Tables_small_mask_0: -8402642758031167349
+      Tables_small_mask_1: 2323767830528750421
+      Tables_small_mask_10: -1971836378738196512
+      Tables_small_mask_11: 1004552644790855276
+      Tables_small_mask_12: 4879821320921295348
+      Tables_small_mask_13: 6407736657590077587
+      Tables_small_mask_14: 3919798250515611897
+      Tables_small_mask_15: -4929497325864045785
+      Tables_small_mask_16: 8340938322181985793
+      Tables_small_mask_17: 7385639959060725714
+      Tables_small_mask_18: 7155276449521010459
+      Tables_small_mask_19: -798413075917702592
+      Tables_small_mask_2: 2578445717878677523
+      Tables_small_mask_20: 5812061734013981809
+      Tables_small_mask_21: 3542934470465175615
+      Tables_small_mask_22: 8528237402113085593
+      Tables_small_mask_23: -3703595982690569141
+      Tables_small_mask_3: 661199287203210259
+      Tables_small_mask_4: -6143120822875283373
+      Tables_small_mask_5: 5214060621165564325
+      Tables_small_mask_6: 8252992242672275242
+      Tables_small_mask_7: -3923304195931589911
+      Tables_small_mask_8: -566137016898978356
+      Tables_small_mask_9: -7525868479959733127
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

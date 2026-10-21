@@ -9,10 +9,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b152cb8e006949b3af72e716a8db7200, type: 3}
+  m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
   m_Name: tile wood wall
-  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.TileGrid.WallTileSo
-  id: 3352792993
+  m_EditorClassIdentifier: TileGrid::TileGrid.Tiles.DbWallTile
+  m_DefaultSprite: {fileID: 0}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_MaskType: 1
+  m_Random: 0
+  m_PhysicsShapeCheck: 0
+  m_AutoTileDictionary:
+    keyData: 10000000300000001800000038000000
+    valueData:
+    - spriteList:
+      - {fileID: -6471187932270448383, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+    - spriteList:
+      - {fileID: 317893972, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+    - spriteList:
+      - {fileID: 1363454493, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+    - spriteList:
+      - {fileID: -2123532113, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  m_TextureList:
+  - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  m_TextureScaleList:
+  - 1
+  id: 1524549602
   displayName:
     m_TableReference:
       m_TableCollectionName: 
@@ -32,8 +61,9 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   icon: {fileID: 0}
-  wall: {fileID: 11400000, guid: f2a48040f09430b43b2c294560f7fbad, type: 2}
   roof: {fileID: 11400000, guid: 8632925c9f2c4504e90a7a3843295b61, type: 2}
+  layerMask: 16
+  flags: 2
   references:
     version: 2
     RefIds: []
