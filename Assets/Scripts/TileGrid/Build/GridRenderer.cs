@@ -31,7 +31,7 @@ namespace TileGrid.Build
         private void SetGrid(GridData grid)
         {
             if (grid != null)
-                if (layers?.Length == BuildLayer.Count)
+                if (layers.Length != BuildLayer.Count)
                     throw new Exception($"Need {BuildLayer.Count} layers");
 
             if (_toppingRoot)
