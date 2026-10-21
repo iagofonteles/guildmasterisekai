@@ -30,7 +30,7 @@ namespace TileGrid.BuildTools
 
                 var after = cell.Clone();
                 after.Colors[e.layer.Value] = e.color.Value;
-                after.Colors[BuildLayer2.Roof] = e.color.Value;
+                after.Colors[BuildLayer.Roof] = e.color.Value;
             }
 
             if (cmd.after.Count == 0)

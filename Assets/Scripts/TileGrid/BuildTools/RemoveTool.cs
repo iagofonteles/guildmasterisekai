@@ -28,8 +28,8 @@ namespace TileGrid.BuildTools
                 var after = cell.Clone();
                 after.Tiles[e.layer.Value] = null;
                 after.Colors[e.layer.Value] = Color.clear;
-                after.Tiles[BuildLayer2.Roof] = null;
-                after.Colors[BuildLayer2.Roof] = Color.clear;
+                after.Tiles[BuildLayer.Roof] = null;
+                after.Colors[BuildLayer.Roof] = Color.clear;
 
                 cmd.after.Add(after);
                 cmd.before.Add(cell.Clone());

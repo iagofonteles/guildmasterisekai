@@ -9,7 +9,7 @@ namespace TileGrid.Data
         {
             using var writer = serializer.GetWriter(key);
             writer.Write((short)Version);
-            writer.Write((short)LayerCount);
+            writer.Write((short)BuildLayer.Count);
             writer.Write(Bounds.position.x);
             writer.Write(Bounds.position.y);
             writer.Write(Bounds.size.x);
@@ -39,7 +39,7 @@ namespace TileGrid.Data
         {
             using var reader = serializer.GetReader(key);
             if (reader.ReadInt16() != Version) throw new InvalidDataException("Unsupported version.");
-            if (reader.ReadInt16() != LayerCount) throw new InvalidDataException("Unsupported layer count.");
+            if (reader.ReadInt16() != BuildLayer.Count) throw new InvalidDataException("Unsupported layer count.");
 
             var minX = reader.ReadInt32();
             var minY = reader.ReadInt32();
@@ -66,9 +66,9 @@ namespace TileGrid.Data
                     Position = new(reader.ReadSingle(), reader.ReadSingle(), 0),
                 };
 
-                for (var t = 0; t < LayerCount; t++)
+                for (var t = 0; t < BuildLayer.Count; t++)
                     cell.Tiles[t] = (ITileEntry)serializer.ReadTile(reader);
-                for (var c = 0; c < LayerCount; c++)
+                for (var c = 0; c < BuildLayer.Count; c++)
                     cell.Colors[c] = serializer.ReadColor(reader);
 
                 var count = reader.ReadInt32();

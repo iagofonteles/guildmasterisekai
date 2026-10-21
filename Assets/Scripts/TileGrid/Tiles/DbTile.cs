@@ -16,6 +16,7 @@ namespace TileGrid.Tiles
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector2Int size = Vector2Int.one;
         [SerializeField] private BuildLayerMask layerMask;
+        [SerializeField] private Sprite[] rotations;
 
         public uint Id => id;
         public string DisplayName => displayName.Localize(this);
@@ -25,10 +26,33 @@ namespace TileGrid.Tiles
         public BuildLayerMask LayerMask => layerMask;
         TileBase ITileEntry.Tile => this;
 
+        public override void GetTileData(Vector3Int pos, ITilemap tilemap, ref TileData tileData)
+        {
+            base.GetTileData(pos, tilemap, ref tileData);
+            var matrix = tilemap.GetTransformMatrix(pos);
+            var index = Mathf.RoundToInt(matrix.rotation.x) % rotations.Length;
+
+            tileData.sprite = rotations[index];
+            tileData.transform = Matrix4x4.identity; // Prevent applying rotation twice.
+        }
+
         public bool CanReplace(ITileEntry other) => other is DbTile t && t.size == size;
-        private void Reset() => flags = TileFlags.None;
+
+        private void Reset()
+        {
+            __RerollId();
+            flags = TileFlags.None;
+            colliderType = ColliderType.None;
+        }
 
         [ContextMenu("Reroll Id")]
-        private void RerollId() => id = UIntGenerator.Instance.Generate();
+        public void __RerollId() => id = UIntGenerator.Instance.Generate();
+
+        public override void OnValidate()
+        {
+            base.OnValidate();
+            if (rotations.Length < 1)
+                rotations = new Sprite[1];
+        }
     }
 }

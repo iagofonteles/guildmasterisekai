@@ -5,17 +5,16 @@ using UnityEngine.UIElements;
 
 namespace TileGrid.Build
 {
-    [Serializable]
     public sealed class GestureArgs
     {
         public GridBuilder builder;
-        [NonSerialized] public GridData grid;
-        [SerializeReference] public IBuildBag bag;
+        public GridData grid;
+        public IBuildBag bag;
         public RectInt area;
         public MouseButton button;
+        public readonly Watcher<int> layer = new();
         public readonly Watcher<IBuildBrush> brush = new();
         public readonly Watcher<IBuildTool> tool = new();
-        public readonly Watcher<int> layer = new();
         public readonly Watcher<object> item = new();
         public readonly Watcher<Color> color = new(Color.white);
         public readonly Watcher<string> lastError = new();

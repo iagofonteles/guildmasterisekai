@@ -14,20 +14,17 @@ namespace TileGrid.Build
         [SerializeField] private MonoBehaviour buildBag;
         [SerializeField] private ScriptableObject material;
         [SerializeField, Min(1)] private int historyLimit = 64;
-        [SerializeField, SO] private GridBuilderTools tools;
         [SerializeField] private string filePath;
-        [SerializeField] private GestureArgs gesture = new();
+        private readonly GestureArgs _gesture = new();
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
 
         public event Action Changed;
 
-        public GestureArgs Gesture => gesture;
-        public GridData Grid => gesture.grid;
-        public IBuildBag Bag => gesture.bag;
-        public IReadOnlyList<ToolConfig> Tools => tools.Tools;
-        public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
+        public GestureArgs Gesture => _gesture;
+        public GridData Grid => _gesture.grid;
+        public IBuildBag Bag => _gesture.bag;
         public bool IsInitialized => Gesture.grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
@@ -37,7 +34,6 @@ namespace TileGrid.Build
         {
             if (!defaultMaps[0]) throw new ArgumentNullException(nameof(defaultMaps));
             if (!defaultMaps[0].layoutGrid) throw new ArgumentNullException(nameof(Tilemap.layoutGrid));
-            if (!tools) throw new ArgumentNullException(nameof(tools));
             Gesture.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
             Gesture.builder = this;
         }
@@ -75,8 +71,8 @@ namespace TileGrid.Build
             return true;
         }
 
-        public bool Undo() => Restore(_undo, _redo, true);
-        public bool Redo() => Restore(_redo, _undo, false);
+        public void Undo() => Restore(_undo, _redo, true);
+        public void Redo() => Restore(_redo, _undo, false);
 
         private bool Restore(List<IBuildCommand> from, List<IBuildCommand> to, bool reverse)
         {
@@ -87,7 +83,7 @@ namespace TileGrid.Build
             if (!success) return Fail("The command could not be restored.");
             from.RemoveAt(from.Count - 1);
             to.Add(command);
-            gesture.lastError.Value = null;
+            _gesture.lastError.Value = null;
 
             Changed?.Invoke();
             return true;
@@ -97,7 +93,7 @@ namespace TileGrid.Build
         {
             _undo.Clear();
             _redo.Clear();
-            gesture.lastError.Value = null;
+            _gesture.lastError.Value = null;
             Changed?.Invoke();
         }
 
@@ -119,7 +115,7 @@ namespace TileGrid.Build
 
         private bool Fail(string error)
         {
-            gesture.lastError.Value = error;
+            _gesture.lastError.Value = error;
             return false;
         }
     }

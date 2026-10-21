@@ -11,11 +11,23 @@ namespace TileGrid.Build
     /// <summary>Runtime building API. Input controllers call the brush methods in cell coordinates.</summary>
     public class GridBuilderTools : ScriptableObject
     {
+        [SerializeField] private LayerConfig[] layers;
         [SerializeReference, TypeInstance] private IBuildBrush[] bruhes;
         [SerializeField] private ToolConfig[] tools;
 
-        public IReadOnlyList<IBuildBrush> Bushes => bruhes;
+        public IReadOnlyList<LayerConfig> Layers => layers;
+        public IReadOnlyList<IBuildBrush> Brushes => bruhes;
         public ToolConfig[] Tools => tools;
+    }
+
+    [Serializable]
+    public class LayerConfig
+    {
+        [SerializeField, Loc] private LocalizedString str;
+        [SerializeField] private Sprite icon;
+
+        public string DisplayName => str.GetLocalizedString();
+        public Sprite Icon => icon;
     }
 
     [Serializable]

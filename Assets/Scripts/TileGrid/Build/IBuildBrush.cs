@@ -5,6 +5,7 @@ namespace TileGrid.Build
 {
     public interface IBuildBrush
     {
+        string DisplayName { get; }
         Sprite Icon { get; }
         bool HasDrag { get; }
 

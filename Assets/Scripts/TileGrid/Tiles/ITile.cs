@@ -11,8 +11,8 @@ namespace TileGrid.Tiles
         public string DisplayName { get; }
         public string Description { get; }
         BuildLayerMask LayerMask { get; }
+        void IDatabaseItemInternal.SetIndex(int i) { }
         int IDatabaseItem.Index => throw new InvalidOperationException();
-        void IDatabaseItemInternal.SetIndex(int i) => throw new InvalidOperationException();
     }
 
     public interface ITileEntry : ITile

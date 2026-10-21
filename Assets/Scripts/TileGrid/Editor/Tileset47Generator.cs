@@ -12,13 +12,15 @@ namespace TileGrid.Editor
     /// <summary>Expands one RPG Maker-style two-column, three-row compact block into 47 blob tiles.</summary>
     public static class Tileset47Generator
     {
-        [MenuItem("Game/Expand Tileset to 47")]
+        [MenuItem("Game/Tiles/Expand Tileset to 47")]
         public static void GenerateFromSelected()
         {
             var texture = Selection.objects.OfType<Texture2D>().FirstOrDefault();
+
             if (!texture)
             {
-                Debug.LogWarning("Select a compact PNG texture in the Project window before expanding the tileset.");
+                Debug.LogWarning(
+                    "Select a compact PNG texture in the Project window before expanding the tileset.");
                 return;
             }
 
@@ -43,12 +45,14 @@ namespace TileGrid.Editor
         /// <summary>Creates or replaces the sibling PNG, preserving existing texture and sprite references.</summary>
         public static string Generate(string sourceAssetPath)
         {
-            if (string.IsNullOrWhiteSpace(sourceAssetPath)) throw new ArgumentNullException(nameof(sourceAssetPath));
+            if (string.IsNullOrWhiteSpace(sourceAssetPath))
+                throw new ArgumentNullException(nameof(sourceAssetPath));
             sourceAssetPath = sourceAssetPath.Replace('\\', '/');
             var projectRoot = Directory.GetParent(Application.dataPath).FullName;
             var fullSource = Path.GetFullPath(Path.Combine(projectRoot, sourceAssetPath));
             if (!sourceAssetPath.StartsWith("Assets/", StringComparison.Ordinal) ||
-                !fullSource.StartsWith(Application.dataPath.Replace('/', Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar,
+                !fullSource.StartsWith(
+                    Application.dataPath.Replace('/', Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar,
                     StringComparison.OrdinalIgnoreCase) ||
                 !string.Equals(Path.GetExtension(sourceAssetPath), ".png", StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("Select a PNG under Assets.");
@@ -56,6 +60,7 @@ namespace TileGrid.Editor
             if (importer == null) throw new ArgumentException("Source must be an imported PNG texture.");
             var source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             Texture2D expanded = null;
+
             try
             {
                 // Decode original PNG bytes so Read/Write, compression and platform scaling
@@ -69,8 +74,10 @@ namespace TileGrid.Editor
                 // Replace only PNG bytes; keep the existing .meta file and asset GUID.
                 File.WriteAllBytes(Path.Combine(projectRoot, destination), expanded.EncodeToPNG());
                 AssetDatabase.ImportAsset(destination, ImportAssetOptions.ForceSynchronousImport);
-                ConfigureOutput(destination, importer.spritePixelsPerUnit, expanded.width / Columns, expanded.height / Rows);
-                Debug.Log($"Generated {destination}: {VariantCount} variants, {Columns} x {Rows} cells, {expanded.width} x {expanded.height} pixels.",
+                ConfigureOutput(destination, importer.spritePixelsPerUnit, expanded.width / Columns,
+                    expanded.height / Rows);
+                Debug.Log(
+                    $"Generated {destination}: {VariantCount} variants, {Columns} x {Rows} cells, {expanded.width} x {expanded.height} pixels.",
                     AssetDatabase.LoadAssetAtPath<Texture2D>(destination));
                 return destination;
             }
@@ -92,15 +99,20 @@ namespace TileGrid.Editor
         {
             if (!source) throw new ArgumentNullException(nameof(source));
             if (source.width % 4 != 0 || source.height % 6 != 0)
-                throw new ArgumentException("Source dimensions must divide exactly into a 4 x 6 grid of tile quarters.", nameof(source));
+                throw new ArgumentException(
+                    "Source dimensions must divide exactly into a 4 x 6 grid of tile quarters.", nameof(source));
             var tileWidth = source.width / 2;
             var tileHeight = source.height / 3;
             var quarterWidth = tileWidth / 2;
             var quarterHeight = tileHeight / 2;
-            if (!source.isReadable) throw new ArgumentException("Expand requires a readable texture; Generate decodes the PNG directly.");
-            if (masks.Length != VariantCount) throw new InvalidOperationException("Expected 47 canonical neighbor masks.");
+            if (!source.isReadable)
+                throw new ArgumentException(
+                    "Expand requires a readable texture; Generate decodes the PNG directly.");
+            if (masks.Length != VariantCount)
+                throw new InvalidOperationException("Expected 47 canonical neighbor masks.");
             var input = source.GetPixels32();
             var pixels = new Color32[Columns * tileWidth * Rows * tileHeight];
+
             for (var index = 0; index < masks.Length; index++)
             for (var quadrant = 0; quadrant < 4; quadrant++)
             {
@@ -114,8 +126,9 @@ namespace TileGrid.Editor
                     Array.Copy(input, (sy + y) * source.width + sx,
                         pixels, (dy + y) * Columns * tileWidth + dx, quarterWidth);
             }
+
             var output = new Texture2D(Columns * tileWidth, Rows * tileHeight, TextureFormat.RGBA32, false)
-            { name = source.name + " 47", filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+                { name = source.name + " 47", filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
             output.SetPixels32(pixels);
             output.Apply(false, false);
             return output;
@@ -164,19 +177,27 @@ namespace TileGrid.Editor
             var factories = new SpriteDataProviderFactories();
             factories.Init();
             var provider = factories.GetSpriteEditorDataProviderFromObject(importer);
-            if (provider == null) throw new NotSupportedException("Output importer has no sprite editor data provider.");
+            if (provider == null)
+                throw new NotSupportedException("Output importer has no sprite editor data provider.");
             provider.InitSpriteEditorDataProvider();
             var capability = provider.GetDataProvider<ISpriteFrameEditCapability>();
-            if (capability == null) throw new NotSupportedException("Output importer has no sprite edit capabilities.");
+            if (capability == null)
+                throw new NotSupportedException("Output importer has no sprite edit capabilities.");
             var supported = capability.GetEditCapability();
-            foreach (var required in new[] { EEditCapability.CreateAndDeleteSprite, EEditCapability.EditSpriteRect,
-                         EEditCapability.EditSpriteName, EEditCapability.EditPivot })
+            foreach (var required in new[]
+                     {
+                         EEditCapability.CreateAndDeleteSprite, EEditCapability.EditSpriteRect,
+                         EEditCapability.EditSpriteName, EEditCapability.EditPivot
+                     })
                 if (!supported.HasCapability(required))
-                    throw new NotSupportedException($"Output importer does not support {required}; slicing aborted.");
+                    throw new NotSupportedException(
+                        $"Output importer does not support {required}; slicing aborted.");
             var names = provider.GetDataProvider<ISpriteNameFileIdDataProvider>();
-            if (names == null) throw new NotSupportedException("Output importer cannot maintain sprite name/file IDs.");
+            if (names == null)
+                throw new NotSupportedException("Output importer cannot maintain sprite name/file IDs.");
             var existingRects = provider.GetSpriteRects();
             var rects = new SpriteRect[VariantCount];
+
             for (var i = 0; i < rects.Length; i++)
             {
                 var spriteName = $"{Path.GetFileNameWithoutExtension(path)}_{i:D2}_mask_{masks[i]:D3}";
@@ -184,19 +205,23 @@ namespace TileGrid.Editor
                 rects[i] = new SpriteRect
                 {
                     name = spriteName,
-                    rect = new Rect(i % Columns * tileWidth, (Rows - 1 - i / Columns) * tileHeight, tileWidth, tileHeight),
+                    rect = new Rect(i % Columns * tileWidth, (Rows - 1 - i / Columns) * tileHeight, tileWidth,
+                        tileHeight),
                     alignment = SpriteAlignment.Center,
                     pivot = new Vector2(.5f, .5f),
                     spriteID = existing != null ? existing.spriteID : GUID.Generate()
                 };
             }
+
             provider.SetSpriteRects(rects);
             names.SetNameFileIdPairs(rects.Select(rect => new SpriteNameFileIdPair(rect.name, rect.spriteID)));
             provider.Apply();
             importer.SaveAndReimport();
             var sprites = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>().ToArray();
-            if (sprites.Length != VariantCount || sprites.Any(sprite => sprite.rect.size != new Vector2(tileWidth, tileHeight)))
-                throw new InvalidOperationException($"Generated sheet did not import as 47 sprites of {tileWidth} x {tileHeight} pixels.");
+            if (sprites.Length != VariantCount ||
+                sprites.Any(sprite => sprite.rect.size != new Vector2(tileWidth, tileHeight)))
+                throw new InvalidOperationException(
+                    $"Generated sheet did not import as 47 sprites of {tileWidth} x {tileHeight} pixels.");
         }
 
         /// <summary>Checks mask coverage and pixel orientation against representative known RPG Maker shapes.</summary>
@@ -207,30 +232,41 @@ namespace TileGrid.Editor
             var canonical = new HashSet<int>();
             for (var mask = 0; mask < 512; mask++) canonical.Add(NormalizeMask(mask));
             if (canonical.Count != VariantCount || !canonical.SetEquals(masks))
-                throw new InvalidOperationException("Neighbor masks do not cover exactly 47 unique normalized shapes.");
+                throw new InvalidOperationException(
+                    "Neighbor masks do not cover exactly 47 unique normalized shapes.");
             var source = new Texture2D(64, 96, TextureFormat.RGBA32, false);
             Texture2D output = null;
+
             try
             {
                 var input = new Color32[64 * 96];
                 for (var y = 0; y < 96; y++)
-                for (var x = 0; x < 64; x++) input[y * 64 + x] = new Color32((byte)x, (byte)y, 123, 255);
-                source.SetPixels32(input); source.Apply();
+                for (var x = 0; x < 64; x++)
+                    input[y * 64 + x] = new Color32((byte)x, (byte)y, 123, 255);
+                source.SetPixels32(input);
+                source.Apply();
                 output = Expand(source);
                 var actual = output.GetPixels32();
                 var examples = new Dictionary<int, Vector2Int[]>
                 {
-                    [16] = new[] { new Vector2Int(0, 2), new Vector2Int(3, 2), new Vector2Int(0, 5), new Vector2Int(3, 5) },
-                    [511] = new[] { new Vector2Int(2, 4), new Vector2Int(1, 4), new Vector2Int(2, 3), new Vector2Int(1, 3) },
-                    [255] = new[] { new Vector2Int(2, 4), new Vector2Int(3, 0), new Vector2Int(2, 3), new Vector2Int(1, 3) },
-                    [56] = new[] { new Vector2Int(2, 2), new Vector2Int(1, 2), new Vector2Int(2, 5), new Vector2Int(1, 5) },
-                    [186] = new[] { new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(2, 1), new Vector2Int(3, 1) }
+                    [16] = new[]
+                        { new Vector2Int(0, 2), new Vector2Int(3, 2), new Vector2Int(0, 5), new Vector2Int(3, 5) },
+                    [511] = new[]
+                        { new Vector2Int(2, 4), new Vector2Int(1, 4), new Vector2Int(2, 3), new Vector2Int(1, 3) },
+                    [255] = new[]
+                        { new Vector2Int(2, 4), new Vector2Int(3, 0), new Vector2Int(2, 3), new Vector2Int(1, 3) },
+                    [56] = new[]
+                        { new Vector2Int(2, 2), new Vector2Int(1, 2), new Vector2Int(2, 5), new Vector2Int(1, 5) },
+                    [186] = new[]
+                        { new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(2, 1), new Vector2Int(3, 1) }
                 };
                 var checkedPixels = 0;
+
                 foreach (var pair in examples)
                 {
                     var index = Array.IndexOf(masks, pair.Key);
                     if (index < 0) throw new InvalidOperationException("Expected canonical example is missing.");
+
                     for (var q = 0; q < 4; q++)
                     for (var y = 0; y < QuarterSize; y++)
                     for (var x = 0; x < QuarterSize; x++)
@@ -240,14 +276,18 @@ namespace TileGrid.Editor
                         var dx = index % Columns * TileSize + q % 2 * QuarterSize + x;
                         var dy = (Rows - 1 - index / Columns) * TileSize + (q < 2 ? QuarterSize : 0) + y;
                         if (!actual[dy * output.width + dx].Equals(input[sy * 64 + sx]))
-                            throw new InvalidOperationException($"Incorrect quarter/pixel orientation for mask {pair.Key}.");
+                            throw new InvalidOperationException(
+                                $"Incorrect quarter/pixel orientation for mask {pair.Key}.");
                         checkedPixels++;
                     }
                 }
+
                 for (var y = 0; y < TileSize; y++)
                 for (var x = 7 * TileSize; x < 8 * TileSize; x++)
-                    if (actual[y * output.width + x].a != 0) throw new InvalidOperationException("Unused final atlas cell must be transparent.");
-                return $"47 canonical shapes cover all 256 neighbor configurations; {checkedPixels} reference pixels match; unused cell is transparent.";
+                    if (actual[y * output.width + x].a != 0)
+                        throw new InvalidOperationException("Unused final atlas cell must be transparent.");
+                return
+                    $"47 canonical shapes cover all 256 neighbor configurations; {checkedPixels} reference pixels match; unused cell is transparent.";
             }
             finally
             {

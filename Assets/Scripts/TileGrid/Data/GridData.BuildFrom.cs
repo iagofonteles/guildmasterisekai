@@ -10,7 +10,7 @@ namespace TileGrid.Data
         public void BuildFrom(Tilemap[] layers)
         {
             if ((layers?.Length ?? 0) == 0) throw new ArgumentException(nameof(layers));
-            var min = Math.Min(LayerCount, layers.Length);
+            var min = Math.Min(BuildLayer.Count, layers.Length);
             for (var l = 0; l < min; l++)
                 if (!layers[l]) throw new ArgumentException("Tilemap layers must not be null.", nameof(layers));
             

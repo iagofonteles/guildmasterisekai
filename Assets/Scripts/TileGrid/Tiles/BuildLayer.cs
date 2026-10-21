@@ -2,7 +2,7 @@ using System;
 
 namespace TileGrid.Tiles
 {
-    public static class BuildLayer2
+    public static class BuildLayer
     {
         public const int Default = 0;
         public const int Ground = 1;

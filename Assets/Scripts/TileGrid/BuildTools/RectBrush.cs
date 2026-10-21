@@ -1,17 +1,22 @@
 using System;
+using Drafts.Localization;
 using TileGrid.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 
 namespace TileGrid.BuildTools
 {
     [Serializable]
     public sealed class RectBrush : IBuildBrush
     {
+        [SerializeField, Loc] private LocalizedString displayName;
         [SerializeField] private Sprite icon;
+
         private Vector2Int _first, _last;
         private bool _cancel;
 
+        public string DisplayName => displayName.GetLocalizedString();
         public Sprite Icon => icon;
         public bool HasDrag => false;
 

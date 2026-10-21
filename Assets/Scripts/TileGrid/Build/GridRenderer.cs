@@ -12,7 +12,6 @@ namespace TileGrid.Build
         [SerializeField] private GridBuilder builder;
         [SerializeField] private Tilemap[] layers;
         private GridData _grid;
-        private Tilemap[] _maps = Array.Empty<Tilemap>();
         private Transform _toppingRoot;
         private HashSet<Vector3Int>[] _refresh = Array.Empty<HashSet<Vector3Int>>();
         private readonly Dictionary<Vector2Int, RenderedTopping[]> _toppings = new();
@@ -32,13 +31,8 @@ namespace TileGrid.Build
         private void SetGrid(GridData grid)
         {
             if (grid != null)
-            {
-                if (layers == null || layers.Length == 0 || layers.Length > GridData.LayerCount)
-                    throw new InvalidOperationException($"Assign between 1 and {GridData.LayerCount} Tilemap layers.");
-                foreach (var layer in layers)
-                    if (!layer || !layer.GetComponent<TilemapRenderer>())
-                        throw new InvalidOperationException("Each layer requires a Tilemap and TilemapRenderer.");
-            }
+                if (layers?.Length == BuildLayer.Count)
+                    throw new Exception($"Need {BuildLayer.Count} layers");
 
             if (_toppingRoot)
             {
@@ -47,30 +41,16 @@ namespace TileGrid.Build
                 DisposeObject(_toppingRoot.gameObject);
             }
 
-            foreach (var map in _maps)
-                if (map)
-                {
-                    map.gameObject.SetActive(false);
-                    DisposeObject(map.gameObject);
-                }
-
             _toppings.Clear();
-            _maps = Array.Empty<Tilemap>();
             _refresh = Array.Empty<HashSet<Vector3Int>>();
             _grid = grid;
             if (grid == null) return;
 
-            _maps = new Tilemap[layers.Length];
             _refresh = new HashSet<Vector3Int>[layers.Length];
-
-            for (var i = 0; i < layers.Length; i++)
-            {
-                _maps[i] = CreateMap(i, layers[i]);
-                _refresh[i] = new HashSet<Vector3Int>();
-            }
-
             _toppingRoot = new GameObject("Runtime Toppings").transform;
-            _toppingRoot.SetParent(_maps[0].transform, false);
+            _toppingRoot.SetParent(layers[0].transform, false);
+            for (var i = 0; i < layers.Length; i++)
+                _refresh[i] = new HashSet<Vector3Int>();
 
             // Replacement snapshots need a full render even when the dirty set is empty.
             foreach (var key in grid.Indexes.allPositionsWithin)
@@ -87,9 +67,9 @@ namespace TileGrid.Build
             {
                 var at = CellPosition(cell.Key);
 
-                for (var i = 0; i < _maps.Length; i++)
+                for (var i = 0; i < layers.Length; i++)
                 {
-                    SetChangedTile(_maps[i], at, cell.Tiles[i], _refresh[i]);
+                    SetChangedTile(layers[i], at, cell.Tiles[i], _refresh[i]);
                     _refresh[i].Add(at);
                 }
 
@@ -97,18 +77,18 @@ namespace TileGrid.Build
             }
 
             // Refresh neighbors after all writes, then restore colors and unlock LockColor.
-            for (var i = 0; i < _maps.Length; i++)
+            for (var i = 0; i < layers.Length; i++)
                 foreach (var at in _refresh[i])
-                    _maps[i].RefreshTile(at);
+                    layers[i].RefreshTile(at);
 
-            for (var i = 0; i < _maps.Length; i++)
+            for (var i = 0; i < layers.Length; i++)
             {
                 foreach (var at in _refresh[i])
                 {
                     var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
                     if (!_grid.Contains(key)) continue;
                     //_maps[i].RemoveTileFlags(at, TileFlags.LockColor);
-                    _maps[i].SetColor(at, _grid[key.x, key.y].Colors[i]);
+                    layers[i].SetColor(at, _grid[key.x, key.y].Colors[i]);
                 }
 
                 _refresh[i].Clear();
@@ -121,32 +101,6 @@ namespace TileGrid.Build
             new(key.x + _grid.Bounds.x, key.y + _grid.Bounds.y, _grid.Bounds.z);
 
         private void OnDestroy() => SetGrid(null);
-
-        private Tilemap CreateMap(int order, Tilemap src)
-        {
-            var go = new GameObject($"Runtime Layer {order} ({src.name})");
-            go.transform.SetParent(transform, false);
-            go.transform.localPosition = src.transform.localPosition;
-            go.transform.localRotation = src.transform.localRotation;
-            go.transform.localScale = src.transform.localScale;
-            go.layer = src.gameObject.layer;
-
-            var map = go.AddComponent<Tilemap>();
-            map.color = src.color;
-            map.tileAnchor = src.tileAnchor;
-            map.orientation = src.orientation;
-            map.orientationMatrix = src.orientationMatrix;
-
-            var original = src.GetComponent<TilemapRenderer>();
-            var renderer = go.AddComponent<TilemapRenderer>();
-            renderer.sharedMaterials = original.sharedMaterials;
-            renderer.sortingLayerID = original.sortingLayerID;
-            renderer.sortingOrder = original.sortingOrder;
-            renderer.mode = original.mode;
-            renderer.sortOrder = original.sortOrder;
-
-            return map;
-        }
 
         private static void SetChangedTile(Tilemap map, Vector3Int at,
             ITileEntry tile, HashSet<Vector3Int> refresh)

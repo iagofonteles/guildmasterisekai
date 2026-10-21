@@ -7,8 +7,6 @@ namespace TileGrid.Data
     /// <summary>Authoritative grid snapshot. Loading replaces state only after full validation.</summary>
     public sealed partial class GridData
     {
-        public const int LayerCount = 6;
-
         private const int Version = 0;
         private GridCell[,] _cells;
         public BoundsInt Bounds { get; private set; }

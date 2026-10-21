@@ -1,15 +1,19 @@
 using System;
+using Drafts.Localization;
 using TileGrid.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 
 namespace TileGrid.BuildTools
 {
     [Serializable]
     public sealed class PixelBrush : IBuildBrush
     {
+        [SerializeField,Loc] private LocalizedString displayName;
         [SerializeField] private Sprite icon;
 
+        public string DisplayName => displayName.GetLocalizedString();
         public Sprite Icon => icon;
         public bool HasDrag => true;
 

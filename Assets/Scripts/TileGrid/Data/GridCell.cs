@@ -9,6 +9,7 @@ namespace TileGrid.Data
         GridData Grid { get; }
         Vector2Int Key { get; }
         Vector3 Position { get; }
+        byte Rotation { get; }
         IReadOnlyList<ITileEntry> Tiles { get; }
         IReadOnlyList<Color> Colors { get; }
         IReadOnlyList<CellTopping> Decoration { get; }
@@ -20,8 +21,9 @@ namespace TileGrid.Data
         public GridData Grid { get; set; }
         public Vector2Int Key { get; set; }
         public Vector3 Position { get; set; }
-        public ITileEntry[] Tiles { get; } = new ITileEntry[GridData.LayerCount];
-        public Color[] Colors { get; } = new Color[GridData.LayerCount];
+        public byte Rotation { get; set; }
+        public ITileEntry[] Tiles { get; } = new ITileEntry[BuildLayer.Count];
+        public Color[] Colors { get; } = new Color[BuildLayer.Count];
         public List<CellTopping> Decoration { get; } = new();
 
         IReadOnlyList<ITileEntry> IGridCell.Tiles => Tiles;
@@ -44,7 +46,7 @@ namespace TileGrid.Data
         public void CopyState(IGridCell state)
         {
             if (ReferenceEquals(this, state)) return;
-            for (var i = 0; i < GridData.LayerCount; i++)
+            for (var i = 0; i < BuildLayer.Count; i++)
             {
                 Tiles[i] = state.Tiles[i];
                 Colors[i] = state.Colors[i];
