@@ -9,8 +9,8 @@ namespace TileGrid.UI
     public sealed class GridBuilderInput : MonoBehaviour
     {
         [SerializeField] private GridBuilder builder;
-        [SerializeField] private UIDocument document;
-        private GestureArgs Args => builder.Gesture;
+        [SerializeField] private PanelRenderer document;
+        private BuildArgs Args => builder.Build;
 
         private VisualElement _outline;
         private Image _cursorIcon;
@@ -20,8 +20,16 @@ namespace TileGrid.UI
 
         private void Start()
         {
-            Bind();
             Subscribe();
+            document.RegisterUIReloadCallback(OnUIReload);
+        }
+
+        private void OnDestroy()
+        {
+            document.UnregisterUIReloadCallback(OnUIReload);
+            Unsubscribe();
+            _outline?.RemoveFromHierarchy();
+            _cursorIcon?.RemoveFromHierarchy();
         }
 
         private void Subscribe()
@@ -38,9 +46,11 @@ namespace TileGrid.UI
             Args.tool.OnChanged -= CancelDrag;
         }
 
-        private void Bind()
+        private void OnUIReload(PanelRenderer renderer, VisualElement root)
         {
-            var root = document.rootVisualElement;
+            if (root == null) return;
+            _outline?.RemoveFromHierarchy();
+            _cursorIcon?.RemoveFromHierarchy();
 
             _outline = new VisualElement { pickingMode = PickingMode.Ignore };
             _outline.AddToClassList("grid-selection-outline");

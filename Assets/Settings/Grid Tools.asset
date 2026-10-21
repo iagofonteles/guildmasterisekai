@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Grid Tools
   m_EditorClassIdentifier: TileGrid::TileGrid.Build.GridBuilderTools
   layers:
-  - str:
+  - index: 2
+    str:
       m_TableReference:
         m_TableCollectionName: General
       m_TableEntryReference:
@@ -23,18 +24,114 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 0}
-  - str:
+  - index: 3
+    str:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: General
       m_TableEntryReference:
-        m_KeyId: 0
+        m_KeyId: 851226454724608
         m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 0}
-  bruhes: []
-  tools: []
+  - index: 4
+    str:
+      m_TableReference:
+        m_TableCollectionName: General
+      m_TableEntryReference:
+        m_KeyId: 851228719648768
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 0}
+  - index: 10
+    str:
+      m_TableReference:
+        m_TableCollectionName: General
+      m_TableEntryReference:
+        m_KeyId: 851230015688704
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 0}
+  bruhes:
+  - rid: 8997147993378128281
+  - rid: 8997147993378128282
+  tools:
+  - rid: 8997147993378128283
+  - rid: 8997147993378128284
+  - rid: 8997147993378128285
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8997147993378128281
+      type: {class: PixelBrush, ns: TileGrid.BuildTools, asm: TileGrid}
+      data:
+        displayName:
+          m_TableReference:
+            m_TableCollectionName: General
+          m_TableEntryReference:
+            m_KeyId: 1452511924224
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+        icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    - rid: 8997147993378128282
+      type: {class: RectBrush, ns: TileGrid.BuildTools, asm: TileGrid}
+      data:
+        displayName:
+          m_TableReference:
+            m_TableCollectionName: General
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+        icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    - rid: 8997147993378128283
+      type: {class: PlaceTool, ns: TileGrid.BuildTools, asm: TileGrid}
+      data:
+        str:
+          m_TableReference:
+            m_TableCollectionName: General
+          m_TableEntryReference:
+            m_KeyId: 96082399232
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+        icon: {fileID: 0}
+        altIcon: {fileID: 0}
+    - rid: 8997147993378128284
+      type: {class: ReplaceTool, ns: TileGrid.BuildTools, asm: TileGrid}
+      data:
+        str:
+          m_TableReference:
+            m_TableCollectionName: General
+          m_TableEntryReference:
+            m_KeyId: 876541084241920
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+        icon: {fileID: 0}
+        altIcon: {fileID: 0}
+    - rid: 8997147993378128285
+      type: {class: ColorTool, ns: TileGrid.BuildTools, asm: TileGrid}
+      data:
+        str:
+          m_TableReference:
+            m_TableCollectionName: General
+          m_TableEntryReference:
+            m_KeyId: 121213560360960
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+        icon: {fileID: 0}
+        altIcon: {fileID: 0}
