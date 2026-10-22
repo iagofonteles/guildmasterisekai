@@ -34,11 +34,14 @@ namespace TileGrid.UI
             StopAllCoroutines();
             panel.UnregisterUIReloadCallback(Subscribe);
             _unsubscribe?.Invoke();
+            _unsubscribe = null;
         }
 
         private void Subscribe(PanelRenderer renderer, VisualElement root)
         {
             _unsubscribe?.Invoke();
+            _unsubscribe = null;
+            
             var b = builder ?? throw new NullReferenceException(nameof(builder));
             var undo = root.Q<Button>("undo");
             var redo = root.Q<Button>("redo");
@@ -65,6 +68,7 @@ namespace TileGrid.UI
             foreach (var child in root.Children())
                 child.pickingMode = PickingMode.Ignore;
 
+            RefreshStatus();
             void RefreshStatus()
             {
                 var ready = builder && builder.IsInitialized;

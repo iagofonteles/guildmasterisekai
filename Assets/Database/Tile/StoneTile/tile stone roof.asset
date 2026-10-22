@@ -213,7 +213,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 73f4f3a376608234fa7aceeacfbb2a50, type: 3}
   m_TextureScaleList:
   - 1
-  id: 0
+  id: 1400639660
   displayName:
     m_TableReference:
       m_TableCollectionName: 

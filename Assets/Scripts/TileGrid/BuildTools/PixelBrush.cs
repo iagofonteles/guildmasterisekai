@@ -32,7 +32,5 @@ namespace TileGrid.BuildTools
         }
 
         public void OnMouseUp(BuildArgs e, Vector2Int pos) { }
-        public void OnKeyDown(Vector2Int pos, Key key) { }
-        public void OnKeyUp(Vector2Int pos, Key key) { }
     }
 }

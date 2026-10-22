@@ -13,6 +13,7 @@ namespace TileGrid.Build
         public RectInt area;
         public MouseButton button;
         public bool alt;
+        public bool cancel;
         public readonly Watcher<int> layer = new();
         public readonly Watcher<IBuildBrush> brush = new();
         public readonly Watcher<IBuildTool> tool = new();

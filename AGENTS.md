@@ -1,5 +1,6 @@
 # Task-file workflow
 
+- Do not guard-check against null on invalid state unless the variable is intended to be null at that point. Exeptions are Awake, Start, Constructor and Initialization, here you should check for valid state 
 
 ### Unity Codex Tasks Workflow
 

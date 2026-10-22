@@ -2,7 +2,6 @@ using System;
 using Drafts.Localization;
 using TileGrid.Build;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 
 namespace TileGrid.BuildTools
@@ -14,17 +13,14 @@ namespace TileGrid.BuildTools
         [SerializeField] private Sprite icon;
 
         private Vector2Int _first, _last;
-        private bool _cancel;
 
         public string DisplayName => displayName.GetLocalizedString();
         public Sprite Icon => icon;
         public bool HasDrag => false;
 
-        public void CancelGesture() => _cancel = true;
-
         public void OnMouseDown(BuildArgs e, Vector2Int pos)
         {
-            _cancel = false;
+            e.cancel = false;
             _first = _last = pos;
         }
 
@@ -32,7 +28,7 @@ namespace TileGrid.BuildTools
 
         public void OnMouseUp(BuildArgs e, Vector2Int pos)
         {
-            if (_cancel) return;
+            if (e.cancel) return;
             _last = pos;
 
             var min = Vector2Int.Min(_first, _last);
@@ -40,12 +36,5 @@ namespace TileGrid.BuildTools
             e.area = new RectInt(min, max - min + Vector2Int.one);
             e.builder.TryUseTool(e);
         }
-
-        public void OnKeyDown(Vector2Int pos, Key key)
-        {
-            if (key == Key.Escape) _cancel = true;
-        }
-
-        public void OnKeyUp(Vector2Int pos, Key key) { }
     }
 }

@@ -8,6 +8,7 @@ namespace TileGrid.Data
     {
         void WriteTile(BinaryWriter writer, ITile tile);
         ITile ReadTile(BinaryReader reader);
+        bool FileExists(string key);
         BinaryWriter GetWriter(string key);
         BinaryReader GetReader(string key);
 

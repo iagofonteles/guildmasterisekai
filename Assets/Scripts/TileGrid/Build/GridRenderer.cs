@@ -48,7 +48,7 @@ namespace TileGrid.Build
 
             _refresh = new HashSet<Vector3Int>[layers.Length];
             _toppingRoot = new GameObject("Runtime Toppings").transform;
-            _toppingRoot.SetParent(layers[0].transform, false);
+            _toppingRoot.SetParent(transform, false);
             for (var i = 0; i < layers.Length; i++)
                 _refresh[i] = new HashSet<Vector3Int>();
 

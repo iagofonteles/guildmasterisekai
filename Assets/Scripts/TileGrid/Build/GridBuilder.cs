@@ -39,9 +39,12 @@ namespace TileGrid.Build
 
         private void Start()
         {
-            BuildArgs.grid = string.IsNullOrEmpty(filePath)
-                ? new(defaultMaps)
-                : new GridData(serializer, filePath);
+            LoadFile(filePath);
+        }
+
+        private void OnDestroy()
+        {
+            SaveFile(filePath);
         }
 
         /// <summary>Runs a tool through inventory checks, atomic commit, rendering and undo history.</summary>
@@ -98,17 +101,14 @@ namespace TileGrid.Build
 
         public void SaveFile(string path)
         {
-            filePath = path ?? filePath;
-            if (string.IsNullOrEmpty(filePath))
-                throw new Exception("no filePath");
-            Grid?.Save(serializer, filePath);
+            if (string.IsNullOrEmpty(path)) return;
+            Grid?.Save(serializer, path);
         }
 
         public void LoadFile(string path)
         {
-            if (string.IsNullOrEmpty(path))
-                throw new Exception("no filePath");
-            BuildArgs.grid = new(serializer, filePath = path);
+            var valid = string.IsNullOrEmpty(path) || !serializer.FileExists(path);
+            BuildArgs.grid = valid ? new(defaultMaps) : new(serializer, path);
             Clear();
         }
 
