@@ -57,6 +57,8 @@ MonoBehaviour:
   size: {x: 1, y: 1}
   layerMask: 4
   rotations:
+  - {fileID: 2618538249558509136, guid: c4ece930052e4e3448803a67aaf3d5f3, type: 3}
+  encodedRotations:
   - {fileID: -6581249417397699342, guid: 5b7208d7187f556418e661c52400f657, type: 2}
   references:
     version: 2

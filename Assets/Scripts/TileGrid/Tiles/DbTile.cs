@@ -17,6 +17,7 @@ namespace TileGrid.Tiles
         [SerializeField] private Vector2Int size = Vector2Int.one;
         [SerializeField] private BuildLayerMask layerMask;
         [SerializeField] private Sprite[] rotations;
+        [SerializeField] private Sprite[] encodedRotations = System.Array.Empty<Sprite>();
 
         public uint Id => id;
         public string DisplayName => displayName.Localize(this);
@@ -29,9 +30,12 @@ namespace TileGrid.Tiles
         public override void GetTileData(Vector3Int pos, ITilemap tilemap, ref TileData tileData)
         {
             base.GetTileData(pos, tilemap, ref tileData);
+            tileData.color = tilemap.GetColor(pos);
             var matrix = tilemap.GetTransformMatrix(pos);
-            var index = Mathf.RoundToInt(matrix.rotation.x) % rotations.Length;
-            tileData.sprite = rotations[index];
+            var sprites = tileData.color == Color.clear || encodedRotations.Length == 0
+                ? rotations : encodedRotations;
+            var index = Mathf.RoundToInt(matrix.rotation.x) % sprites.Length;
+            tileData.sprite = sprites[index];
         }
 
         public bool CanReplace(ITileEntry other) => other is DbTile t && t.size == size;

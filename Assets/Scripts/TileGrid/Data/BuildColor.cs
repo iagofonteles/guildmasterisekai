@@ -41,7 +41,12 @@ namespace TileGrid.Build
         }
 
         // Each channel selects a shared ramp row; zero preserves original colors.
-        // Alpha selects region 4's ramp, not opacity. Do not apply gamma conversion.
-        public Color GetColor() => new Color32(region1Ramp, region2Ramp, region3Ramp, region4Ramp);
+        // Alpha selects region 4's ramp, not opacity. Compensate for Unity's RGB
+        // tint conversion before Chunk mode quantizes the vertex colors to bytes.
+        public Color GetColor()
+        {
+            Color color = new Color32(region1Ramp, region2Ramp, region3Ramp, region4Ramp);
+            return QualitySettings.activeColorSpace == ColorSpace.Linear ? color.gamma : color;
+        }
     }
 }

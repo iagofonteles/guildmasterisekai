@@ -24,6 +24,7 @@ namespace TileGrid.Editor
             Add(r, so, "m_ColliderType");
             Add(r, so, "m_InstancedGameObject");
             Add(r, so, "rotations");
+            Add(r, so, "encodedRotations");
 
             return r;
         }

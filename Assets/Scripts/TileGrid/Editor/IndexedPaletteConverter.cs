@@ -39,7 +39,7 @@ namespace TileGrid.Editor
             var palette = ReadPalette();
             // Validate both inputs completely before writing any generated assets.
             var conversions = new[] { Prepare("test floor", palette), Prepare("test tile", palette) };
-            var shader = Shader.Find("Custom/TilemapIndexedPaletteProposal");
+            var shader = Shader.Find("Custom/IndexedPalette");
             if (!shader || ShaderUtil.ShaderHasError(shader))
                 throw new InvalidOperationException("Indexed palette shader is missing or has compilation errors.");
             if (!SystemInfo.SupportsTextureFormat(TextureFormat.RG16))
@@ -98,7 +98,10 @@ namespace TileGrid.Editor
                 var serialized = new SerializedObject(conversion.tile);
                 var rotations = serialized.FindProperty("rotations");
                 rotations.arraySize = 1;
-                rotations.GetArrayElementAtIndex(0).objectReferenceValue = sprite;
+                rotations.GetArrayElementAtIndex(0).objectReferenceValue = source;
+                var encoded = serialized.FindProperty("encodedRotations");
+                encoded.arraySize = 1;
+                encoded.GetArrayElementAtIndex(0).objectReferenceValue = sprite;
                 // Keep normal RGB icons in UI; the packed data is not a color image.
                 serialized.FindProperty("icon").objectReferenceValue = source;
                 serialized.ApplyModifiedProperties();

@@ -76,20 +76,20 @@ namespace TileGrid.Build
                 RenderToppings(cell);
             }
 
-            // Refresh neighbors after all writes, then restore colors and unlock LockColor.
-            for (var i = 0; i < layers.Length; i++)
-                foreach (var at in _refresh[i])
-                    layers[i].RefreshTile(at);
-
+            // Restore colors before refreshing so DbTile can select the matching sprite.
             for (var i = 0; i < layers.Length; i++)
             {
                 foreach (var at in _refresh[i])
                 {
                     var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
-                    if (!_grid.Contains(key)) continue;
-                    //_maps[i].RemoveTileFlags(at, TileFlags.LockColor);
-                    var col = _grid[key.x, key.y].Colors[i];
-                    layers[i].SetColor(at, col?.GetColor() ?? Color.clear);
+                    if (_grid.Contains(key))
+                    {
+                        //_maps[i].RemoveTileFlags(at, TileFlags.LockColor);
+                        var col = _grid[key.x, key.y].Colors[i];
+                        var color = col?.GetColor() ?? Color.clear;
+                        layers[i].SetColor(at, color);
+                    }
+                    layers[i].RefreshTile(at);
                 }
 
                 _refresh[i].Clear();
