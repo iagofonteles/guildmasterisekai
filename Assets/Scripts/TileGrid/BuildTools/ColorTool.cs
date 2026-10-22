@@ -34,11 +34,11 @@ namespace TileGrid.BuildTools
                 return null;
             if (e.alt) return _pick.CreateCommand(e);
 
-            if (e.item.Value is Color color2)
+            if (e.item.Value is BuildColor color2)
                 e.color.Value = color2;
 
             var cmd = new CellCommand(e.builder);
-            var tgt = e.button == LeftMouse ? e.color.Value : Color.clear;
+            var tgt = e.button == LeftMouse ? e.color.Value : null;
 
             foreach (var p in e.area.allPositionsWithin)
             {

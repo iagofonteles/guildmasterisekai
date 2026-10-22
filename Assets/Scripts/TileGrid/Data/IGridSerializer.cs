@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using TileGrid.Build;
 using TileGrid.Tiles;
 using UnityEngine;
 
@@ -25,18 +27,15 @@ namespace TileGrid.Data
             ReadSingle(reader),
             ReadSingle(reader));
 
-        void WriteColor(BinaryWriter writer, Color color)
+        void WriteColor(BinaryWriter writer, BuildColor color)
         {
-            WriteSingle(writer, color.r);
-            WriteSingle(writer, color.g);
-            WriteSingle(writer, color.b);
-            WriteSingle(writer, color.a);
+            throw new NotImplementedException();
+            // WriteSingle(writer, color.r);
+            // WriteSingle(writer, color.g);
+            // WriteSingle(writer, color.b);
+            // WriteSingle(writer, color.a);
         }
 
-        Color ReadColor(BinaryReader reader) => new(
-            ReadSingle(reader),
-            ReadSingle(reader),
-            ReadSingle(reader),
-            ReadSingle(reader));
+        BuildColor ReadColor(BinaryReader reader) => throw new NotImplementedException();
     }
 }

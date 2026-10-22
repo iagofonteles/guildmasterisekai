@@ -106,6 +106,7 @@ namespace TileGrid.UI
                 _dragging = null;
                 Brush.OnMouseUp(Args, gridPos);
                 Args.area = new(gridPos, Vector2Int.one);
+                Args.button = MouseButton.LeftMouse;
                 selection.UpdateArea();
                 return;
             }
@@ -117,6 +118,7 @@ namespace TileGrid.UI
                 _first = gridPos;
                 Args.area = new(gridPos, Vector2Int.one);
                 Brush.OnMouseDown(Args, gridPos);
+                selection.UpdateArea();
             }
         }
 

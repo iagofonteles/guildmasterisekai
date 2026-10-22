@@ -18,16 +18,8 @@ namespace TileGrid.Build
         public readonly Watcher<IBuildBrush> brush = new();
         public readonly Watcher<IBuildTool> tool = new();
         public readonly Watcher<object> item = new();
-        public readonly Watcher<Color> color = new();
+        public readonly Watcher<BuildColor> color = new();
         public readonly Watcher<string> lastError = new();
-
-        public void Validate2()
-        {
-            if (!builder) throw new ArgumentNullException(nameof(builder));
-            if (grid == null) throw new NullReferenceException(nameof(grid));
-            if (bag == null) throw new NullReferenceException(nameof(bag));
-            if (!builder.Material) throw new NullReferenceException(nameof(builder.Material));
-        }
 
         public IBuildCommand Error(string message)
         {

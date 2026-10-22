@@ -33,7 +33,7 @@ namespace TileGrid.Data
                 for (var l = 0; l < min; l++)
                 {
                     cell.Tiles[l] = layers[l].GetTile(p) as ITileEntry;
-                    cell.Colors[l] = layers[l].GetColor(p);
+                    cell.Colors[l] = null;
                 }
 
                 _cells[key.x, key.y] = cell;

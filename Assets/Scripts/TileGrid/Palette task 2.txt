@@ -1,0 +1,8 @@
+implement color class according to new palete index shader
+is tilemap.setcolr still needed?
+
+BuildColor.GetColor
+IGridSerializer.WriteColor
+IGridSerializer.ReadColor
+
+if changes on other files are need, state here instead of modifing

@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2e1de3c28e3c4effed756c71a866b159542c315e"
+      "hash": "8d998ac9cdeaee457337812b24e5abfc576386ef"
     },
     "com.drafts.dataview": {
       "version": "https://github.com/bydrafts/dataview.git#v1.0",
@@ -55,6 +55,13 @@
       "source": "git",
       "dependencies": {},
       "hash": "f4eab41765a605244ca18ca6b494ba66be7704f0"
+    },
+    "com.h8man.2d.navmeshplus": {
+      "version": "git@github.com:h8man/NavMeshPlus.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "019e15cfe2fe7985ff1ac04cc8db6666ccc0df8d"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

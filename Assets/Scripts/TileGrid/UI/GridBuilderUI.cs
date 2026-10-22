@@ -245,7 +245,7 @@ namespace TileGrid.UI
                     SelectedItem = e.item.Value
                 };
 
-                if (slot.Item is Color color)
+                if (slot.Item is BuildColor color)
                     element.clicked += () => e.color.Value = color;
                 element.clicked += () => e.item.Value = slot.Item;
 

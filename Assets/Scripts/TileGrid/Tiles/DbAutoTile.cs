@@ -28,7 +28,9 @@ namespace TileGrid.Tiles
         TileBase ITileEntry.Tile => this;
 
         public bool CanReplace(ITileEntry other) => other is DbAutoTile;
-        protected override bool IsMatch(TileBase other) => other is AutoTile;
+
+        protected override bool IsMatch(TileBase other, int x, int y) =>
+            (!roof || y == 0) && other is DbAutoTile;
 
         public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
         {

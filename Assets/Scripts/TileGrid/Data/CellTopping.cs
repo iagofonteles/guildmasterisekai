@@ -1,4 +1,5 @@
 using System.IO;
+using TileGrid.Build;
 using TileGrid.Tiles;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace TileGrid.Data
     {
         public IDecorationEntry item;
         public Vector2 position;
-        public Color color;
+        public BuildColor color;
 
         public void Save(IGridSerializer serializer, BinaryWriter writer)
         {

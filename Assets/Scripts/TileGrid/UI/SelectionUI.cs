@@ -57,7 +57,7 @@ namespace TileGrid.UI
 
             var point = RuntimePanelUtils.ScreenToPanel(_cursorIcon.panel, screenPos);
             point = _cursorIcon.parent.WorldToLocal(point);
-            _cursorIcon.style.translate = new Vector3(point.x + 16, point.y + 16, 0);
+            _cursorIcon.style.translate = new Vector3(point.x + 16, Screen.height - point.y + 16, 0);
         }
 
         public void UpdateArea()

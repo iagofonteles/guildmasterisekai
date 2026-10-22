@@ -31,9 +31,7 @@ namespace TileGrid.Tiles
             base.GetTileData(pos, tilemap, ref tileData);
             var matrix = tilemap.GetTransformMatrix(pos);
             var index = Mathf.RoundToInt(matrix.rotation.x) % rotations.Length;
-
             tileData.sprite = rotations[index];
-            tileData.transform = Matrix4x4.identity; // Prevent applying rotation twice.
         }
 
         public bool CanReplace(ITileEntry other) => other is DbTile t && t.size == size;

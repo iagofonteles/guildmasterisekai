@@ -149,7 +149,7 @@ namespace UnityEngine.Tilemaps
             }
         }
 
-        protected virtual bool IsMatch(TileBase other)
+        protected virtual bool IsMatch(TileBase other, int x, int y)
         {
             return other == this;
         }
@@ -178,7 +178,7 @@ namespace UnityEngine.Tilemaps
                 {
                     var tilePosition = new Vector3Int(position.x + x, position.y + y, position.z);
                     m_CachedTiles[index] = itilemap.GetTile(tilePosition);
-                    if (IsMatch(m_CachedTiles[index]))
+                    if (IsMatch(m_CachedTiles[index], x, y))
                         mask |= (uint)1 << index;
                     index++;
                 }

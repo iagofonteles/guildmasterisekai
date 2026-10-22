@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TileGrid.Build;
 using TileGrid.Tiles;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace TileGrid.Data
         Vector3 Position { get; }
         byte Rotation { get; }
         IReadOnlyList<ITileEntry> Tiles { get; }
-        IReadOnlyList<Color> Colors { get; }
+        IReadOnlyList<BuildColor> Colors { get; }
         IReadOnlyList<CellTopping> Decoration { get; }
         GridCell Clone();
     }
@@ -23,11 +24,11 @@ namespace TileGrid.Data
         public Vector3 Position { get; set; }
         public byte Rotation { get; set; }
         public ITileEntry[] Tiles { get; } = new ITileEntry[BuildLayer.Count];
-        public Color[] Colors { get; } = new Color[BuildLayer.Count];
+        public BuildColor[] Colors { get; } = new BuildColor[BuildLayer.Count];
         public List<CellTopping> Decoration { get; } = new();
 
         IReadOnlyList<ITileEntry> IGridCell.Tiles => Tiles;
-        IReadOnlyList<Color> IGridCell.Colors => Colors;
+        IReadOnlyList<BuildColor> IGridCell.Colors => Colors;
         IReadOnlyList<CellTopping> IGridCell.Decoration => Decoration;
 
         public GridCell Clone()

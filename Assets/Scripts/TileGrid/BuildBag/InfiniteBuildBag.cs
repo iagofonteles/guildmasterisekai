@@ -14,17 +14,17 @@ namespace TileGrid.BuildBag
         public int GetBuildingMaterials() => int.MaxValue;
 
         private ListInventory<IDatabaseItem> _inventory;
-        public ListInventory<Color> colors;
+        public List<BuildColor> colors;
 
         private IEnumerable<Slot<IDatabaseItem>> FetchItems()
             => ((IDatabase)database).GetAll<IDatabaseItem>().Select(i => new Slot<IDatabaseItem>(i, -1, true));
 
         public IEnumerable<ISlot> GetSlots<T>()
         {
-            if (typeof(T) == typeof(Color))
+            if (typeof(T) == typeof(BuildColor))
             {
-                foreach (var slot in colors)
-                    yield return slot;
+                foreach (var color in colors)
+                    yield return color;
                 yield break;
             }
             
