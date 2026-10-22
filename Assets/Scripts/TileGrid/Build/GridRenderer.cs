@@ -88,7 +88,8 @@ namespace TileGrid.Build
                     var key = new Vector2Int(at.x - _grid.Bounds.x, at.y - _grid.Bounds.y);
                     if (!_grid.Contains(key)) continue;
                     //_maps[i].RemoveTileFlags(at, TileFlags.LockColor);
-                    layers[i].SetColor(at, _grid[key.x, key.y].Colors[i].GetColor());
+                    var col = _grid[key.x, key.y].Colors[i];
+                    layers[i].SetColor(at, col?.GetColor() ?? Color.clear);
                 }
 
                 _refresh[i].Clear();

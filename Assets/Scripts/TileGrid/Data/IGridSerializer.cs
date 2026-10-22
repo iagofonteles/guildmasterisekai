@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using TileGrid.Build;
 using TileGrid.Tiles;
@@ -29,13 +28,21 @@ namespace TileGrid.Data
 
         void WriteColor(BinaryWriter writer, BuildColor color)
         {
-            throw new NotImplementedException();
-            // WriteSingle(writer, color.r);
-            // WriteSingle(writer, color.g);
-            // WriteSingle(writer, color.b);
-            // WriteSingle(writer, color.a);
+            writer.Write(color != null);
+            if (color == null) return;
+            writer.Write(color.Id);
+            writer.Write(color.Name ?? "");
+            writer.Write(color.Region1Ramp);
+            writer.Write(color.Region2Ramp);
+            writer.Write(color.Region3Ramp);
+            writer.Write(color.Region4Ramp);
         }
 
-        BuildColor ReadColor(BinaryReader reader) => throw new NotImplementedException();
+        BuildColor ReadColor(BinaryReader reader) => reader.ReadBoolean()
+            ? new BuildColor(
+                reader.ReadString(), reader.ReadUInt32(),
+                reader.ReadByte(), reader.ReadByte(),
+                reader.ReadByte(), reader.ReadByte())
+            : null;
     }
 }

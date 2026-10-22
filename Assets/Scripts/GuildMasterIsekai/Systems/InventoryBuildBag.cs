@@ -11,7 +11,7 @@ namespace GuildMasterIsekai.TileGrid
     {
         public DatabaseEntrySo buildingMaterial;
         public ListInventory<DatabaseEntrySo> inventory;
-        public ListInventory<Color> colors;
+        public List<BuildColor> colors;
         private bool _applying;
 
         private void Start()
@@ -23,10 +23,10 @@ namespace GuildMasterIsekai.TileGrid
 
         public IEnumerable<ISlot> GetSlots<T>()
         {
-            if (typeof(T) == typeof(Color))
+            if (typeof(T) == typeof(BuildColor))
             {
-                foreach (var slot in colors)
-                    yield return slot;
+                foreach (var color in colors)
+                    yield return color;
                 yield break;
             }
 

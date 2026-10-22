@@ -1,41 +1,32 @@
 using TileGrid.Tiles;
+using TileGrid.Build;
 using Drafts.Inventory;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace TileGrid.UI
 {
-    public sealed class SlotElement : Button
+    public sealed class SlotElement : Button, IViewElement
     {
         private readonly Label _amount;
         private readonly Image _image;
         private readonly Label _placeholder;
         private ISlot _slot;
         private bool _subscribed;
-        private object _selectedItem;
 
-        public ISlot Slot
+        public object Data
         {
             get => _slot;
             set {
                 Unsubscribe();
-                _slot = value;
+                _slot = value as ISlot;
                 if (panel != null) Subscribe();
-                RefreshItem(_slot?.Item);
+                Refresh();
                 RefreshAmount(_slot?.Amount ?? 0);
             }
         }
 
-        public object SelectedItem
-        {
-            get => _selectedItem;
-            set {
-                _selectedItem = value;
-                RefreshItem(_slot?.Item);
-            }
-        }
-
-        public SlotElement()
+        public SlotElement(ISlot data)
         {
             AddToClassList("tile-choice");
             _image = new Image
@@ -48,23 +39,26 @@ namespace TileGrid.UI
             _placeholder = new Label("?") { pickingMode = PickingMode.Ignore };
             _placeholder.AddToClassList("slot-placeholder");
             Add(_placeholder);
+
             _amount = new Label { pickingMode = PickingMode.Ignore };
             _amount.AddToClassList("tile-amount");
             Add(_amount);
             RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 Subscribe();
-                RefreshItem(_slot?.Item);
+                Refresh();
                 RefreshAmount(_slot?.Amount ?? 0);
             });
             RegisterCallback<DetachFromPanelEvent>(_ => Unsubscribe());
+
+            Data = data;
         }
 
         private void Subscribe()
         {
             if (_slot == null || _subscribed) return;
             _slot.OnAmountChanged += RefreshAmount;
-            _slot.OnItemChanged += RefreshItem;
+            _slot.OnItemChanged += Refresh;
             _subscribed = true;
         }
 
@@ -72,7 +66,7 @@ namespace TileGrid.UI
         {
             if (!_subscribed) return;
             _slot.OnAmountChanged -= RefreshAmount;
-            _slot.OnItemChanged -= RefreshItem;
+            _slot.OnItemChanged -= Refresh;
             _subscribed = false;
         }
 
@@ -82,27 +76,24 @@ namespace TileGrid.UI
             _amount.EnableInClassList("hidden", amount < 1);
         }
 
-        private void RefreshItem(object value)
-        {
-            if (value is Color color)
-            {
-                EnableInClassList("selected", color.Equals(_selectedItem));
-                tooltip = "#" + ColorUtility.ToHtmlStringRGBA(color);
-                _image.image = Texture2D.whiteTexture;
-                _image.tintColor = new Color(color.r, color.g, color.b, 1);
-                _image.EnableInClassList("hidden", false);
-                _placeholder.EnableInClassList("hidden", true);
-                return;
-            }
+        private void Refresh<T>(T _) => Refresh();
 
-            var item = value as ITile;
+        public void Refresh()
+        {
+            var item = _slot?.Item as ITile;
             var icon = item?.Icon;
-            EnableInClassList("selected", item != null && Equals(item, _selectedItem));
             tooltip = item?.DisplayName ?? string.Empty;
             _image.sprite = icon;
             _image.tintColor = Color.white;
             _image.EnableInClassList("hidden", !icon);
             _placeholder.EnableInClassList("hidden", icon);
+        }
+
+        public void SetSelected(object item)
+        {
+            var value = _slot?.Item;
+            var selected = value != null && Equals(value, item);
+            EnableInClassList("selected", selected);
         }
     }
 }

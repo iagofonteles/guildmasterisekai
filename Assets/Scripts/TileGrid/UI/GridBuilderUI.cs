@@ -8,6 +8,7 @@ using TileGrid.Tiles;
 using Drafts.Inventory;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Tilemaps;
 
 namespace TileGrid.UI
 {
@@ -17,14 +18,15 @@ namespace TileGrid.UI
         [SerializeField] private GridBuilder builder;
         [SerializeField] private PanelRenderer panel;
         [SerializeField, SO] private GridBuilderTools gridTools;
+        [SerializeField] private Material paletteMaterial;
 
         private Action _unsubscribe;
 
         private IEnumerator Start()
         {
+            if (!paletteMaterial) throw new NullReferenceException();
             panel.panelSettings.sortingOrder = 100;
-            while (!builder.IsInitialized)
-                yield return null;
+            while (!builder.IsInitialized) yield return null;
             yield return null;
             panel.RegisterUIReloadCallback(Subscribe);
         }
@@ -41,7 +43,7 @@ namespace TileGrid.UI
         {
             _unsubscribe?.Invoke();
             _unsubscribe = null;
-            
+
             var b = builder ?? throw new NullReferenceException(nameof(builder));
             var undo = root.Q<Button>("undo");
             var redo = root.Q<Button>("redo");
@@ -63,12 +65,13 @@ namespace TileGrid.UI
             _unsubscribe += DrawLayers(root, b.BuildArgs, gridTools);
             _unsubscribe += DrawBrushes(root, b.BuildArgs, gridTools);
             _unsubscribe += DrawTools(root, b.BuildArgs, gridTools);
-            _unsubscribe += DrawTiles(root, b.BuildArgs);
+            _unsubscribe += DrawTiles(root, b.BuildArgs, paletteMaterial);
 
             foreach (var child in root.Children())
                 child.pickingMode = PickingMode.Ignore;
 
             RefreshStatus();
+
             void RefreshStatus()
             {
                 var ready = builder && builder.IsInitialized;
@@ -198,10 +201,10 @@ namespace TileGrid.UI
             }
         }
 
-        private static Action DrawTiles(VisualElement root, BuildArgs e)
+        private static Action DrawTiles(VisualElement root, BuildArgs e, Material paletteMaterial)
         {
             var tiles = root.Q<ScrollView>("tiles");
-            var elements = new List<SlotElement>();
+            var elements = new List<IViewElement>();
             Refresh(e.tool.Value);
 
             e.tool.OnChanged += Refresh;
@@ -218,39 +221,46 @@ namespace TileGrid.UI
             void RefreshSelection<T>(T _)
             {
                 foreach (var element in elements)
-                    element.SelectedItem = e.item.Value;
+                    element.SetSelected(e.item.Value);
             }
 
             void Refresh(IBuildTool tool)
             {
                 tiles.Clear();
                 elements.Clear();
-                AddItems(tiles, e, tool.GetItems(e), elements);
+                AddItems(tiles, e, tool.GetItems(e), elements, paletteMaterial);
 
                 if (tiles.contentContainer.childCount == 0)
                     tiles.Add(new Label("No available tiles on this layer."));
             }
         }
 
-        private static void AddItems(ScrollView tiles, BuildArgs e, IEnumerable<ISlot> slots, List<SlotElement> elements)
+        private static void AddItems(ScrollView tiles, BuildArgs e, IEnumerable<ISlot> slots,
+            List<IViewElement> elements, Material paletteMaterial)
         {
             if (slots == null) return;
 
             foreach (var slot in slots)
             {
                 if (slot == null) continue;
-                var element = new SlotElement
+
+                Button button = slot.Item switch
                 {
-                    Slot = slot,
-                    SelectedItem = e.item.Value
+                    BuildColor c => new BuildColorElement(paletteMaterial, c),
+                    _ => new SlotElement(slot),
                 };
 
                 if (slot.Item is BuildColor color)
-                    element.clicked += () => e.color.Value = color;
-                element.clicked += () => e.item.Value = slot.Item;
+                    button.clicked += () => e.color.Value = color;
+                button.clicked += () => e.item.Value = slot.Item;
 
-                elements.Add(element);
-                tiles.Add(element);
+                if (button is IViewElement view)
+                {
+                    elements.Add(view);
+                    view.SetSelected(e.item.Value);
+                }
+
+                tiles.Add(button);
             }
         }
     }

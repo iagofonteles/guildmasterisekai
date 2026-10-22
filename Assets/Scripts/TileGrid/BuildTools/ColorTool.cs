@@ -26,7 +26,7 @@ namespace TileGrid.BuildTools
         public Sprite Icon => icon;
         public Sprite AltIcon => altIcon;
 
-        public IEnumerable<ISlot> GetItems(BuildArgs e) => e.bag.GetSlots<Color>();
+        public IEnumerable<ISlot> GetItems(BuildArgs e) => e.bag.GetSlots<BuildColor>();
 
         public IBuildCommand CreateCommand(BuildArgs e)
         {
