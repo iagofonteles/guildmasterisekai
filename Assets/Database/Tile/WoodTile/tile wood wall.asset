@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152604c734ec4b529e82eac9e81212ae, type: 3}
+  m_Name: tile wood wall
+  m_EditorClassIdentifier: TileGrid::TileGrid.Tiles.DbWallTile
+  m_DefaultSprite: {fileID: 0}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_MaskType: 1
+  m_Random: 0
+  m_PhysicsShapeCheck: 0
+  m_AutoTileDictionary:
+    keyData: 10000000300000001800000038000000
+    valueData:
+    - spriteList:
+      - {fileID: -6471187932270448383, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+    - spriteList:
+      - {fileID: 317893972, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+    - spriteList:
+      - {fileID: 1363454493, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+    - spriteList:
+      - {fileID: -2123532113, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+      textureList:
+      - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  m_TextureList:
+  - {fileID: 2800000, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
+  m_TextureScaleList:
+  - 1
+  id: 1524549602
+  displayName:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 0}
+  roof: {fileID: 11400000, guid: 8632925c9f2c4504e90a7a3843295b61, type: 2}
+  layerMask: 16
+  flags: 2
+  references:
+    version: 2
+    RefIds: []

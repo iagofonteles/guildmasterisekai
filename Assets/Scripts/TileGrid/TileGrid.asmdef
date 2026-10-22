@@ -1,0 +1,22 @@
+{
+    "name": "TileGrid",
+    "rootNamespace": "",
+    "references": [
+        "GUID:120a7ef29c781c844bf64dd82bbe7257",
+        "GUID:9202d568df08d634aab983af187ccc85",
+        "GUID:6de914f6e52208d4c9d05518b573a448",
+        "GUID:60f63be0a4795064283d0c4e001c5dc6",
+        "GUID:613783dc1674e844b87788ea74ede0f6",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

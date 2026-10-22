@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Data
 {
     /// <summary>Authoritative grid snapshot. Loading replaces state only after full validation.</summary>
     public sealed partial class GridData
@@ -18,25 +18,19 @@ namespace GuildMasterIsekai.TileGrid
         public int Height => _cells.GetLength(1);
         public IGridCell this[int x, int y] => _cells[x, y];
 
-        public GridData(Tilemap defaultMap, Tilemap baseMap = null, Tilemap furniture = null)
-        {
-            BuildFrom(defaultMap, baseMap, furniture);
-        }
-
-        public GridData(IGridSerializer serializer, string key)
-        {
-            Load(serializer, key);
-        }
-
+        public GridData(Tilemap[] layers) => BuildFrom(layers);
+        public GridData(IGridSerializer serializer, string key) => Load(serializer, key);
         public GridData(GridData src)
         {
             Bounds = src.Bounds;
             Indexes = src.Indexes;
+            TileSize = src.TileSize;
             _cells = new GridCell[src.Width, src.Height];
 
             foreach (var p in Indexes.allPositionsWithin)
             {
-                var cell = src._cells[p.x, p.y].Clone(this);
+                var cell = src._cells[p.x, p.y].Clone();
+                cell.Grid = this;
                 _cells[p.x, p.y] = cell;
                 Modified.Add(cell);
             }

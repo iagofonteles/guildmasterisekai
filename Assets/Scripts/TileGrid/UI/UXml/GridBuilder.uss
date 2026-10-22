@@ -49,6 +49,7 @@
 .build-toolbar .tile-choice:disabled { opacity: 0.4; }
 .build-toolbar .tile-list {
     flex-grow: 1;
+    flex-basis: 0;
     min-height: 60px;
     margin: 8px 3px;
     padding: 5px;
@@ -56,6 +57,16 @@
     border-width: 2px;
     border-color: rgb(83, 100, 149);
     border-radius: 3px;
+    overflow: hidden;
+}
+.tile-list .unity-scroll-view__content-viewport {
+    overflow: hidden;
+    min-width: 0;
+}
+.tile-list .unity-scroll-view__content-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
 }
 .build-toolbar .tile-choice {
     flex-grow: 0;
@@ -64,7 +75,7 @@
     width: 64px;
     height: 64px;
     min-height: 64px;
-    margin: 3px 0;
+    margin: 3px;
     padding: 4px;
 }
 .build-toolbar .slot-icon,

@@ -1,76 +1,64 @@
 using System;
 using System.Collections.Generic;
 using Drafts;
-using GuildMasterIsekai.Systems;
+using TileGrid.Data;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     public sealed class GridBuilder : MonoBehaviour
     {
-        private static readonly GameGridSerializer Serializer = new();
-
-        [SerializeField] private Tilemap defaultMap;
+        [SerializeReference, TypeInstance] private IGridSerializer serializer;
+        [SerializeField] private Tilemap[] defaultMaps;
         [SerializeField] private MonoBehaviour buildBag;
-        [SerializeField] private DatabaseEntrySo material;
+        [SerializeField] private ScriptableObject material;
         [SerializeField, Min(1)] private int historyLimit = 64;
-        [SerializeField, SO] private GridBuilderTools tools;
         [SerializeField] private string filePath;
 
         private readonly List<IBuildCommand> _undo = new();
         private readonly List<IBuildCommand> _redo = new();
-        private readonly OperationArgs _opArgs = new();
 
-        public GridData Grid => _opArgs.grid;
-        public IBuildBag Bag => _opArgs.bag;
-        public LayerToolConfig CurrentTool { get; set; }
-        public IBuildBrush CurrentBrush { get; set; }
-        public string LastError { get; private set; }
         public event Action Changed;
 
-        public LayerToolsConfig[] Tools => tools.LayerTools;
-        public IReadOnlyList<IBuildBrush> Brushes => tools.Bushes;
-        public object SelectedItem { get => _opArgs.item; set => _opArgs.item = value; }
-        public Vector3Int Origin => Grid.Bounds.position;
-        public bool IsInitialized => Grid != null;
+        public BuildArgs BuildArgs { get; } = new();
+        public GridData Grid => BuildArgs.grid;
+        public IBuildBag Bag => BuildArgs.bag;
+        public bool IsInitialized => BuildArgs.grid != null;
         public bool CanUndo => _undo.Count > 0;
         public bool CanRedo => _redo.Count > 0;
-        public DatabaseEntrySo Material => material;
+        public ScriptableObject Material => material;
 
         private void Awake()
         {
-            if (!defaultMap) throw new ArgumentNullException(nameof(defaultMap));
-            if (!defaultMap.layoutGrid) throw new ArgumentNullException(nameof(defaultMap.layoutGrid));
-            if (!tools) throw new ArgumentNullException(nameof(tools));
-            _opArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
-            _opArgs.builder = this;
+            if (!defaultMaps[0]) throw new ArgumentNullException(nameof(defaultMaps));
+            if (!defaultMaps[0].layoutGrid) throw new ArgumentNullException(nameof(Tilemap.layoutGrid));
+            BuildArgs.bag = buildBag as IBuildBag ?? throw new ArgumentNullException(nameof(buildBag));
+            BuildArgs.builder = this;
         }
 
         private void Start()
         {
-            _opArgs.grid = string.IsNullOrEmpty(filePath)
-                ? new(defaultMap)
-                : new GridData(Serializer, filePath);
+            LoadFile(filePath);
+        }
+
+        private void OnDestroy()
+        {
+            SaveFile(filePath);
         }
 
         /// <summary>Runs a tool through inventory checks, atomic commit, rendering and undo history.</summary>
-        public bool TryUseTool(RectInt area, IBuildTool tool, int slot = -1,
-            Vector2Int delta = default, Func<Vector2Int, int> nearestSlot = null)
+        public bool TryUseTool(BuildArgs e)
         {
-            if (tool == null) throw new ArgumentNullException(nameof(tool));
-
-            _opArgs.area = area;
-            _opArgs.slot = slot;
-            _opArgs.delta = delta;
-            _opArgs.nearestSlot = nearestSlot;
-
-            var command = tool.CreateCommand(_opArgs, out var error);
+            if (e.tool == null) throw new ArgumentNullException(nameof(e.tool));
+            e.lastError.Value = null;
+            var command = e.tool.Value.CreateCommand(e);
 
             if (command == null)
             {
-                if (error != null) return Fail(error);
-                LastError = null;
+                if (e.lastError.Value != null)
+                    return Fail(e.lastError.Value);
+                e.lastError.Value = null;
                 Changed?.Invoke();
                 return true;
             }
@@ -79,14 +67,14 @@ namespace GuildMasterIsekai.TileGrid
             _redo.Clear();
             _undo.Add(command);
             if (_undo.Count > Mathf.Max(1, historyLimit)) _undo.RemoveAt(0);
-            LastError = null;
+            e.lastError.Value = null;
             Changed?.Invoke();
 
             return true;
         }
 
-        public bool Undo() => Restore(_undo, _redo, true);
-        public bool Redo() => Restore(_redo, _undo, false);
+        public void Undo() => Restore(_undo, _redo, true);
+        public void Redo() => Restore(_redo, _undo, false);
 
         private bool Restore(List<IBuildCommand> from, List<IBuildCommand> to, bool reverse)
         {
@@ -97,84 +85,36 @@ namespace GuildMasterIsekai.TileGrid
             if (!success) return Fail("The command could not be restored.");
             from.RemoveAt(from.Count - 1);
             to.Add(command);
-            LastError = null;
+            BuildArgs.lastError.Value = null;
 
             Changed?.Invoke();
             return true;
         }
 
-        public Vector2Int WorldToCell(Vector3 world)
-        {
-            if (!IsInitialized) throw new InvalidOperationException("Grid is not initialized.");
-            var cell = defaultMap.WorldToCell(world);
-            return new Vector2Int(cell.x - Grid.Bounds.x, cell.y - Grid.Bounds.y);
-        }
-
-        // private int NearestEmptySlot(GridData state, Vector2Int p, Vector3? pointer)
-        // {
-        //     var cell = state[p.x, p.y];
-        //     if (!cell.Furniture) return -1;
-        //     var used = cell.Toppings;
-        //
-        //     if (!pointer.HasValue)
-        //     {
-        //         for (var i = 0; i < used.Count; i++)
-        //             if (!used[i])
-        //                 return i;
-        //         return -1;
-        //     }
-        //
-        //     var pos = pointer.Value - cell.Position; // move to local tile position
-        //     var best = -1;
-        //     var slots = cell.Furniture.ToppingSlots;
-        //     var distance = float.PositiveInfinity;
-        //
-        //     for (var i = 0; i < slots.Count; i++)
-        //     {
-        //         if (used[i]) continue;
-        //         if (!pointer.HasValue) return i;
-        //         var current = (SlotWorld(state, p, slots[i]) - pointer.Value).sqrMagnitude;
-        //
-        //         if (current < distance)
-        //         {
-        //             best = i;
-        //             distance = current;
-        //         }
-        //     }
-        //
-        //     return best;
-        // }
-
-        // private Vector3 SlotWorld(GridData state, Vector2Int p, Vector2 offset) =>
-        //     defaultMap.GetCellCenterWorld(new Vector3Int(p.x + state.Bounds.x, p.y + state.Bounds.y, state.Bounds.z)) +
-        //     defaultMap.transform.TransformVector(new Vector3(offset.x, offset.y, 0));
-
         public void Clear()
         {
             _undo.Clear();
             _redo.Clear();
-            LastError = null;
+            BuildArgs.lastError.Value = null;
             Changed?.Invoke();
         }
 
         public void SaveFile(string path)
         {
-            filePath = path ?? filePath;
-            if (string.IsNullOrEmpty(filePath))
-                throw new Exception("no filePath");
-            Grid?.Save(Serializer, filePath);
+            if (string.IsNullOrEmpty(path)) return;
+            Grid?.Save(serializer, path);
         }
 
         public void LoadFile(string path)
         {
-            if (string.IsNullOrEmpty(path))
-                throw new Exception("no filePath");
-            _opArgs.grid = new(Serializer, filePath = path);
+            var valid = string.IsNullOrEmpty(path) || !serializer.FileExists(path);
+            BuildArgs.grid = valid ? new(defaultMaps) : new(serializer, path);
+            Clear();
         }
 
         private bool Fail(string error)
         {
-            LastError = error;
+            BuildArgs.lastError.Value = error;
             return false;
         }
     }

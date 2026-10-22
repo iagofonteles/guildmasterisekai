@@ -23,7 +23,29 @@ MonoBehaviour:
     valueData: []
   m_TextureList: []
   m_TextureScaleList: []
-  id: 0
-  item: {fileID: 11400000, guid: 4736322fd9c6478498a15a493ce953e8, type: 2}
-  type: 2
+  id: 1710453136
+  displayName:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 0}
+  roof: {fileID: 0}
+  layerMask: 4
   flags: 2
+  references:
+    version: 2
+    RefIds: []

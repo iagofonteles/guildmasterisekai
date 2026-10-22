@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     /// <summary>Positive amounts are costs consumed by Pay and restored by Refund; negative amounts reverse that direction.</summary>
     public sealed class OperationCost

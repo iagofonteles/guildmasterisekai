@@ -5,41 +5,28 @@ using Drafts.Localization;
 using UnityEngine;
 using UnityEngine.Localization;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
-    /// <summary>Runtime building API. Input controllers call the brush methods in cell coordinates.</summary>
     public class GridBuilderTools : ScriptableObject
     {
+        [SerializeField] private LayerConfig[] layers;
         [SerializeReference, TypeInstance] private IBuildBrush[] bruhes;
-        [SerializeField] private LayerToolsConfig[] layerTools;
+        [SerializeReference, TypeInstance] private IBuildTool[] tools;
 
-        public IReadOnlyList<IBuildBrush> Bushes => bruhes;
-        public LayerToolsConfig[] LayerTools => layerTools;
+        public IReadOnlyList<LayerConfig> Layers => layers;
+        public IReadOnlyList<IBuildBrush> Brushes => bruhes;
+        public IReadOnlyList<IBuildTool> Tools => tools;
     }
 
     [Serializable]
-    public class LayerToolsConfig
+    public class LayerConfig
     {
-        [SerializeField] private BuildLayer layer;
-        [SerializeReference, TypeInstance(true)] private IBuildTool altTool;
-        [SerializeField] private LayerToolConfig[] tools;
-
-        public BuildLayer Layer => layer;
-        public IBuildTool AltTool => altTool;
-        public LayerToolConfig[] Tools => tools;
-    }
-
-    [Serializable]
-    public class LayerToolConfig
-    {
+        [SerializeField] private int index;
         [SerializeField, Loc] private LocalizedString str;
         [SerializeField] private Sprite icon;
-        [SerializeReference, TypeInstance(true)] private IBuildTool left;
-        [SerializeReference, TypeInstance(true)] private IBuildTool right;
 
+        public int Index => index;
         public string DisplayName => str.GetLocalizedString();
         public Sprite Icon => icon;
-        public IBuildTool Left => left;
-        public IBuildTool Right => right;
     }
 }

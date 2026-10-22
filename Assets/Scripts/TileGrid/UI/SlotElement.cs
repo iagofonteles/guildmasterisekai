@@ -1,9 +1,9 @@
+using TileGrid.Tiles;
 using Drafts.Inventory;
-using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.UI
 {
     public sealed class SlotElement : Button
     {
@@ -95,10 +95,10 @@ namespace GuildMasterIsekai.TileGrid
                 return;
             }
 
-            var item = value as DatabaseEntrySo;
-            var icon = item ? item.Icon : null;
-            EnableInClassList("selected", item && item == _selectedItem as DatabaseEntrySo);
-            tooltip = item ? item.name : string.Empty;
+            var item = value as ITile;
+            var icon = item?.Icon;
+            EnableInClassList("selected", item != null && Equals(item, _selectedItem));
+            tooltip = item?.DisplayName ?? string.Empty;
             _image.sprite = icon;
             _image.tintColor = Color.white;
             _image.EnableInClassList("hidden", !icon);

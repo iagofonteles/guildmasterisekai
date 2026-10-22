@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Drafts.Inventory;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     public interface IBuildBag
     {
         int GetBuildingMaterials();
-        IEnumerable<ISlot> GetItems<T>();
+        IEnumerable<ISlot> GetSlots<T>();
 
         bool CanPay(OperationCost cost);
         bool CanRefund(OperationCost cost);

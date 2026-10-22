@@ -34,6 +34,34 @@ MonoBehaviour:
     m_Localized: Color
     m_Metadata:
       m_Items: []
+  - m_Id: 851144162480128
+    m_Localized: Floor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851226454724608
+    m_Localized: Carpet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851228719648768
+    m_Localized: Object
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851230015688704
+    m_Localized: Decor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 873483885416448
+    m_Localized: Pixel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 873516747788288
+    m_Localized: Rect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 876541084241920
+    m_Localized: Replace
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

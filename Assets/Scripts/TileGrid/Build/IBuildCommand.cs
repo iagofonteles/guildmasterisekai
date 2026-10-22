@@ -1,4 +1,4 @@
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.Build
 {
     public interface IBuildCommand
     {

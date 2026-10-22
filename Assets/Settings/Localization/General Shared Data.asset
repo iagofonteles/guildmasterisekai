@@ -31,6 +31,34 @@ MonoBehaviour:
     m_Key: tool_color
     m_Metadata:
       m_Items: []
+  - m_Id: 851144162480128
+    m_Key: layer_floor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851226454724608
+    m_Key: layer_carpet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851228719648768
+    m_Key: layer_object
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851230015688704
+    m_Key: layer_decoration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 873483885416448
+    m_Key: brush_pixel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 873516747788288
+    m_Key: brush_rect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 876541084241920
+    m_Key: tool_replace
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

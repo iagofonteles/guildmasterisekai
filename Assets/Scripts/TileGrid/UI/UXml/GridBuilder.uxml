@@ -7,7 +7,7 @@
         <ui:Button name="furnitureLayer" text="Furniture" tooltip="Furniture layer" />
         <ui:Button name="toppingLayer" text="Topping" tooltip="Topping layer" />
       </ui:VisualElement>
-      <ui:ScrollView name="tiles" class="tile-list" mode="Vertical" />
+      <ui:ScrollView name="tiles" class="tile-list" mode="Vertical" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" />
       <ui:VisualElement name="tools" class="row tool-tabs" />
       <ui:VisualElement class="row brush-controls">
         <ui:VisualElement name="brushes" class="row" />

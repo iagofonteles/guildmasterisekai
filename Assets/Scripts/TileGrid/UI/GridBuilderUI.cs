@@ -1,197 +1,131 @@
+using System;
+using System.Collections;
+using TileGrid.Build;
 using System.Collections.Generic;
+using System.Linq;
+using Drafts;
+using TileGrid.Tiles;
 using Drafts.Inventory;
-using GuildMasterIsekai.Systems;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GuildMasterIsekai.TileGrid
+namespace TileGrid.UI
 {
     [DisallowMultipleComponent]
     public sealed class GridBuilderUI : MonoBehaviour
     {
-        [SerializeField] private GridBuilderInput input;
-        [SerializeField] private UIDocument document;
-        [SerializeField] private PanelSettings panelSettings;
+        [SerializeField] private GridBuilder builder;
+        [SerializeField] private PanelRenderer panel;
+        [SerializeField, SO] private GridBuilderTools gridTools;
 
-        private PanelSettings _ownedPanel;
-        private VisualElement _root;
-        private VisualElement _outline;
-        private Image _cursorIcon;
-        private readonly Vector2[] _outlineCorners = new Vector2[4];
-        private ScrollView _tiles;
-        private Button _undo, _redo;
-        private GridBuilder _subscribedBuilder;
-        private bool _bound, _initialized;
+        private Action _unsubscribe;
 
-        private void Awake() => document.sortingOrder = 100;
-
-        private void OnEnable()
+        private IEnumerator Start()
         {
-            if (!document) return;
-            document.enabled = true;
-        }
-
-        private void Start()
-        {
-            if (!_bound) Bind();
-        }
-
-        private void Update()
-        {
-            if (!_bound && document && document.rootVisualElement != null) Bind();
-            if (!_bound || !input.Builder) return;
-
-            if (_subscribedBuilder != input.Builder)
-            {
-                if (_subscribedBuilder) _subscribedBuilder.Changed -= Refresh;
-                _subscribedBuilder = input.Builder;
-                _subscribedBuilder.Changed += Refresh;
-            }
-
-            if (_initialized != input.Builder.IsInitialized)
-            {
-                _initialized = input.Builder.IsInitialized;
-                Refresh();
-            }
-        }
-
-        private void LateUpdate()
-        {
-            if (!_bound) return;
-            _outline?.MarkDirtyRepaint();
-            var builder = input.Builder;
-            var icon = builder
-                ? input.TemporaryTool != null ? input.TemporaryTool.Icon : builder.CurrentTool?.Icon
-                : null;
-            var visible = input.TryGetToolCursorPosition(out var screen) && icon;
-            _cursorIcon.sprite = icon;
-            _cursorIcon.EnableInClassList("hidden", !visible);
-            if (visible && _cursorIcon.panel != null)
-            {
-                var panelPoint = RuntimePanelUtils.ScreenToPanel(_cursorIcon.panel, screen);
-                var point = _root.WorldToLocal(panelPoint);
-                _cursorIcon.style.translate = new Translate(point.x + 12, point.y - 44);
-            }
-        }
-
-        private void DrawSelection(MeshGenerationContext context)
-        {
-            if (!input || _outline.panel == null || !input.TryGetSelectionScreenCorners(_outlineCorners)) return;
-            var painter = context.painter2D;
-            painter.strokeColor = Color.yellow;
-            painter.lineWidth = 2;
-            painter.BeginPath();
-            for (var i = 0; i < _outlineCorners.Length; i++)
-            {
-                var panelPoint = RuntimePanelUtils.ScreenToPanel(_outline.panel, _outlineCorners[i]);
-                var point = _outline.WorldToLocal(panelPoint);
-                if (i == 0) painter.MoveTo(point);
-                else painter.LineTo(point);
-            }
-            painter.ClosePath();
-            painter.Stroke();
-        }
-
-        private void Bind()
-        {
-            if (_bound || !document.visualTreeAsset || !input) return;
-            _root = document.rootVisualElement;
-            if (_root == null) return;
-            _root.Clear();
-            document.visualTreeAsset.CloneTree(_root);
-            _root.AddToClassList("build-document");
-            _root.pickingMode = PickingMode.Ignore;
-            foreach (var child in _root.Children()) child.pickingMode = PickingMode.Ignore;
-            _outline = new VisualElement { pickingMode = PickingMode.Ignore };
-            _outline.AddToClassList("grid-selection-outline");
-            _outline.generateVisualContent += DrawSelection;
-            _root.Insert(0, _outline);
-            _cursorIcon = new Image { pickingMode = PickingMode.Ignore, scaleMode = ScaleMode.ScaleToFit };
-            _cursorIcon.AddToClassList("tool-cursor-icon");
-            _cursorIcon.AddToClassList("hidden");
-            _root.Add(_cursorIcon);
-            _tiles = _root.Q<ScrollView>("tiles");
-            if (_tiles == null) return;
-            _undo = _root.Q<Button>("undo");
-            _redo = _root.Q<Button>("redo");
-            _root.Q<Button>("baseLayer").clicked += () => input.SetLayer(BuildLayer.Base);
-            _root.Q<Button>("furnitureLayer").clicked += () => input.SetLayer(BuildLayer.Furniture);
-            _root.Q<Button>("toppingLayer").clicked += () => input.SetLayer(BuildLayer.Topping);
-            _undo.clicked += input.Undo;
-            _redo.clicked += input.Redo;
-            var toolbar = _root.Q("toolbar");
-            toolbar.RegisterCallback<WheelEvent>(evt => evt.StopPropagation());
-            input.SelectionChanged += Refresh;
-            input.StatusChanged += RefreshStatus;
-            _bound = true;
-            Refresh();
-        }
-
-        private void OnDisable()
-        {
-            _tiles?.Clear();
-            if (input)
-            {
-                input.CancelGesture();
-                input.SelectionChanged -= Refresh;
-                input.StatusChanged -= RefreshStatus;
-            }
-
-            if (_subscribedBuilder) _subscribedBuilder.Changed -= Refresh;
-            _subscribedBuilder = null;
-            if (document) document.enabled = false;
-            _bound = false;
-            _root = null;
-            _outline = null;
-            _cursorIcon = null;
+            panel.panelSettings.sortingOrder = 100;
+            while (!builder.IsInitialized)
+                yield return null;
+            yield return null;
+            panel.RegisterUIReloadCallback(Subscribe);
         }
 
         private void OnDestroy()
         {
-            if (_ownedPanel) Destroy(_ownedPanel);
+            StopAllCoroutines();
+            panel.UnregisterUIReloadCallback(Subscribe);
+            _unsubscribe?.Invoke();
+            _unsubscribe = null;
         }
 
-        public void Refresh()
+        private void Subscribe(PanelRenderer renderer, VisualElement root)
         {
-            if (!_bound) return;
-            Selected("baseLayer", input.Layer == BuildLayer.Base);
-            Selected("furnitureLayer", input.Layer == BuildLayer.Furniture);
-            Selected("toppingLayer", input.Layer == BuildLayer.Topping);
-            _root.Q<Button>("baseLayer").SetEnabled(input.HasLayer(BuildLayer.Base));
-            _root.Q<Button>("furnitureLayer").SetEnabled(input.HasLayer(BuildLayer.Furniture));
-            _root.Q<Button>("toppingLayer").SetEnabled(input.HasLayer(BuildLayer.Topping));
-            RefreshTools();
-            _tiles.Clear();
-            if (input.Builder && input.Builder.IsInitialized && input.Builder.CurrentTool?.Left != null)
-                AddItems(input.Builder.CurrentTool.Left.GetItems(input.Builder.Bag));
-            if (_tiles.contentContainer.childCount == 0) _tiles.Add(new Label("No available tiles on this layer."));
+            _unsubscribe?.Invoke();
+            _unsubscribe = null;
+            
+            var b = builder ?? throw new NullReferenceException(nameof(builder));
+            var undo = root.Q<Button>("undo");
+            var redo = root.Q<Button>("redo");
+
+            root.AddToClassList("build-document");
+            root.pickingMode = PickingMode.Ignore;
+            root.Q("toolbar").RegisterCallback<WheelEvent>(e => e.StopPropagation());
+
+            b.BuildArgs.brush.Value = gridTools.Brushes[0];
+
+            undo.clicked += b.Undo;
+            redo.clicked += b.Redo;
+            b.Changed += RefreshStatus;
+
+            _unsubscribe += () => undo.clicked -= b.Undo;
+            _unsubscribe += () => redo.clicked -= b.Redo;
+            _unsubscribe += () => b.Changed -= RefreshStatus;
+
+            _unsubscribe += DrawLayers(root, b.BuildArgs, gridTools);
+            _unsubscribe += DrawBrushes(root, b.BuildArgs, gridTools);
+            _unsubscribe += DrawTools(root, b.BuildArgs, gridTools);
+            _unsubscribe += DrawTiles(root, b.BuildArgs);
+
+            foreach (var child in root.Children())
+                child.pickingMode = PickingMode.Ignore;
+
             RefreshStatus();
+            void RefreshStatus()
+            {
+                var ready = builder && builder.IsInitialized;
+                undo.SetEnabled(ready && builder.CanUndo);
+                redo.SetEnabled(ready && builder.CanRedo);
+            }
         }
 
-        private void RefreshTools()
+        private static Action DrawLayers(VisualElement root, BuildArgs e, GridBuilderTools toolsSo)
         {
-            var tools = _root.Q("tools");
-            var brushes = _root.Q("brushes");
-            tools.Clear();
-            brushes.Clear();
-            if (!input.Builder) return;
+            var list = toolsSo.Layers;
+            var layers = root.Q("layers");
+            layers.Clear();
+            var buttons = new List<Button>(list.Count);
+            e.layer.Value = list[0].Index;
 
-            foreach (var tool in input.AvailableTools)
+            foreach (var layer in list)
             {
-                if (tool == null) continue;
-                var button = new Button(() => input.SelectTool(tool)) { text = tool.DisplayName };
-                button.EnableInClassList("selected", ReferenceEquals(input.Builder.CurrentTool, tool));
-                button.SetEnabled(tool.Left != null || tool.Right != null);
-                tools.Add(button);
+                var lName = layer.DisplayName;
+                var button = new Button(() => e.layer.Value = layer.Index) { text = lName };
+                //button.SetEnabled(true);
+                button.EnableInClassList("selected", e.layer.Value == layer.Index);
+                button.userData = layer.Index;
+                layers.Add(button);
+                buttons.Add(button);
             }
 
-            foreach (var brush in input.Builder.Brushes)
+            Refresh(e.layer.Value);
+            e.layer.OnChanged += Refresh;
+            return () => e.layer.OnChanged -= Refresh;
+
+            void Refresh(int i)
+            {
+                foreach (var button in buttons)
+                    button.EnableInClassList("selected", (int)button.userData == i);
+
+                var tMask = e.tool.Value?.LayerMask ?? 0;
+                var iMask = (BuildLayerMask)(1 << i);
+
+                if ((iMask & tMask) == 0)
+                    e.tool.Value = toolsSo.Tools.First(t => (t.LayerMask & iMask) > 0);
+                else e.tool.Value = e.tool.Value;
+            }
+        }
+
+        private static Action DrawBrushes(VisualElement root, BuildArgs e, GridBuilderTools toolsSo)
+        {
+            var list = toolsSo.Brushes;
+            var brushes = root.Q("brushes");
+            var buttons = new List<Button>(list.Count);
+
+            foreach (var brush in list)
             {
                 if (brush == null) continue;
-                var name = brush.GetType().Name;
-                var button = new Button(() => input.SelectBrush(brush)) { tooltip = name };
+                var button = new Button(() => e.brush.Value = brush) { tooltip = brush.DisplayName };
                 button.AddToClassList("brush-choice");
-                button.EnableInClassList("selected", ReferenceEquals(input.Builder.CurrentBrush, brush));
+                button.EnableInClassList("selected", e.brush.Value == brush);
 
                 if (brush.Icon)
                 {
@@ -200,38 +134,124 @@ namespace GuildMasterIsekai.TileGrid
                     image.pickingMode = PickingMode.Ignore;
                     button.Add(image);
                 }
-                else button.text = name;
+                else button.text = brush.DisplayName;
 
+                button.userData = brush;
                 brushes.Add(button);
+                buttons.Add(button);
+            }
+
+            e.brush.OnChanged += Refresh;
+            return () => e.brush.OnChanged -= Refresh;
+
+            void Refresh(IBuildBrush b)
+            {
+                foreach (var button in buttons)
+                    button.EnableInClassList("selected", ReferenceEquals(button.userData, b));
             }
         }
 
-        private void AddItems(IEnumerable<ISlot> slots)
+        private static Action DrawTools(VisualElement root, BuildArgs e, GridBuilderTools toolsSo)
+        {
+            var list = toolsSo.Tools;
+            var tools = root.Q("tools");
+            var buttons = new List<Button>(list.Count);
+
+            foreach (var tool in list)
+            {
+                var button = new Button(() => e.tool.Value = tool)
+                {
+                    text = tool.DisplayName,
+                    userData = tool
+                };
+                tools.Add(button);
+                buttons.Add(button);
+            }
+
+            e.layer.OnChanged += Show;
+            e.tool.OnChanged += Refresh;
+            Show(e.layer.Value);
+            Refresh(e.tool.Value);
+
+            return () =>
+            {
+                e.layer.OnChanged -= Show;
+                e.tool.OnChanged -= Refresh;
+            };
+
+            void Show(int layer)
+            {
+                foreach (var button in buttons)
+                {
+                    var tool = (IBuildTool)button.userData;
+                    button.visible = ((int)tool.LayerMask & (1 << layer)) > 0;
+                }
+            }
+
+            void Refresh(IBuildTool curr)
+            {
+                foreach (var button in buttons)
+                {
+                    var tool = (IBuildTool)button.userData;
+                    button.EnableInClassList("selected", tool == curr);
+                }
+            }
+        }
+
+        private static Action DrawTiles(VisualElement root, BuildArgs e)
+        {
+            var tiles = root.Q<ScrollView>("tiles");
+            var elements = new List<SlotElement>();
+            Refresh(e.tool.Value);
+
+            e.tool.OnChanged += Refresh;
+            e.item.OnChanged += RefreshSelection;
+            e.color.OnChanged += RefreshSelection;
+
+            return () =>
+            {
+                e.tool.OnChanged -= Refresh;
+                e.item.OnChanged -= RefreshSelection;
+                e.color.OnChanged -= RefreshSelection;
+            };
+
+            void RefreshSelection<T>(T _)
+            {
+                foreach (var element in elements)
+                    element.SelectedItem = e.item.Value;
+            }
+
+            void Refresh(IBuildTool tool)
+            {
+                tiles.Clear();
+                elements.Clear();
+                AddItems(tiles, e, tool.GetItems(e), elements);
+
+                if (tiles.contentContainer.childCount == 0)
+                    tiles.Add(new Label("No available tiles on this layer."));
+            }
+        }
+
+        private static void AddItems(ScrollView tiles, BuildArgs e, IEnumerable<ISlot> slots, List<SlotElement> elements)
         {
             if (slots == null) return;
+
             foreach (var slot in slots)
             {
                 if (slot == null) continue;
-                if (slot.Item is not Color && (slot.Item is not DatabaseEntrySo item || !item)) continue;
-                var element = new SlotElement { Slot = slot, SelectedItem = input.Builder.SelectedItem };
-                element.clicked += () =>
+                var element = new SlotElement
                 {
-                    if (element.Slot.Item is Color color) input.SelectColor(color);
-                    else if (element.Slot.Item is DatabaseEntrySo selected && selected) input.SelectTile(selected);
+                    Slot = slot,
+                    SelectedItem = e.item.Value
                 };
-                _tiles.Add(element);
+
+                if (slot.Item is Color color)
+                    element.clicked += () => e.color.Value = color;
+                element.clicked += () => e.item.Value = slot.Item;
+
+                elements.Add(element);
+                tiles.Add(element);
             }
-        }
-
-        private void Selected(string tileName, bool selected) =>
-            _root.Q<Button>(tileName).EnableInClassList("selected", selected);
-
-        private void RefreshStatus()
-        {
-            if (!_bound) return;
-            var ready = input.Builder && input.Builder.IsInitialized;
-            _undo.SetEnabled(ready && input.Builder.CanUndo);
-            _redo.SetEnabled(ready && input.Builder.CanRedo);
         }
     }
 }
