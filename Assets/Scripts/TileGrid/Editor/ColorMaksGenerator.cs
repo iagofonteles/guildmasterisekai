@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using TileGrid.Tiles;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -12,131 +10,125 @@ namespace TileGrid.Editor
 {
     public static class ColorMaksGenerator
     {
-        private static Dictionary<Color32, int> _cachedPaletteIndexMap;
-        private static readonly FieldInfo Rotations = typeof(DbTile).GetField("rotations",
-            BindingFlags.Instance | BindingFlags.NonPublic);
+        private const string MenuPath = "Game/Tiles/GenerateColorMask";
+        private const string MaskName = "_MaskTex";
         private static readonly Color32[] RegionColors =
         {
             new(255, 0, 0, 255), new(0, 255, 0, 255),
             new(0, 0, 255, 255), new(255, 255, 255, 255)
         };
 
-        [InitializeOnLoadMethod]
-        private static void Initialize() => DbTile.__GenerateMask = GenerateMask;
+        private static string[] SelectedPaths() => Selection.objects.OfType<Texture2D>()
+            .Where(texture => AssetDatabase.IsMainAsset(texture)).Select(texture => AssetDatabase.GetAssetPath(texture))
+            .Where(path => AssetImporter.GetAtPath(path) is TextureImporter
+                { textureType: TextureImporterType.Sprite } &&
+                string.Equals(Path.GetExtension(path), ".png", StringComparison.OrdinalIgnoreCase))
+            .Distinct().ToArray();
 
-        internal static string MaskName(int rotation) => $"Color Mask {rotation}";
+        [MenuItem(MenuPath, true)]
+        private static bool ValidateSelection() => SelectedPaths().Length > 0;
 
-        public static void GenerateMask(DbTile tile) => GenerateMask(tile, IndexedPaletteConverter.GetConfig());
-
-        public static void GenerateMask(DbTile tile, ColorPaletteConfig config)
+        [MenuItem(MenuPath)]
+        public static void GenerateColorMask()
         {
-            var path = AssetDatabase.GetAssetPath(tile);
-            if (!tile || string.IsNullOrEmpty(path) || !AssetDatabase.IsMainAsset(tile))
-                throw new InvalidOperationException("Generate Mask requires a saved DbTile asset.");
+            var paths = SelectedPaths();
+            var config = IndexedPaletteConverter.GetConfig();
             config.ValidateConfiguration();
-            var sources = (Sprite[])Rotations.GetValue(tile);
-            if (sources == null || sources.Length == 0 || sources.Any(s => !s))
-                throw new InvalidDataException($"{tile.name}: assign every source rotation before generating masks.");
-
             var palette = IndexedPaletteConverter.ReadPalette(config);
-            // Rebuild for each operation so palette edits cannot leave stale cached indices.
-            _cachedPaletteIndexMap = new Dictionary<Color32, int>();
-            for (var i = 0; i < palette.Length; i++)
-                _cachedPaletteIndexMap.TryAdd(palette[i], i);
-
-            var rotations = new int[sources.Length][];
-            var ramps = new SortedSet<int>();
-            var quantized = 0;
-            // Validate every rotation and collect ramps before writing any subassets.
-            for (var rotation = 0; rotation < sources.Length; rotation++)
+            foreach (var path in paths)
             {
-                var sprite = sources[rotation];
-                var source = IndexedPaletteConverter.ReadPng(AssetDatabase.GetAssetPath(sprite));
-                try
-                {
-                    var rect = sprite.rect;
-                    if (source.width != sprite.texture.width || source.height != sprite.texture.height ||
-                        rect != new Rect((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height))
-                        throw new InvalidDataException($"{sprite.name}: source was resized/atlased or its rectangle uses fractional pixels.");
-                    var width = (int)rect.width;
-                    var height = (int)rect.height;
-                    var pixels = source.GetPixels32();
-                    var indices = new int[width * height];
-                    rotations[rotation] = indices;
-                    for (var y = 0; y < height; y++)
-                    for (var x = 0; x < width; x++)
-                    {
-                        var pixel = pixels[((int)rect.y + y) * source.width + (int)rect.x + x];
-                        var output = y * width + x;
-                        indices[output] = -1;
-                        if (pixel.a == 0) continue;
-                        if (pixel.a != 255)
-                            throw new InvalidDataException($"{sprite.name}: mask generation requires binary source alpha.");
-                        if (!_cachedPaletteIndexMap.TryGetValue(pixel, out var index))
-                        {
-                            index = IndexedPaletteConverter.NearestIndex(pixel, palette);
-                            _cachedPaletteIndexMap.Add(pixel, index);
-                        }
-                        if (!pixel.Equals(palette[index])) quantized++;
-                        var ramp = index / config.PaletteColorShades;
-                        ramps.Add(ramp);
-                        indices[output] = ramp;
-                    }
-                }
-                finally { Object.DestroyImmediate(source); }
+                try { GenerateMask(path, palette, config.PaletteColorShades); }
+                catch (Exception exception) { Debug.LogException(exception); }
             }
-            if (ramps.Count > ColorPaletteConfig.RegionCount)
-                throw new InvalidDataException($"{tile.name}: found {ramps.Count} palette ramps across rotations; " +
-                                               $"the current shader supports only {ColorPaletteConfig.RegionCount} mask regions.");
+        }
 
-            // Ascending palette order gives each ramp the same region in every rotation.
-            var regions = ramps.Select((ramp, region) => (ramp, region))
-                .ToDictionary(pair => pair.ramp, pair => pair.region);
-            var assets = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Texture2D>().ToArray();
-            var dirty = false;
-            for (var rotation = 0; rotation < sources.Length; rotation++)
+        private static void GenerateMask(string path, Color32[] palette, int shades)
+        {
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            var source = IndexedPaletteConverter.ReadPng(path);
+            try
             {
-                var width = (int)sources[rotation].rect.width;
-                var height = (int)sources[rotation].rect.height;
-                var pixels = rotations[rotation]
-                    .Select(ramp => ramp < 0 ? new Color32(0, 0, 0, 0) : RegionColors[regions[ramp]]).ToArray();
-                var name = MaskName(rotation);
-                var mask = assets.FirstOrDefault(t => t.name == name);
-                var changed = false;
+                var indices = new int[source.width * source.height];
+                var counts = new Dictionary<int, long>();
+                var paletteIndices = new Dictionary<Color32, int>();
+                for (var i = 0; i < palette.Length; i++) paletteIndices.TryAdd(palette[i], i);
+                var pixels = source.GetPixels32();
+                var quantized = 0;
+                for (var i = 0; i < pixels.Length; i++)
+                {
+                    var pixel = pixels[i];
+                    indices[i] = -1;
+                    if (pixel.a == 0) continue;
+                    if (pixel.a != 255)
+                        throw new InvalidDataException($"{path}: mask generation requires binary source alpha.");
+                    if (!paletteIndices.TryGetValue(pixel, out var index))
+                    {
+                        index = IndexedPaletteConverter.NearestIndex(pixel, palette);
+                        paletteIndices.Add(pixel, index);
+                    }
+                    if (!pixel.Equals(palette[index])) quantized++;
+                    var ramp = index / shades;
+                    indices[i] = ramp;
+                    counts.TryGetValue(ramp, out var count);
+                    counts[ramp] = count + 1;
+                }
+
+                // Rank the entire sheet, keeping assignments consistent across its sprites.
+                var ranked = counts.OrderByDescending(pair => pair.Value).ThenBy(pair => pair.Key).ToArray();
+                var regions = ranked.Take(ColorPaletteConfig.RegionCount)
+                    .Select((pair, region) => (ramp: pair.Key, region))
+                    .ToDictionary(pair => pair.ramp, pair => pair.region);
+                var maskPixels = indices.Select(ramp => ramp < 0 ? new Color32(0, 0, 0, 0) :
+                    regions.TryGetValue(ramp, out var region) ? RegionColors[region] :
+                    new Color32(0, 0, 0, 255)).ToArray();
+
+                // Imported image assets cannot persist manually added subassets.
+                var assetPath = path + ".ColorMask.asset";
+                var owner = AssetDatabase.LoadAssetAtPath<ColorMaskAsset>(assetPath);
+                if (!owner)
+                {
+                    if (AssetDatabase.LoadMainAssetAtPath(assetPath))
+                        throw new InvalidDataException($"{assetPath}: already contains another asset type.");
+                    owner = ScriptableObject.CreateInstance<ColorMaskAsset>();
+                    AssetDatabase.CreateAsset(owner, assetPath);
+                }
+                var mask = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Texture2D>()
+                    .FirstOrDefault(texture => texture.name == MaskName);
                 if (!mask)
                 {
-                    mask = new Texture2D(width, height, TextureFormat.RGBA32, false, true) { name = name };
-                    AssetDatabase.AddObjectToAsset(mask, tile);
-                    changed = true;
+                    mask = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false, true)
+                        { name = MaskName };
+                    AssetDatabase.AddObjectToAsset(mask, owner);
                 }
-                else if (mask.width != width || mask.height != height || mask.format != TextureFormat.RGBA32 ||
-                         mask.isDataSRGB || mask.mipmapCount != 1)
+                else if (mask.width != source.width || mask.height != source.height ||
+                         mask.format != TextureFormat.RGBA32 || mask.isDataSRGB || mask.mipmapCount != 1)
                 {
-                    if (!mask.Reinitialize(width, height,
+                    if (!mask.Reinitialize(source.width, source.height,
                             UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm, false))
-                        throw new InvalidOperationException($"Could not resize {name}.");
-                    changed = true;
+                        throw new InvalidOperationException($"Could not resize {assetPath}.");
                 }
-                if (changed || mask.filterMode != FilterMode.Point || mask.wrapMode != TextureWrapMode.Clamp ||
-                    mask.anisoLevel != 0 || !mask.GetPixels32().SequenceEqual(pixels))
-                {
-                    mask.filterMode = FilterMode.Point;
-                    mask.wrapMode = TextureWrapMode.Clamp;
-                    mask.anisoLevel = 0;
-                    mask.SetPixels32(pixels);
-                    mask.Apply(false, false);
-                    EditorUtility.SetDirty(mask);
-                    dirty = true;
-                }
+                mask.filterMode = FilterMode.Point;
+                mask.wrapMode = TextureWrapMode.Clamp;
+                mask.anisoLevel = 0;
+                mask.SetPixels32(maskPixels);
+                mask.Apply(false, false);
+                EditorUtility.SetDirty(mask);
+                EditorUtility.SetDirty(owner);
+                AssetDatabase.SaveAssetIfDirty(owner);
+
+                var secondary = (importer.secondarySpriteTextures ?? Array.Empty<SecondarySpriteTexture>())
+                    .Where(texture => texture.name != MaskName).ToList();
+                secondary.Add(new SecondarySpriteTexture { name = MaskName, texture = mask });
+                importer.secondarySpriteTextures = secondary.ToArray();
+                importer.SaveAndReimport();
+
+                var report = ranked.Select(pair => $"{pair.Key + 1}: {pair.Value} pixels -> " +
+                    (regions.TryGetValue(pair.Key, out var region) ? $"region {region + 1}" : "black (fixed)"));
+                Debug.Log($"Generated color mask for {path}. Palette ramps {string.Join(", ", report)}; " +
+                          $"quantized {quantized} off-palette pixels.",
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(path));
             }
-            if (dirty)
-            {
-                EditorUtility.SetDirty(tile);
-                AssetDatabase.SaveAssetIfDirty(tile);
-            }
-            Debug.Log($"Generated {sources.Length} color masks for {tile.name}. Palette ramps " +
-                      $"{string.Join(", ", ramps.Select(ramp => ramp + 1))} map to regions 1..{ramps.Count}; " +
-                      $"quantized {quantized} off-palette pixels.", tile);
+            finally { Object.DestroyImmediate(source); }
         }
     }
 }

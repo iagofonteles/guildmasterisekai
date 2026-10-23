@@ -53,8 +53,7 @@ namespace TileGrid.Editor
             var palette = ReadPalette(config);
             var assets = AssetDatabase.LoadAllAssetsAtPath(path);
             // Validate all rotations before modifying persistent assets.
-            var conversions = sources.Select((source, i) => Prepare(source, palette, config.PaletteColorShades,
-                assets.OfType<Texture2D>().FirstOrDefault(t => t.name == ColorMaksGenerator.MaskName(i)))).ToArray();
+            var conversions = sources.Select(source => Prepare(source, palette, config.PaletteColorShades)).ToArray();
             var previous = (Sprite[])encodedField.GetValue(tile);
             var encoded = new Sprite[sources.Length];
 
@@ -139,11 +138,11 @@ namespace TileGrid.Editor
             AssetDatabase.SaveAssetIfDirty(tile);
         }
 
-        private static Conversion Prepare(Sprite sprite, Color32[] palette, int shades, Texture2D generatedMask)
+        private static Conversion Prepare(Sprite sprite, Color32[] palette, int shades)
         {
             var secondary = new SecondarySpriteTexture[sprite.GetSecondaryTextureCount()];
             sprite.GetSecondaryTextures(secondary);
-            var maskTexture = generatedMask ? generatedMask : secondary.FirstOrDefault(t => t.name == "_MaskTex").texture;
+            var maskTexture = secondary.FirstOrDefault(t => t.name == "_MaskTex").texture;
             if (!maskTexture)
                 throw new InvalidDataException($"{sprite.name}: missing _MaskTex secondary texture.");
             var source = ReadPng(AssetDatabase.GetAssetPath(sprite));
@@ -152,7 +151,7 @@ namespace TileGrid.Editor
             try
             {
                 mask = ReadTexture(maskTexture);
-                var maskRect = generatedMask ? sprite.rect : new Rect(0, 0, source.width, source.height);
+                var maskRect = new Rect(0, 0, source.width, source.height);
                 if (mask.width != maskRect.width || mask.height != maskRect.height ||
                     source.width != sprite.texture.width || source.height != sprite.texture.height)
                     throw new InvalidDataException(
@@ -180,8 +179,7 @@ namespace TileGrid.Editor
                     if (pixel.a == 0) continue;
                     if (pixel.a != 255)
                         throw new InvalidDataException($"{sprite.name}: pixel {sourceIndex} requires binary alpha.");
-                    var maskIndex = generatedMask ? row * width + column : sourceIndex;
-                    var region = Region(masks[maskIndex]);
+                    var region = Region(masks[sourceIndex]);
                     var index = NearestIndex(pixel, palette);
 
                     if (!SameRgb(pixel, palette[index]))

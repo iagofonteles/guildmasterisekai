@@ -66,9 +66,7 @@ namespace TileGrid.Tiles
 
 #if UNITY_EDITOR
         public static Action<DbTile> __EncodeSprites;
-        public static Action<DbTile> __GenerateMask;
         [ContextMenu("Encode Sprites")] private void __EncodeSprites_() => __EncodeSprites(this);
-        [ContextMenu("Generate Mask")] private void __GenerateMask_() => __GenerateMask(this);
 #endif
     }
 }
