@@ -42,6 +42,7 @@ namespace TileGrid.Editor
                     AssetDatabase.CreateAsset(tile, path);
                 }
 
+                DbTile.__EncodeSprites(tile); //TODO
                 EditorUtility.SetDirty(tile);
             }
 

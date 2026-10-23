@@ -6,7 +6,8 @@ Shader "Custom/IndexedPalette"
     // Encoded R byte = region * 8 + shade slot (0..4; slots 5..7 clamp to 4).
     // Encoded G byte = original palette index (0..63) + 64 when opaque.
     // Regions 1..4 recolor; region 0 and ramp ID 0 preserve the original index.
-    // Ramp IDs 1..13 select consecutive five-color groups in the 64-color palette.
+    // Default ramp IDs 1..13 select consecutive five-color groups in the 64-color palette.
+    // ColorPaletteConfig sets _PaletteColorCount and _PaletteShades on shared materials.
     // The final ramp's fifth shade repeats index 63, since it has only four colors.
     //
     // Palette layout: 64x1, or 5x13 in texture row order (bottom row first).
@@ -17,6 +18,8 @@ Shader "Custom/IndexedPalette"
         [PerRendererData] _MainTex ("Original or Encoded Sprite", 2D) = "white" {}
         [NoScaleOffset] _PaletteTex ("Palette (13 Ramps, 5 Shades)", 2D) = "white" {}
         [NoScaleOffset] _NormalMap ("Normal Map", 2D) = "bump" {}
+        [HideInInspector] _PaletteColorCount ("Palette Color Count", Float) = 64
+        [HideInInspector] _PaletteShades ("Palette Shades Per Ramp", Float) = 5
     }
 
     SubShader
@@ -45,6 +48,8 @@ Shader "Custom/IndexedPalette"
 
         CBUFFER_START(UnityPerMaterial)
             float4 _PaletteTex_TexelSize;
+            float _PaletteColorCount;
+            float _PaletteShades;
         CBUFFER_END
 
         struct Attributes
@@ -99,15 +104,18 @@ Shader "Custom/IndexedPalette"
 
             uint2 data = (uint2)floor(texel.rg * 255.0 + .5);
             uint region = data.r >> 3;
-            uint shade = min(data.r & 7u, 4u);
+            uint shades = (uint)clamp(_PaletteShades, 1.0, 8.0);
+            uint colorCount = (uint)clamp(_PaletteColorCount, 1.0, 64.0);
+            uint shade = min(data.r & 7u, shades - 1u);
             uint paletteIndex = data.g & 63u;
             half opacity = (half)((data.g >> 6) & 1u);
             if (region >= 1u && region <= 4u)
             {
-                uint ramp = min(rampIds[region - 1u], 13u);
+                uint ramp = min(rampIds[region - 1u], (colorCount + shades - 1u) / shades);
                 if (ramp != 0u)
-                    paletteIndex = min((ramp - 1u) * 5u + shade, 63u);
+                    paletteIndex = min((ramp - 1u) * shades + shade, colorCount - 1u);
             }
+            paletteIndex = min(paletteIndex, colorCount - 1u);
             uint width = (uint)_PaletteTex_TexelSize.z;
             half3 rgb = LOAD_TEXTURE2D(_PaletteTex,
                 int2(paletteIndex % width, paletteIndex / width)).rgb;

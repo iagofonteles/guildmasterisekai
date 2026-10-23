@@ -1,3 +1,4 @@
+using System;
 using Drafts;
 using Drafts.Database;
 using Drafts.Localization;
@@ -17,7 +18,7 @@ namespace TileGrid.Tiles
         [SerializeField] private Vector2Int size = Vector2Int.one;
         [SerializeField] private BuildLayerMask layerMask;
         [SerializeField] private Sprite[] rotations;
-        [SerializeField] private Sprite[] encodedRotations = System.Array.Empty<Sprite>();
+        [SerializeField, ReadOnly] private Sprite[] encodedRotations;
 
         public uint Id => id;
         public string DisplayName => displayName.Localize(this);
@@ -31,9 +32,15 @@ namespace TileGrid.Tiles
         {
             base.GetTileData(pos, tilemap, ref tileData);
             tileData.color = tilemap.GetColor(pos);
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                tileData.color = Color.clear;
+                tileData.flags |= TileFlags.LockColor;
+            }
+#endif
             var matrix = tilemap.GetTransformMatrix(pos);
-            var sprites = tileData.color == Color.clear || encodedRotations.Length == 0
-                ? rotations : encodedRotations;
+            var sprites = tileData.color == Color.clear ? rotations : encodedRotations;
             var index = Mathf.RoundToInt(matrix.rotation.x) % sprites.Length;
             tileData.sprite = sprites[index];
         }
@@ -56,5 +63,12 @@ namespace TileGrid.Tiles
             if (rotations.Length < 1)
                 rotations = new Sprite[1];
         }
+
+#if UNITY_EDITOR
+        public static Action<DbTile> __EncodeSprites;
+        public static Action<DbTile> __GenerateMask;
+        [ContextMenu("Encode Sprites")] private void __EncodeSprites_() => __EncodeSprites(this);
+        [ContextMenu("Generate Mask")] private void __GenerateMask_() => __GenerateMask(this);
+#endif
     }
 }

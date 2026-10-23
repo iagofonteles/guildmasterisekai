@@ -2,208 +2,239 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using TileGrid.Tiles;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using Object = UnityEngine.Object;
 
 namespace TileGrid.Editor
 {
-    /// <summary>Bakes the two palette test tiles without changing their source PNGs.</summary>
+    /// <summary>Bakes indexed sprites into their owning tile without changing source images.</summary>
     public static class IndexedPaletteConverter
     {
-        public const string Directory = "Assets/Database/Tile/TestTile";
-        public const string MaterialPath = Directory + "/Indexed Palette.mat";
-        private const string PalettePath = "Assets/Sprites/Palette/palette jehkoba64-1x.png";
-        private const int Shades = 8;
-        private const int RampCount = 256;
+        private const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic;
+        private static readonly FieldInfo DbTileRotations = typeof(DbTile).GetField("rotations", Fields);
+        private static readonly FieldInfo DbTileEncodedRotations = typeof(DbTile).GetField("encodedRotations", Fields);
+        private static readonly FieldInfo DbAutoTileRotations = typeof(DbAutoTile).GetField("", Fields);
+        private static readonly FieldInfo DbAutoTileEncodedRotations = typeof(DbAutoTile).GetField("", Fields);
+
+        [InitializeOnLoadMethod]
+        private static void Initialize()
+        {
+            DbTile.__EncodeSprites = t => EncodeSprites(t, DbTileRotations, DbTileEncodedRotations);
+            // DbAutoTile.__EncodeSprites = t => EncodeSprites(t, DbAutoTileRotations, DbAutoTileEncodedRotations);
+        }
 
         private sealed class Conversion
         {
             public string name;
             public Sprite source;
-            public DbTile tile;
             public int width;
             public int height;
             public byte[] data;
             public int changedPixels;
             public readonly HashSet<int> changedColors = new();
-            public readonly List<byte>[] regions = Enumerable.Range(0, 4)
-                .Select(_ => new List<byte>()).ToArray();
         }
 
-        [MenuItem("Game/Tiles/Convert Indexed Palette Test Tiles")]
-        public static void ConvertTestTiles()
+        public static void EncodeSprites(Object tile, FieldInfo originalField, FieldInfo encodedField,
+            ColorPaletteConfig config = null)
         {
-            var palette = ReadPalette();
-            // Validate both inputs completely before writing any generated assets.
-            var conversions = new[] { Prepare("test floor", palette), Prepare("test tile", palette) };
-            var shader = Shader.Find("Custom/IndexedPalette");
-            if (!shader || ShaderUtil.ShaderHasError(shader))
-                throw new InvalidOperationException("Indexed palette shader is missing or has compilation errors.");
+            var path = AssetDatabase.GetAssetPath(tile);
+            if (!tile || string.IsNullOrEmpty(path) || !AssetDatabase.IsMainAsset(tile))
+                throw new InvalidOperationException("Encode Sprites requires a saved DbTile asset.");
             if (!SystemInfo.SupportsTextureFormat(TextureFormat.RG16))
                 throw new NotSupportedException("This Editor device does not support RG16 textures.");
-
-            var paletteTexture = WriteTexture(Directory + "/Indexed Palette.asset", 64, 1,
-                TextureFormat.RGBA32, false, palette.SelectMany(c => new[] { c.r, c.g, c.b, (byte)255 }).ToArray());
-            var ramps = new byte[Shades * RampCount];
-            var nextRamp = 1;
-            foreach (var conversion in conversions)
-            foreach (var region in conversion.regions)
+            var sources = (Sprite[])originalField.GetValue(tile);
+            if (sources == null || sources.Length == 0 || sources.Any(s => !s))
+                throw new InvalidDataException($"{tile.name}: assign every source rotation before encoding.");
+            if (!config)
             {
-                // The first eight rows document each input's original region ramps.
-                // Ramp 0 bypasses the table and restores original colors on ANY tile.
-                for (var slot = 0; slot < Shades; slot++)
-                    ramps[nextRamp * Shades + slot] = region.Count == 0
-                        ? (byte)0 : region[Math.Min(slot, region.Count - 1)];
-                nextRamp++;
+                var configs = AssetDatabase.FindAssets("t:ColorPaletteConfig");
+                if (configs.Length != 1)
+                    throw new InvalidOperationException("Assign a ColorPaletteConfig explicitly, or keep exactly one config asset.");
+                config = AssetDatabase.LoadAssetAtPath<ColorPaletteConfig>(AssetDatabase.GUIDToAssetPath(configs[0]));
             }
-            // Additional selectable ramps: eight consecutive palette entries each.
-            // These are examples; artists can replace them with curated shade ramps.
-            for (var row = nextRamp; row < RampCount; row++)
-            for (var slot = 0; slot < Shades; slot++)
-                ramps[row * Shades + slot] = (byte)(((row - nextRamp) * Shades + slot) % 64);
-            var rampTexture = WriteTexture(Directory + "/Indexed Ramps.asset", Shades, RampCount,
-                TextureFormat.R8, true, ramps);
+            config.ValidateConfiguration();
+            var palette = ReadPalette(config);
+            // Validate all rotations before modifying persistent assets.
+            var conversions = sources.Select(source => Prepare(source, palette, config.PaletteColorShades)).ToArray();
+            var previous = (Sprite[])encodedField.GetValue(tile);
+            var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+            var encoded = new Sprite[sources.Length];
 
-            var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath);
-            if (!material)
+            for (var i = 0; i < sources.Length; i++)
             {
-                material = new Material(shader);
-                AssetDatabase.CreateAsset(material, MaterialPath);
-            }
-            Undo.RecordObject(material, "Configure indexed palette material");
-            material.shader = shader;
-            material.SetTexture("_PaletteTex", paletteTexture);
-            material.SetTexture("_RampTex", rampTexture);
-            EditorUtility.SetDirty(material);
+                var conversion = conversions[i];
+                var source = sources[i];
+                var spriteName = $"Indexed Sprite {i}";
+                var textureName = $"Indexed Texture {i}";
+                var sprite = previous != null && i < previous.Length && previous[i] &&
+                             AssetDatabase.GetAssetPath(previous[i]) == path
+                    ? previous[i]
+                    : assets.OfType<Sprite>().FirstOrDefault(s => s.name == spriteName);
+                var texture = sprite && AssetDatabase.GetAssetPath(sprite.texture) == path
+                    ? sprite.texture
+                    : assets.OfType<Texture2D>().FirstOrDefault(t => t.name == textureName);
 
-            foreach (var conversion in conversions)
-            {
-                var path = Directory + "/" + conversion.name + " indexed.asset";
-                var texture = WriteTexture(path, conversion.width, conversion.height,
-                    TextureFormat.RG16, true, conversion.data);
-                var source = conversion.source;
-                var sprite = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>().SingleOrDefault();
-                if (!sprite)
+                if (!texture)
                 {
-                    sprite = Sprite.Create(texture, source.rect,
-                        source.pivot / source.rect.size, source.pixelsPerUnit, 0,
-                        SpriteMeshType.FullRect, source.border, false);
-                    sprite.name = conversion.name + " indexed";
-                    AssetDatabase.AddObjectToAsset(sprite, texture);
+                    texture = new Texture2D(conversion.width, conversion.height, TextureFormat.RG16, false, true);
+                    texture.name = textureName;
+                    AssetDatabase.AddObjectToAsset(texture, tile);
                 }
-                Undo.RecordObject(conversion.tile, "Use indexed test sprite");
-                var serialized = new SerializedObject(conversion.tile);
-                var rotations = serialized.FindProperty("rotations");
-                rotations.arraySize = 1;
-                rotations.GetArrayElementAtIndex(0).objectReferenceValue = source;
-                var encoded = serialized.FindProperty("encodedRotations");
-                encoded.arraySize = 1;
-                encoded.GetArrayElementAtIndex(0).objectReferenceValue = sprite;
-                // Keep normal RGB icons in UI; the packed data is not a color image.
-                serialized.FindProperty("icon").objectReferenceValue = source;
-                serialized.ApplyModifiedProperties();
-                conversion.tile.color = Color.clear;
-                conversion.tile.flags &= ~TileFlags.LockColor;
-                EditorUtility.SetDirty(conversion.tile);
-                Debug.Log($"Converted {conversion.name}: {conversion.width}x{conversion.height}, " +
-                          $"{conversion.data.Length} packed bytes; quantized {conversion.changedPixels} pixels " +
-                          $"from {conversion.changedColors.Count} off-palette colors. " +
-                          $"Region shade counts: {string.Join(", ", conversion.regions.Select(r => r.Count))}.",
-                    conversion.tile);
+
+                if (texture.width != conversion.width || texture.height != conversion.height ||
+                    texture.format != TextureFormat.RG16 || texture.isDataSRGB || texture.mipmapCount != 1)
+                {
+                    if (!texture.Reinitialize(conversion.width, conversion.height,
+                            UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_UNorm, false))
+                        throw new InvalidOperationException($"Could not resize {textureName}.");
+                    EditorUtility.SetDirty(texture);
+                }
+
+                if (!texture.GetRawTextureData<byte>().ToArray().SequenceEqual(conversion.data) ||
+                    texture.filterMode != FilterMode.Point || texture.wrapMode != TextureWrapMode.Clamp ||
+                    texture.anisoLevel != 0)
+                {
+                    texture.filterMode = FilterMode.Point;
+                    texture.wrapMode = TextureWrapMode.Clamp;
+                    texture.anisoLevel = 0;
+                    texture.LoadRawTextureData(conversion.data);
+                    texture.Apply(false, false);
+                    EditorUtility.SetDirty(texture);
+                }
+
+                var rect = new Rect(0, 0, conversion.width, conversion.height);
+                var pivot = source.pivot / source.rect.size;
+
+                if (!sprite || sprite.texture != texture || sprite.rect != rect ||
+                    sprite.pivot / sprite.rect.size != pivot || sprite.pixelsPerUnit != source.pixelsPerUnit ||
+                    sprite.border != source.border)
+                {
+                    var replacement = Sprite.Create(texture, rect, pivot, source.pixelsPerUnit,
+                        0, SpriteMeshType.FullRect, source.border, false);
+                    replacement.name = spriteName;
+
+                    if (sprite)
+                    {
+                        EditorUtility.CopySerialized(replacement, sprite);
+                        Object.DestroyImmediate(replacement);
+                        EditorUtility.SetDirty(sprite);
+                    }
+                    else
+                    {
+                        sprite = replacement;
+                        AssetDatabase.AddObjectToAsset(sprite, tile);
+                    }
+                }
+
+                encoded[i] = sprite;
+                Debug.Log($"Encoded {tile.name} rotation {i}: {conversion.width}x{conversion.height}; " +
+                          $"quantized {conversion.changedPixels} pixels from " +
+                          $"{conversion.changedColors.Count} off-palette colors.", tile);
             }
-            AssetDatabase.SaveAssets();
-            Debug.Log($"Indexed palette material: {MaterialPath}. Assign it to a test TilemapRenderer. " +
-                      "Set cell Color to Color.clear for original colors, or Color32(ramp1, ramp2, ramp3, ramp4). " +
-                      "Existing hue presets are incompatible. Source PNGs and scene renderers were not changed.");
+
+            if (previous == null || !previous.SequenceEqual(encoded))
+            {
+                encodedField.SetValue(tile, encoded);
+                EditorUtility.SetDirty(tile);
+            }
+
+            AssetDatabase.SaveAssetIfDirty(tile);
         }
 
-        private static Conversion Prepare(string name, Color32[] palette)
+        private static Conversion Prepare(Sprite sprite, Color32[] palette, int shades)
         {
-            var sourcePath = Directory + "/" + name + ".png";
-            var tile = AssetDatabase.LoadAssetAtPath<DbTile>(Directory + "/" + name + ".asset");
-            var sprites = AssetDatabase.LoadAllAssetsAtPath(sourcePath).OfType<Sprite>().ToArray();
-            if (!tile || sprites.Length != 1)
-                throw new InvalidDataException($"Expected one DbTile and one source sprite for {name}.");
-            var source = ReadPng(sourcePath);
-            var mask = ReadPng(Directory + "/" + name + " mask.png");
+            var secondary = new SecondarySpriteTexture[sprite.GetSecondaryTextureCount()];
+            sprite.GetSecondaryTextures(secondary);
+            var maskTexture = secondary.FirstOrDefault(t => t.name == "_MaskTex").texture;
+            if (!maskTexture)
+                throw new InvalidDataException($"{sprite.name}: missing _MaskTex secondary texture.");
+            var source = ReadPng(AssetDatabase.GetAssetPath(sprite));
+            Texture2D mask = null;
+
             try
             {
-                if (source.width != mask.width || source.height != mask.height)
-                    throw new InvalidDataException($"{name}: source and mask dimensions differ.");
+                mask = ReadPng(AssetDatabase.GetAssetPath(maskTexture));
+                if (source.width != mask.width || source.height != mask.height ||
+                    source.width != sprite.texture.width || source.height != sprite.texture.height)
+                    throw new InvalidDataException(
+                        $"{sprite.name}: source/mask dimensions differ or source was resized/atlased.");
+                var rect = sprite.rect;
+                var x = (int)rect.x;
+                var y = (int)rect.y;
+                var width = (int)rect.width;
+                var height = (int)rect.height;
+                if (rect != new Rect(x, y, width, height))
+                    throw new InvalidDataException($"{sprite.name}: sprite rectangle must use whole pixels.");
                 var conversion = new Conversion
                 {
-                    name = name, tile = tile, source = sprites[0],
-                    width = source.width, height = source.height,
-                    data = new byte[source.width * source.height * 2]
+                    name = sprite.name, source = sprite, width = width, height = height,
+                    data = new byte[width * height * 2]
                 };
                 var pixels = source.GetPixels32();
                 var masks = mask.GetPixels32();
-                var indices = new byte[pixels.Length];
-                var regions = new int[pixels.Length];
-                for (var i = 0; i < pixels.Length; i++)
+
+                for (var row = 0; row < height; row++)
+                for (var column = 0; column < width; column++)
                 {
-                    var pixel = pixels[i];
+                    var sourceIndex = (y + row) * source.width + x + column;
+                    var pixel = pixels[sourceIndex];
                     if (pixel.a == 0) continue;
                     if (pixel.a != 255)
-                        throw new InvalidDataException($"{name}: pixel {i} has partial alpha; packed format requires binary alpha.");
-                    var region = Region(masks[i]);
+                        throw new InvalidDataException($"{sprite.name}: pixel {sourceIndex} requires binary alpha.");
+                    var region = Region(masks[sourceIndex]);
                     var index = NearestIndex(pixel, palette);
-                    indices[i] = index;
-                    regions[i] = region;
+
                     if (!SameRgb(pixel, palette[index]))
                     {
                         conversion.changedPixels++;
                         conversion.changedColors.Add(pixel.r << 16 | pixel.g << 8 | pixel.b);
                     }
-                    if (region > 0 && !conversion.regions[region - 1].Contains(index))
-                        conversion.regions[region - 1].Add(index);
+
+                    var output = (row * width + column) * 2;
+                    // Preserve the source shade column within the configured natural ramps.
+                    conversion.data[output] = (byte)(region * ColorPaletteConfig.EncodedShades +
+                                                     (region == 0 ? 0 : index % shades));
+                    conversion.data[output + 1] = (byte)(index | ColorPaletteConfig.OpaqueFlag);
                 }
-                foreach (var region in conversion.regions)
-                {
-                    if (region.Count > Shades)
-                        throw new InvalidDataException($"{name}: region has {region.Count} shades, maximum is {Shades}.");
-                    region.Sort((a, b) =>
-                    {
-                        var order = Luminance(palette[a]).CompareTo(Luminance(palette[b]));
-                        return order != 0 ? order : a.CompareTo(b);
-                    });
-                }
-                for (var i = 0; i < pixels.Length; i++)
-                {
-                    if (pixels[i].a == 0) continue;
-                    var region = regions[i];
-                    var slot = region == 0 ? 0 : conversion.regions[region - 1].IndexOf(indices[i]);
-                    conversion.data[i * 2] = (byte)(region * Shades + slot);
-                    conversion.data[i * 2 + 1] = (byte)(indices[i] | 64);
-                }
+
                 return conversion;
             }
             finally
             {
                 Object.DestroyImmediate(source);
-                Object.DestroyImmediate(mask);
+                if (mask) Object.DestroyImmediate(mask);
             }
         }
 
-        private static Color32[] ReadPalette()
+        private static Color32[] ReadPalette(ColorPaletteConfig config)
         {
-            var texture = ReadPng(PalettePath);
+            var source = config.PaletteTexture;
+            var path = AssetDatabase.GetAssetPath(source);
+            var isPng = string.Equals(Path.GetExtension(path), ".png", StringComparison.OrdinalIgnoreCase);
+            var texture = isPng ? ReadPng(path) : source;
+
             try
             {
-                var colors = texture.GetPixels32();
-                if (colors.Length != 64 || colors.Any(c => c.a != 255))
-                    throw new InvalidDataException("Expected exactly 64 opaque palette pixels.");
+                if (!texture.isReadable)
+                    throw new InvalidDataException($"{source.name}: palette texture must be readable for encoding.");
+                var colors = texture.GetPixels32().Take(config.PaletteColorCount).ToArray();
+                if (colors.Length != config.PaletteColorCount || colors.Any(c => c.a != 255))
+                    throw new InvalidDataException("Expected the configured number of opaque palette pixels.");
                 return colors;
             }
-            finally { Object.DestroyImmediate(texture); }
+            finally
+            {
+                if (isPng) Object.DestroyImmediate(texture);
+            }
         }
 
         private static Texture2D ReadPng(string path)
         {
             var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false, true);
+
             try
             {
                 if (!ImageConversion.LoadImage(texture, File.ReadAllBytes(path), false))
@@ -215,28 +246,6 @@ namespace TileGrid.Editor
                 Object.DestroyImmediate(texture);
                 throw;
             }
-        }
-
-        private static Texture2D WriteTexture(string path, int width, int height,
-            TextureFormat format, bool linear, byte[] bytes)
-        {
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-            if (!texture)
-            {
-                texture = new Texture2D(width, height, format, false, linear);
-                texture.name = Path.GetFileNameWithoutExtension(path);
-                AssetDatabase.CreateAsset(texture, path);
-            }
-            else if (texture.width != width || texture.height != height || texture.format != format ||
-                     texture.isDataSRGB == linear)
-                throw new InvalidDataException($"{path}: existing generated texture has incompatible settings.");
-            texture.filterMode = FilterMode.Point;
-            texture.wrapMode = TextureWrapMode.Clamp;
-            texture.anisoLevel = 0;
-            texture.LoadRawTextureData(bytes);
-            texture.Apply(false, false);
-            EditorUtility.SetDirty(texture);
-            return texture;
         }
 
         private static int Region(Color32 mask)
@@ -255,6 +264,7 @@ namespace TileGrid.Editor
         {
             var bestDistance = int.MaxValue;
             byte best = 0;
+
             for (byte i = 0; i < palette.Length; i++)
             {
                 var dr = pixel.r - palette[i].r;
@@ -265,10 +275,10 @@ namespace TileGrid.Editor
                 bestDistance = distance;
                 best = i;
             }
+
             return best;
         }
 
         private static bool SameRgb(Color32 a, Color32 b) => a.r == b.r && a.g == b.g && a.b == b.b;
-        private static int Luminance(Color32 c) => 2126 * c.r + 7152 * c.g + 722 * c.b;
     }
 }

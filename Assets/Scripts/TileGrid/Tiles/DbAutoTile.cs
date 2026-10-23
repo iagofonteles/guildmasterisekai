@@ -56,5 +56,11 @@ namespace TileGrid.Tiles
             roof.layerMask = BuildLayerMask.Roof;
             roof.m_DefaultColliderType = Tile.ColliderType.None;
         }
+                
+#if UNITY_EDITOR
+        public static Action<DbAutoTile> __EncodeSprites;
+        [ContextMenu("Encode Sprites")]
+        private void __EncodeSprites_() => __EncodeSprites(this);
+#endif
     }
 }
