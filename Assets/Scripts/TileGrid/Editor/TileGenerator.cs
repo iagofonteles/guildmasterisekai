@@ -20,14 +20,25 @@ namespace TileGrid.Editor
 
             var sprites = Selection.objects.OfType<Sprite>().ToArray();
             var field = typeof(DbTile).GetField("rotations", Flags)!;
+            var rotationCount = ((Sprite[])field.GetValue(tiles[0])).Length;
+            if (rotationCount < 1) throw new Exception("base tile must have at least one rotation slot");
+            if (sprites.Length == 0 || sprites.Length % rotationCount != 0)
+                throw new Exception($"select complete groups of {rotationCount} rotation sprites");
+            Array.Sort(sprites, (a, b) =>
+            {
+                var pathOrder = string.CompareOrdinal(AssetDatabase.GetAssetPath(a), AssetDatabase.GetAssetPath(b));
+                return pathOrder != 0 ? pathOrder : EditorUtility.NaturalCompare(a.name, b.name);
+            });
             var directory = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(tiles[0]));
 
-            for (var i = 0; i < sprites.Length; i++)
+            for (var i = 0; i < sprites.Length / rotationCount; i++)
             {
                 var tile = i < tiles.Length ? tiles[i] : Object.Instantiate(tiles[0]);
-                var sprite = sprites[i];
+                var rotations = new Sprite[rotationCount];
+                Array.Copy(sprites, i * rotationCount, rotations, 0, rotationCount);
+                var sprite = rotations[0];
                 tile.name = sprite.name;
-                ((Sprite[])field.GetValue(tile))[0] = sprite;
+                field.SetValue(tile, rotations);
 
                 if (i < tiles.Length)
                 {

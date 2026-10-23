@@ -19,7 +19,7 @@ namespace TileGrid.Editor
             Add(r, so, "description");
             Add(r, so, "icon");
             Add(r, so, "size");
-            Add(r, so, "layerMask");
+            Add(r, so, "layer");
             Add(r, so, "m_Flags");
             Add(r, so, "m_ColliderType");
             Add(r, so, "m_InstancedGameObject");

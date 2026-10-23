@@ -55,7 +55,7 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: 2618538249558509136, guid: c4ece930052e4e3448803a67aaf3d5f3, type: 3}
   size: {x: 1, y: 1}
-  layerMask: 4
+  layer: 2
   rotations:
   - {fileID: 2618538249558509136, guid: c4ece930052e4e3448803a67aaf3d5f3, type: 3}
   encodedRotations:

@@ -13,6 +13,17 @@ namespace TileGrid.Tiles
         public const int Count = 6;
     }
 
+    public enum BuildLayerEnum
+    {
+        Default,
+        Ground,
+        Floor,
+        Carpet,
+        World,
+        Roof,
+        Decoration,
+    };
+
     [Flags]
     public enum BuildLayerMask
     {

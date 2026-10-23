@@ -10,7 +10,7 @@ namespace TileGrid.Tiles
         public Sprite Icon { get; }
         public string DisplayName { get; }
         public string Description { get; }
-        BuildLayerMask LayerMask { get; }
+        int Layer { get; }
         void IDatabaseItemInternal.SetIndex(int i) { }
         int IDatabaseItem.Index => throw new InvalidOperationException();
     }

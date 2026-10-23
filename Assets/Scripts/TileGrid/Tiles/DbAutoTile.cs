@@ -16,7 +16,7 @@ namespace TileGrid.Tiles
         [SerializeField, Loc] private LocalizedString description;
         [SerializeField] private Sprite icon;
         [SerializeField, SO] private DbAutoTile roof;
-        [SerializeField] private BuildLayerMask layerMask;
+        [SerializeField] private BuildLayerEnum layer;
         [SerializeField] private TileFlags flags = TileFlags.LockTransform;
 
         public uint Id => id;
@@ -24,7 +24,7 @@ namespace TileGrid.Tiles
         public string Description => description.Localize(this);
         public Sprite Icon => icon ? icon : m_DefaultSprite;
         public ITileEntry Roof => roof;
-        public BuildLayerMask LayerMask => layerMask;
+        public int Layer => (int)layer;
         TileBase ITileEntry.Tile => this;
 
         public bool CanReplace(ITileEntry other) => other is DbAutoTile;
@@ -51,9 +51,9 @@ namespace TileGrid.Tiles
         private void OnValidate()
         {
             if (!roof) return;
-            layerMask = BuildLayerMask.World;
+            layer = BuildLayerEnum.World;
             m_DefaultColliderType = Tile.ColliderType.Grid;
-            roof.layerMask = BuildLayerMask.Roof;
+            roof.layer = BuildLayerEnum.Roof;
             roof.m_DefaultColliderType = Tile.ColliderType.None;
         }
                 

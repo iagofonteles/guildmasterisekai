@@ -16,7 +16,7 @@ namespace TileGrid.Tiles
         [SerializeField, Loc] private LocalizedString description;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector2Int size = Vector2Int.one;
-        [SerializeField] private BuildLayerMask layerMask;
+        [SerializeField] private BuildLayerEnum layer;
         [SerializeField] private Sprite[] rotations;
         [SerializeField, ReadOnly] private Sprite[] encodedRotations;
 
@@ -25,7 +25,7 @@ namespace TileGrid.Tiles
         public string Description => description.Localize(this);
         public Sprite Icon => icon ? icon : rotations[0];
         public Vector2Int Size => size;
-        public BuildLayerMask LayerMask => layerMask;
+        public int Layer => (int)layer;
         TileBase ITileEntry.Tile => this;
 
         public override void GetTileData(Vector3Int pos, ITilemap tilemap, ref TileData tileData)

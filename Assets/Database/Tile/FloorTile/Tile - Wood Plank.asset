@@ -44,7 +44,7 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: 0}
   roof: {fileID: 0}
-  layerMask: 4
+  layer: 2
   flags: 2
   references:
     version: 2

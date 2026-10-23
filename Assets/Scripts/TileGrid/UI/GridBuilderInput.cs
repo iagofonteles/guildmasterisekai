@@ -24,7 +24,7 @@ namespace TileGrid.UI
         private VisualElement _toolbar;
         private Vector2Int _first, _last;
         private ButtonControl _dragging;
-        private Plane _plane = new(Vector3.forward, Vector3.zero);
+        private readonly Plane _plane = new(Vector3.forward, Vector3.zero);
 
         #region UnityEvents
 

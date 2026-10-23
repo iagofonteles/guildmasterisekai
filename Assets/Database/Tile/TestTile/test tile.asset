@@ -101,7 +101,7 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: -4875476888154007157, guid: 872eff66462d04c469526615f078196b, type: 3}
   size: {x: 1, y: 1}
-  layerMask: 16
+  layer: 4
   rotations:
   - {fileID: -4875476888154007157, guid: 872eff66462d04c469526615f078196b, type: 3}
   encodedRotations:
@@ -130,7 +130,7 @@ Sprite:
   m_Extrude: 0
   m_PackingTag: 
   m_RenderDataKey:
-    00000000000000000000000000000000: 0
+    f90d6b4274a8bbe44ac07e3d490edb3a: 5811396740008814287
   m_AtlasTags: []
   m_SpriteAtlas: {fileID: 0}
   m_RD:
@@ -226,7 +226,7 @@ Sprite:
       height: 32
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
-    settingsRaw: 0
+    settingsRaw: 3072
     uvTransform: {x: 32, y: 16, z: 32, w: 16}
     downscaleMultiplier: 1
   m_AtlasRD:
@@ -307,7 +307,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf00000000000000000000803f0000803f0000803f00000000000000000000803f00000000
     m_Bindpose: []
     m_BlendShapes:
       vertices: []

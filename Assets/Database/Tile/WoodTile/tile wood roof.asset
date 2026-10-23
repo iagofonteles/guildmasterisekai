@@ -234,7 +234,7 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: 0}
   roof: {fileID: 0}
-  layerMask: 32
+  layer: 5
   flags: 2
   references:
     version: 2

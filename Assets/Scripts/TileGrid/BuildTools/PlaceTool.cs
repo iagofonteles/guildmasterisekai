@@ -29,14 +29,14 @@ namespace TileGrid.BuildTools
         {
             if (e.button == MouseButton.RightMouse)
                 return _remove.CreateCommand(e);
-            if(e.alt) return _pick.CreateCommand(e);
+            if (e.alt) return _pick.CreateCommand(e);
 
             if (e.button != MouseButton.LeftMouse)
                 return null;
-            
+
             if (e.item.Value is not ITileEntry tile)
                 return e.Error("not ITileEntry");
-            if (((int)tile.LayerMask & (1 << e.layer.Value)) == 0)
+            if (tile.Layer != e.layer.Value)
                 return e.Error("incompatible layer");
 
             if (tile is DbTile t && t.Size != Vector2Int.one)

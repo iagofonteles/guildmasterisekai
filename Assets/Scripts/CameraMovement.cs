@@ -1,8 +1,9 @@
-using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class CameraMovement : MonoBehaviour {
+public class CameraMovement : MonoBehaviour
+{
     Camera cam;
     public float moveSpeed;
     private Vector2 axis;
@@ -11,12 +12,17 @@ public class CameraMovement : MonoBehaviour {
     public Vector2 scrollLimit;
     public bool mouseMovement;
 
-    private void Start() {
+    private void Start()
+    {
         cam = GetComponent<Camera>();
     }
 
-    public void Zoom(InputAction.CallbackContext ctx) {
-        if(ctx.performed) {
+    public void Zoom(InputAction.CallbackContext ctx)
+    {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
+        if (ctx.performed)
+        {
             zoom = ctx.ReadValue<Vector2>().y;
             cam.orthographicSize += zoom * scrollSpeed * Time.deltaTime;
             if (cam.orthographicSize < scrollLimit.x) cam.orthographicSize = scrollLimit.x;
@@ -24,22 +30,28 @@ public class CameraMovement : MonoBehaviour {
         }
     }
 
-    public void Movement(InputAction.CallbackContext ctx) {
+    public void Movement(InputAction.CallbackContext ctx)
+    {
         axis = ctx.ReadValue<Vector2>();
     }
 
-    public void ToogleMovement(InputAction.CallbackContext ctx) {
+    public void ToogleMovement(InputAction.CallbackContext ctx)
+    {
         if (ctx.performed) mouseMovement = true;
-        if (ctx.canceled) mouseMovement = false; axis = Vector2.zero;
+        if (ctx.canceled) mouseMovement = false;
+        axis = Vector2.zero;
     }
 
-    public void MouseMovement(InputAction.CallbackContext ctx) {
-        if(mouseMovement == true) axis = ctx.ReadValue<Vector2>();
+    public void MouseMovement(InputAction.CallbackContext ctx)
+    {
+        if (mouseMovement == true) axis = ctx.ReadValue<Vector2>();
     }
-    
-    void FixedUpdate() {
-        Vector3 dir = axis * moveSpeed * Time.fixedDeltaTime;
+
+    private void FixedUpdate()
+    {
+        Vector3 dir = axis * (moveSpeed * Time.fixedDeltaTime);
         if (axis.sqrMagnitude != 0)
-            transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, moveSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, transform.position + dir,
+                moveSpeed * Time.fixedDeltaTime);
     }
 }

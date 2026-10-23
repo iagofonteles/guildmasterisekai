@@ -9,6 +9,6 @@ namespace TileGrid.Tiles
     {
         [SerializeField, Prefab] private GameObject prefab;
         public GameObject Prefab => prefab;
-        public BuildLayerMask LayerMask => 0;
+        public int Layer => BuildLayer.Roof + 1;
     }
 }

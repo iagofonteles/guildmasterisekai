@@ -28,7 +28,7 @@ namespace TileGrid.BuildTools
         {
             if (e.item.Value is not ITileEntry tile)
                 return e.Error("not ITileEntry");
-            if (((int)tile.LayerMask & (1 << e.layer.Value)) == 0)
+            if (tile.Layer != e.layer.Value)
                 return e.Error("incompatible layer");
 
             var cmd = new CellCommand(e.builder);

@@ -21,7 +21,7 @@ namespace TileGrid.Editor
             Insert(root, so, i++, "description");
             Insert(root, so, i++, "icon");
             Insert(root, so, i++, "roof");
-            Insert(root, so, i++, "layerMask");
+            Insert(root, so, i++, "layer");
             Insert(root, so, i++, "flags");
             
             root.Insert(i, new Label("---") { style = { alignContent = Align.Center } });

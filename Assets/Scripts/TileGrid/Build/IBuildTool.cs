@@ -16,7 +16,7 @@ namespace TileGrid.Build
         IEnumerable<ISlot> GetItems(BuildArgs e)
         {
             foreach (var slot in e.bag.GetSlots<ITile>())
-                if (slot.Item is ITile t && ((int)t.LayerMask & (1 << e.layer.Value)) > 0)
+                if (slot.Item is ITile t && t.Layer == e.layer.Value)
                     yield return slot;
         }
 
