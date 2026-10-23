@@ -523,9 +523,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23e957fb1937fd449d47bbb4f102ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraMovement
-  moveSpeed: 15
+  moveSpeed: 10
   scrollSpeed: -20
-  scrollLimit: {x: 4, y: 10}
+  scrollLimit: {x: 1, y: 10}
   mouseMovement: 0
 --- !u!114 &464989013
 MonoBehaviour:
