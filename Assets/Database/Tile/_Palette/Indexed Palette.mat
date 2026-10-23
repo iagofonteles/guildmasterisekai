@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PaletteTex:
-        m_Texture: {fileID: 2800000, guid: 9a5ddc77d6b168048bb88fa82992bd0a, type: 2}
+        m_Texture: {fileID: 2800000, guid: 30a154132ca8f7c4b8da0f2cea47096c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTex:
@@ -41,7 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _PaletteColorCount: 64
+    - _PaletteColorCount: 65
     - _PaletteShades: 5
     m_Colors: []
   m_BuildTextureStacks: []

@@ -8,7 +8,7 @@ namespace TileGrid
     {
         // Storage layout shared with IndexedPalette.shader, independent of the palette's ramp length.
         public const int EncodedShades = 8;
-        public const int MaxPaletteColors = 64;
+        public const int MaxPaletteColors = 128;
         public const int OpaqueFlag = 64;
         public const int RegionCount = 4;
 
@@ -19,7 +19,7 @@ namespace TileGrid
         [SerializeField] private Shader tilemapShader;
         [SerializeField] private Material tilemapMaterial;
         [SerializeField] private Texture2D paletteTexture;
-        [SerializeField, Range(1, MaxPaletteColors)] private int paletteColorCount = 64;
+        [SerializeField, Range(1, MaxPaletteColors)] private int paletteColorCount = 65;
         [Tooltip("Changing the shade count requires encoding tiles again.")]
         [SerializeField, Range(1, EncodedShades)] private int paletteColorShades = 5;
 

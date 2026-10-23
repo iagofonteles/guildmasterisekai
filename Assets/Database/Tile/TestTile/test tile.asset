@@ -226,7 +226,7 @@ Sprite:
       height: 32
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
-    settingsRaw: 3072
+    settingsRaw: 0
     uvTransform: {x: 32, y: 16, z: 32, w: 16}
     downscaleMultiplier: 1
   m_AtlasRD:

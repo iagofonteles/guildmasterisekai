@@ -194,7 +194,9 @@ namespace TileGrid.Editor
                     // Preserve the source shade column within the configured natural ramps.
                     conversion.data[output] = (byte)(region * ColorPaletteConfig.EncodedShades +
                                                      (region == 0 ? 0 : index % shades));
-                    conversion.data[output + 1] = (byte)(index | ColorPaletteConfig.OpaqueFlag);
+                    // G bit 6 stores opacity; bit 7 stores the palette index's high bit.
+                    conversion.data[output + 1] = (byte)((index & 63) | ((index & 64) << 1) |
+                                                        ColorPaletteConfig.OpaqueFlag);
                 }
 
                 return conversion;
