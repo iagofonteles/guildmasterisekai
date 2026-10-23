@@ -129,15 +129,6 @@
 .slot-preset {
     flex-grow: 1;
 }
-.preset-name {
-    font-size: 9px;
-    -unity-text-align: middle-center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin: 0;
-    padding: 0;
-}
 .preset-regions {
     flex-grow: 1;
     flex-direction: row;
@@ -146,16 +137,11 @@
 .preset-region {
     width: 50%;
     height: 50%;
-    flex-direction: row;
-    padding: 1px;
-}
-.preset-swatch {
-    flex-grow: 1;
-    flex-basis: 0;
+    flex-shrink: 0;
 }
 .preset-ramp-label {
     flex-grow: 1;
-    font-size: 7px;
+    font-size: 16px;
     -unity-text-align: middle-center;
     margin: 0;
     padding: 0;

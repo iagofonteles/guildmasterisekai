@@ -1,3 +1,4 @@
+using System;
 using TileGrid.Build;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,13 +8,14 @@ namespace TileGrid.UI
     public sealed class BuildColorElement : Button, IViewElement
     {
         private static readonly int PaletteTex = Shader.PropertyToID("_PaletteTex");
-        private static readonly int RampTex = Shader.PropertyToID("_RampTex");
+        private static readonly int PaletteColorCount = Shader.PropertyToID("_PaletteColorCount");
+        private static readonly int PaletteShades = Shader.PropertyToID("_PaletteShades");
 
         private readonly VisualElement _preset;
         private readonly Texture2D _palette;
-        private readonly Texture2D _ramps;
+        private readonly int _colorCount;
+        private readonly int _shades;
         private BuildColor _color;
-        private bool _subscribed;
 
         public object Data
         {
@@ -26,18 +28,16 @@ namespace TileGrid.UI
 
         public BuildColorElement(Material paletteMaterial, BuildColor data)
         {
-            if (paletteMaterial && paletteMaterial.HasProperty(PaletteTex) &&
-                paletteMaterial.HasProperty(RampTex))
-            {
-                var palette = paletteMaterial.GetTexture(PaletteTex) as Texture2D;
-                var ramps = paletteMaterial.GetTexture(RampTex) as Texture2D;
-
-                if (palette && ramps && palette.isReadable && ramps.isReadable)
-                {
-                    _palette = palette;
-                    _ramps = ramps;
-                }
-            }
+            if (!paletteMaterial || !paletteMaterial.HasProperty(PaletteTex) ||
+                !paletteMaterial.HasProperty(PaletteColorCount) || !paletteMaterial.HasProperty(PaletteShades))
+                throw new ArgumentException("A configured indexed palette material is required.", nameof(paletteMaterial));
+            _palette = paletteMaterial.GetTexture(PaletteTex) as Texture2D;
+            if (!_palette || !_palette.isReadable)
+                throw new ArgumentException("The palette texture must be readable.", nameof(paletteMaterial));
+            _colorCount = Mathf.Clamp(paletteMaterial.GetInt(PaletteColorCount), 1, ColorPaletteConfig.MaxPaletteColors);
+            _shades = Mathf.Clamp(paletteMaterial.GetInt(PaletteShades), 1, ColorPaletteConfig.EncodedShades);
+            if (_palette.width * _palette.height < _colorCount)
+                throw new ArgumentException("The palette texture has too few colors.", nameof(paletteMaterial));
 
             AddToClassList("tile-choice");
 
@@ -66,10 +66,6 @@ namespace TileGrid.UI
         private void DrawPreset(BuildColor color)
         {
             _preset.Clear();
-            var name = new Label(string.IsNullOrEmpty(color.Name) ? "Preset" : color.Name)
-                { pickingMode = PickingMode.Ignore };
-            name.AddToClassList("preset-name");
-            _preset.Add(name);
             var regions = new VisualElement { pickingMode = PickingMode.Ignore };
             regions.AddToClassList("preset-regions");
             _preset.Add(regions);
@@ -81,23 +77,19 @@ namespace TileGrid.UI
                 ramp.AddToClassList("preset-region");
                 regions.Add(ramp);
 
-                if (id == 0 || !_palette || !_ramps)
+                if (id == 0)
                 {
-                    var label = new Label(id == 0 ? "Original" : $"Ramp {id}")
+                    var label = new Label("x")
                         { pickingMode = PickingMode.Ignore };
                     label.AddToClassList("preset-ramp-label");
                     ramp.Add(label);
                     continue;
                 }
 
-                for (var shade = 0; shade < _ramps.width; shade++)
-                {
-                    var index = Mathf.RoundToInt(_ramps.GetPixel(shade, id).r * 255);
-                    var swatch = new VisualElement { pickingMode = PickingMode.Ignore };
-                    swatch.AddToClassList("preset-swatch");
-                    swatch.style.backgroundColor = _palette.GetPixel(index, 0);
-                    ramp.Add(swatch);
-                }
+                var rampCount = (_colorCount + _shades - 1) / _shades;
+                var index = Mathf.Min((Mathf.Min((int)id, rampCount) - 1) * _shades + _shades / 2,
+                    _colorCount - 1);
+                ramp.style.backgroundColor = _palette.GetPixel(index % _palette.width, index / _palette.width);
             }
         }
     }

@@ -48,19 +48,14 @@ namespace TileGrid.Editor
             var sources = (Sprite[])originalField.GetValue(tile);
             if (sources == null || sources.Length == 0 || sources.Any(s => !s))
                 throw new InvalidDataException($"{tile.name}: assign every source rotation before encoding.");
-            if (!config)
-            {
-                var configs = AssetDatabase.FindAssets("t:ColorPaletteConfig");
-                if (configs.Length != 1)
-                    throw new InvalidOperationException("Assign a ColorPaletteConfig explicitly, or keep exactly one config asset.");
-                config = AssetDatabase.LoadAssetAtPath<ColorPaletteConfig>(AssetDatabase.GUIDToAssetPath(configs[0]));
-            }
+            if (!config) config = GetConfig();
             config.ValidateConfiguration();
             var palette = ReadPalette(config);
-            // Validate all rotations before modifying persistent assets.
-            var conversions = sources.Select(source => Prepare(source, palette, config.PaletteColorShades)).ToArray();
-            var previous = (Sprite[])encodedField.GetValue(tile);
             var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+            // Validate all rotations before modifying persistent assets.
+            var conversions = sources.Select((source, i) => Prepare(source, palette, config.PaletteColorShades,
+                assets.OfType<Texture2D>().FirstOrDefault(t => t.name == ColorMaksGenerator.MaskName(i)))).ToArray();
+            var previous = (Sprite[])encodedField.GetValue(tile);
             var encoded = new Sprite[sources.Length];
 
             for (var i = 0; i < sources.Length; i++)
@@ -144,11 +139,11 @@ namespace TileGrid.Editor
             AssetDatabase.SaveAssetIfDirty(tile);
         }
 
-        private static Conversion Prepare(Sprite sprite, Color32[] palette, int shades)
+        private static Conversion Prepare(Sprite sprite, Color32[] palette, int shades, Texture2D generatedMask)
         {
             var secondary = new SecondarySpriteTexture[sprite.GetSecondaryTextureCount()];
             sprite.GetSecondaryTextures(secondary);
-            var maskTexture = secondary.FirstOrDefault(t => t.name == "_MaskTex").texture;
+            var maskTexture = generatedMask ? generatedMask : secondary.FirstOrDefault(t => t.name == "_MaskTex").texture;
             if (!maskTexture)
                 throw new InvalidDataException($"{sprite.name}: missing _MaskTex secondary texture.");
             var source = ReadPng(AssetDatabase.GetAssetPath(sprite));
@@ -156,8 +151,9 @@ namespace TileGrid.Editor
 
             try
             {
-                mask = ReadPng(AssetDatabase.GetAssetPath(maskTexture));
-                if (source.width != mask.width || source.height != mask.height ||
+                mask = ReadTexture(maskTexture);
+                var maskRect = generatedMask ? sprite.rect : new Rect(0, 0, source.width, source.height);
+                if (mask.width != maskRect.width || mask.height != maskRect.height ||
                     source.width != sprite.texture.width || source.height != sprite.texture.height)
                     throw new InvalidDataException(
                         $"{sprite.name}: source/mask dimensions differ or source was resized/atlased.");
@@ -184,7 +180,8 @@ namespace TileGrid.Editor
                     if (pixel.a == 0) continue;
                     if (pixel.a != 255)
                         throw new InvalidDataException($"{sprite.name}: pixel {sourceIndex} requires binary alpha.");
-                    var region = Region(masks[sourceIndex]);
+                    var maskIndex = generatedMask ? row * width + column : sourceIndex;
+                    var region = Region(masks[maskIndex]);
                     var index = NearestIndex(pixel, palette);
 
                     if (!SameRgb(pixel, palette[index]))
@@ -209,7 +206,15 @@ namespace TileGrid.Editor
             }
         }
 
-        private static Color32[] ReadPalette(ColorPaletteConfig config)
+        internal static ColorPaletteConfig GetConfig()
+        {
+            var configs = AssetDatabase.FindAssets("t:ColorPaletteConfig");
+            if (configs.Length != 1)
+                throw new InvalidOperationException("Assign a ColorPaletteConfig explicitly, or keep exactly one config asset.");
+            return AssetDatabase.LoadAssetAtPath<ColorPaletteConfig>(AssetDatabase.GUIDToAssetPath(configs[0]));
+        }
+
+        internal static Color32[] ReadPalette(ColorPaletteConfig config)
         {
             var source = config.PaletteTexture;
             var path = AssetDatabase.GetAssetPath(source);
@@ -231,7 +236,17 @@ namespace TileGrid.Editor
             }
         }
 
-        private static Texture2D ReadPng(string path)
+        internal static Texture2D ReadTexture(Texture2D texture)
+        {
+            var path = AssetDatabase.GetAssetPath(texture);
+            if (string.Equals(Path.GetExtension(path), ".png", StringComparison.OrdinalIgnoreCase))
+                return ReadPng(path);
+            if (!texture.isReadable)
+                throw new InvalidDataException($"{texture.name}: generated texture must be readable.");
+            return Object.Instantiate(texture);
+        }
+
+        internal static Texture2D ReadPng(string path)
         {
             var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false, true);
 
@@ -260,7 +275,7 @@ namespace TileGrid.Editor
             throw new InvalidDataException($"Unknown mask color {mask}.");
         }
 
-        private static byte NearestIndex(Color32 pixel, Color32[] palette)
+        internal static byte NearestIndex(Color32 pixel, Color32[] palette)
         {
             var bestDistance = int.MaxValue;
             byte best = 0;
