@@ -15,7 +15,11 @@ namespace Drafts.UIElements
         private readonly Wrapper _wrapper = new();
         public Label EmptyLabel { get; } = new("Empty");
 
-        public ListView() => _listView = new(null, -1, MakeItem, BindItem);
+        public ListView()
+        {
+            Add(_listView = new(null, -1, MakeItem, BindItem));
+            Add(EmptyLabel);
+        }
 
         public IEnumerable<T> Views => _listView.contentContainer.Children().OfType<T>();
 
@@ -39,7 +43,8 @@ namespace Drafts.UIElements
         }
 
         private static VisualElement MakeItem() => new T().Element;
-        private void BindItem(VisualElement element, int index) => ((IViewElement)element).Data = _wrapper[index];
+        private void BindItem(VisualElement element, int index) 
+            => ((IViewElement)element).Data = _listView.itemsSource[index];
 
         //TODO refresh only revlevant
         private void Changed(object sender, NotifyCollectionChangedEventArgs args) => Refresh();
