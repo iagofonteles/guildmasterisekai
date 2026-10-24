@@ -20,50 +20,17 @@ namespace GuildMasterIsekai.Interactables
     [UxmlElement]
     public partial class QuestBoardUI : ViewElement<GuildHall>
     {
-        private readonly ListView<QuestStripUI> _list;
+        private readonly ListView<QuestStripUI> _list = new();
 
         public QuestBoardUI()
         {
             AddToClassList("quest-board");
-            _list = new ()
-            {
-                virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight,
-                selectionType = SelectionType.None,
-                makeItem = () => new QuestStripUI(),
-                bindItem = (element, index) => ((QuestStripUI)element).Data = _quests[index],
-                unbindItem = (element, _) => ((QuestStripUI)element).Data = null
-            };
             Add(_list);
-            RegisterCallback<AttachToPanelEvent>(_ =>
-            {
-                if (Data == null) return;
-                Subscribe();
-                Refresh();
-            });
-            RegisterCallback<DetachFromPanelEvent>(_ => Unsubscribe());
         }
 
-        protected override void Subscribe()
-        {
-            _quests = Data.QuestBoard;
-            _quests.OnChanged += QuestsChanged;
-            _list.itemsSource = _quests;
-        }
-
-        protected override void Unsubscribe()
-        {
-            _quests.OnChanged -= QuestsChanged;
-            _list.itemsSource = null;
-            _quests = null;
-        }
-
-        public override void Refresh()
-        {
-            _list.RefreshItems();
-        }
-
-        private void QuestsChanged(ListEvent action, int index, Quest quest) => _list.RefreshItems();
-
-        public override void SetSelected(object selected) { }
+        protected override void Subscribe() { }
+        protected override void Unsubscribe() { }
+        public override void Refresh() => _list.Data = Data.QuestBoard;
+        public override void SetSelected(object selected) => _list.SetSelected(selected);
     }
 }

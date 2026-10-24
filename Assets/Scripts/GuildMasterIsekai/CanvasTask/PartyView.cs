@@ -1,3 +1,4 @@
+using Drafts.UIElements;
 using System;
 using System.Linq;
 using GuildMasterIsekai.Model;
@@ -15,11 +16,6 @@ namespace GuildMasterIsekai.CanvasTask
         public PartyView()
         {
             AddToClassList("list");
-            _members.ConfigureItem = view =>
-            {
-                view.PartyMember = true;
-                view.Selected += member => Removed?.Invoke(member);
-            };
             Add(_members);
             Add(_totals);
         }

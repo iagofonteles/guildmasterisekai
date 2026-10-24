@@ -1,3 +1,4 @@
+using Drafts.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +35,14 @@ namespace GuildMasterIsekai.CanvasTask
             layout.CloneTree(this);
             AddToClassList("game-canvas");
             pickingMode = PickingMode.Ignore;
-            _guildView = Replace("guildHeader", new GuildView());
-            _clients = Replace("clientsList", new ListView<CostomerView>());
-            _problems = Replace("problemsList", new ListView<ProblemRequestView>());
-            _quests = Replace("questsList", new ListView<QuestStripView>());
-            _requests = Replace("questRequestsList", new ListView<QuestRequestView>());
-            _adventurers = Replace("adventurersList", new ListView<AdventurerView>());
-            _freelancers = Replace("freelancersList", new ListView<AdventurerView>());
-            _partyView = Replace("partyList", new PartyView());
+            // _guildView = Replace("guildHeader", new GuildView());
+            // _clients = Replace("clientsList", new ListView<CostomerView>());
+            // _problems = Replace("problemsList", new ListView<ProblemRequestView>());
+            // _quests = Replace("questsList", new ListView<QuestStripView>());
+            // _requests = Replace("questRequestsList", new ListView<QuestRequestView>());
+            // _adventurers = Replace("adventurersList", new ListView<AdventurerView>());
+            // _freelancers = Replace("freelancersList", new ListView<AdventurerView>());
+            // _partyView = Replace("partyList", new PartyView());
             _problemView = new ProblemView();
             this.Q<ScrollView>("solutionsList").Add(_problemView);
             _questView = new QuestStripView { ShowDetailsButton = false };
@@ -57,46 +58,34 @@ namespace GuildMasterIsekai.CanvasTask
             this.Q<Button>("questClose").clicked += () => { _questView.Data = null; Hide("questPanel"); };
             this.Q<Button>("refuseProblem").clicked += () => ReplyProblem(-1);
 
-            _problems.ConfigureItem = view => view.Selected += SelectProblem;
-            _quests.ConfigureItem = view => view.Selected += SelectQuest;
-            _requests.ConfigureItem = view => view.Replied += ReplyQuest;
-            _adventurers.ConfigureItem = ConfigureAdventurer;
-            _freelancers.ConfigureItem = ConfigureAdventurer;
-            _problemView.SolutionSelected += ReplyProblem;
-            _problemView.QuestSelected += SelectQuest;
-            _partyView.Removed += member => { _party.Remove(member); RefreshParty(); };
-            _clients.CountChanged += count => Text("clientsButton", $"Clients ({count})");
-            _problems.CountChanged += count =>
-            {
-                Text("problemsButton", $"Problems ({count})");
-                if (!_binding && _selectedProblem != null && !Data.ProblemRequests.Contains(_selectedProblem))
-                    ClearProblem();
-            };
-            _requests.CountChanged += count => Text("questsButton", $"Mission board ({count} requests)");
-            _adventurers.CountChanged += _ => { if (!_binding) RefreshParty(); };
-            _freelancers.CountChanged += _ => { if (!_binding) RefreshParty(); };
-
-            this.Q<TextField>("adventurerSearch").RegisterValueChangedCallback(evt =>
-            {
-                Predicate<object> filter = item => Matches(((Adventurer)item).DisplayName, evt.newValue);
-                _adventurers.Filter = filter;
-                _freelancers.Filter = filter;
-            });
-            this.Q<TextField>("questSearch").RegisterValueChangedCallback(evt =>
-                _quests.Filter = item => Matches(((Quest)item).DisplayName, evt.newValue));
+            // _problems.ConfigureItem = view => view.Selected += SelectProblem;
+            // _quests.ConfigureItem = view => view.Selected += SelectQuest;
+            // _requests.ConfigureItem = view => view.Replied += ReplyQuest;
+            // _adventurers.ConfigureItem = ConfigureAdventurer;
+            // _freelancers.ConfigureItem = ConfigureAdventurer;
+            // _problemView.SolutionSelected += ReplyProblem;
+            // _problemView.QuestSelected += SelectQuest;
+            // _partyView.Removed += member => { _party.Remove(member); RefreshParty(); };
+            // _clients.CountChanged += count => Text("clientsButton", $"Clients ({count})");
+            // _problems.CountChanged += count =>
+            // {
+            //     Text("problemsButton", $"Problems ({count})");
+            //     if (!_binding && _selectedProblem != null && !Data.ProblemRequests.Contains(_selectedProblem))
+            //         ClearProblem();
+            // };
+            // _requests.CountChanged += count => Text("questsButton", $"Mission board ({count} requests)");
+            // _adventurers.CountChanged += _ => { if (!_binding) RefreshParty(); };
+            // _freelancers.CountChanged += _ => { if (!_binding) RefreshParty(); };
+            //
+            // this.Q<TextField>("adventurerSearch").RegisterValueChangedCallback(evt =>
+            // {
+            //     Predicate<object> filter = item => Matches(((Adventurer)item).DisplayName, evt.newValue);
+            //     _adventurers.Filter = filter;
+            //     _freelancers.Filter = filter;
+            // });
+            // this.Q<TextField>("questSearch").RegisterValueChangedCallback(evt =>
+            //     _quests.Filter = item => Matches(((Quest)item).DisplayName, evt.newValue));
             RegisterCallback<DetachFromPanelEvent>(_ => Data = null);
-        }
-
-        private T Replace<T>(string name, T view) where T : VisualElement
-        {
-            var placeholder = this.Q(name);
-            view.name = name;
-            foreach (var className in placeholder.GetClasses()) view.AddToClassList(className);
-            var parent = placeholder.parent;
-            var index = parent.IndexOf(placeholder);
-            placeholder.RemoveFromHierarchy();
-            parent.Insert(index, view);
-            return view;
         }
 
         public void Rebind() => Data = Game.SaveMngr.Get<GuildHall>();
@@ -115,9 +104,6 @@ namespace GuildMasterIsekai.CanvasTask
             _freelancers.Data = Data.Freelancers;
             this.Q<TextField>("adventurerSearch").SetValueWithoutNotify("");
             this.Q<TextField>("questSearch").SetValueWithoutNotify("");
-            _adventurers.Filter = null;
-            _freelancers.Filter = null;
-            _quests.Filter = null;
             _binding = false;
             RefreshParty();
         }
@@ -164,7 +150,7 @@ namespace GuildMasterIsekai.CanvasTask
         public override void Refresh()
         {
             _guildView.Refresh(); // Guild rank has no change event.
-            foreach (var view in _adventurers.Views.Concat(_freelancers.Views)) view.Refresh();
+            // foreach (var view in _adventurers.Views.Concat(_freelancers.Views)) view.Refresh();
         }
 
         private void ConfigureAdventurer(AdventurerView view) => view.Selected += member =>

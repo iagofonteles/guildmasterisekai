@@ -2,87 +2,86 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using TileGrid.UI;
 using UnityEngine.UIElements;
 
 namespace Drafts.UIElements
 {
-    public sealed class ListView<T> : ViewElement<IEnumerable> where T : VisualElement, IViewElement, new()
+    public sealed class ListView<T> : ViewElement<IEnumerable> where T : IViewElement, new()
     {
-        private readonly UnityEngine.UIElements.ListView _listView;
-        private readonly HashSet<T> _views = new();
-        private INotifyCollectionChanged _notifications;
-        private Predicate<object> _filter;
+        private readonly ListView _listView;
+        private readonly Wrapper _wrapper = new();
+        public Label EmptyLabel { get; } = new("Empty");
 
-        public event Action<int> CountChanged;
-        public Action<T> ConfigureItem { get; set; }
-        public IEnumerable<T> Views => _views.Where(view => view.Data != null);
+        public ListView() => _listView = new(null, -1, MakeItem, BindItem);
 
-        public Predicate<object> Filter
-        {
-            get => _filter;
-            set { _filter = value; Refresh(); }
-        }
-
-        public ListView()
-        {
-            AddToClassList("list");
-            _listView = new UnityEngine.UIElements.ListView
-            {
-                virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight,
-                selectionType = SelectionType.None,
-                makeItem = MakeItem,
-                bindItem = (element, index) => ((IViewElement)element).Data = _listView.itemsSource[index],
-                unbindItem = (element, index) => ((IViewElement)element).Data = null,
-                destroyItem = element => { ((IViewElement)element).Data = null; _views.Remove((T)element); }
-            };
-            _listView.AddToClassList("list");
-            Add(_listView);
-            RegisterCallback<AttachToPanelEvent>(_ => { if (Data != null) { Subscribe(); Refresh(); } });
-            RegisterCallback<DetachFromPanelEvent>(_ => { Unsubscribe(); ReleaseRows(); });
-        }
-
-        private VisualElement MakeItem()
-        {
-            var view = new T();
-            ConfigureItem?.Invoke(view);
-            _views.Add(view);
-            return view;
-        }
+        public IEnumerable<T> Views => _listView.contentContainer.Children().OfType<T>();
 
         protected override void Subscribe()
         {
-            Unsubscribe();
-            _notifications = Data as INotifyCollectionChanged;
-            if (_notifications != null) _notifications.CollectionChanged += Changed;
+            _listView.itemsSource = Data switch
+            {
+                IList a => a,
+                IReadOnlyList<object> b => _wrapper.SetData(b),
+                _ => throw new InvalidDataException(Data.GetType().Name)
+            };
+
+            if (Data is INotifyCollectionChanged n)
+                n.CollectionChanged += Changed;
         }
 
         protected override void Unsubscribe()
         {
-            if (_notifications != null) _notifications.CollectionChanged -= Changed;
-            _notifications = null;
+            if (Data is INotifyCollectionChanged n)
+                n.CollectionChanged -= Changed;
         }
 
-        private void Changed(object sender, NotifyCollectionChangedEventArgs args)
+        private static VisualElement MakeItem() => new T().Element;
+        private void BindItem(VisualElement element, int index) => ((IViewElement)element).Data = _wrapper[index];
+
+        //TODO refresh only revlevant
+        private void Changed(object sender, NotifyCollectionChangedEventArgs args) => Refresh();
+
+        public override void Refresh()
         {
-            if (_filter == null && args.Action == NotifyCollectionChangedAction.Replace &&
-                args.NewStartingIndex >= 0 && args.NewItems.Count == 1)
-            {
-                _listView.itemsSource[args.NewStartingIndex] = args.NewItems[0];
-                _listView.RefreshItem(args.NewStartingIndex);
-                CountChanged?.Invoke(_listView.itemsSource.Count);
-                return;
-            }
-            Refresh();
+            _listView.RefreshItems();
+            EmptyLabel.visible = _listView.itemsSource.Count == 0;
         }
-
-        public override void Refresh() => _listView.RefreshItems();
-
 
         public override void SetSelected(object selected)
         {
-            foreach (var view in Views) view.SetSelected(selected);
+            foreach (var e in _listView.contentContainer.Children())
+                ((IViewElement)e).SetSelected(selected);
         }
+    }
+
+    internal class Wrapper : IList
+    {
+        private IReadOnlyList<object> _data;
+
+        public Wrapper SetData(IReadOnlyList<object> d)
+        {
+            _data = d;
+            return this;
+        }
+
+        public int Count => _data.Count;
+        public bool IsSynchronized => throw new InvalidOperationException();
+        public object SyncRoot => throw new InvalidOperationException();
+        public bool IsFixedSize => true;
+        public bool IsReadOnly => true;
+        public IEnumerator GetEnumerator() => _data.GetEnumerator();
+        public void CopyTo(Array array, int index) => throw new InvalidOperationException();
+        public int Add(object value) => throw new InvalidOperationException();
+        public void Clear() => throw new InvalidOperationException();
+        public bool Contains(object value) => throw new InvalidOperationException();
+        public int IndexOf(object value) => throw new InvalidOperationException();
+        public void Insert(int index, object value) => throw new InvalidOperationException();
+        public void Remove(object value) => throw new InvalidOperationException();
+        public void RemoveAt(int index) => throw new InvalidOperationException();
+
+        public object this[int index] { get => _data[index]; set => throw new InvalidOperationException(); }
     }
 }
