@@ -1,46 +1,27 @@
-﻿using System;
-using Drafts.DataView;
-using GuildMasterIsekai.Model;
+﻿using GuildMasterIsekai.Model;
 using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.ModelView
 {
+    [DefaultExecutionOrder(-100)]
     public class GameSaveData : MonoBehaviour
     {
-        [SerializeField] private Data data;
+        [SerializeField] private bool overrideGuild;
+        [SerializeField] private Guild guild;
+        [SerializeField] private bool overrideHall;
+        [SerializeField] private GuildHall hall;
 
-        private void Start()
+        private void Awake()
         {
-            var guild = Game.SaveMngr.Get<Guild>();
-            var hall = Game.SaveMngr.Get<GuildHall>();
-
-            GetComponent<DataView>().SetData(data switch
-            {
-                Data.Guild => guild,
-                Data.GuildHall => hall,
-                Data.GuildRank => guild.Rank,
-                Data.Adventurers => guild.Adventurers,
-                Data.Freelancers => hall.Freelancers,
-                Data.Costumers => hall.Costomers,
-                Data.QuestBoard => hall.QuestBoard,
-                Data.QuestRequests => hall.QuestRequests,
-                Data.ProblemRequests => hall.ProblemRequests,
-                _ => throw new NotImplementedException()
-            });
+            if (overrideGuild) Game.SaveMngr.Set(guild);
+            if (overrideHall) Game.SaveMngr.Set(hall);
         }
 
-        private enum Data
+        public void Start()
         {
-            Guild,
-            GuildHall,
-            GuildRank,
-            Adventurers,
-            Freelancers,
-            Costumers,
-            QuestBoard,
-            QuestRequests,
-            ProblemRequests
+            guild = Game.SaveMngr.Get<Guild>();
+            hall = Game.SaveMngr.Get<GuildHall>();
         }
     }
 }

@@ -25,13 +25,16 @@ namespace GuildMasterIsekai.Systems
             return v = Resources.Load<T>(path ?? typeof(T).Name);
         }
 
-        [RuntimeInitializeOnLoadMethod]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void Reset()
         {
             SaveMngr.Load("Default");
         }
 
-        public static Sprite LoadSprite(string path) =>
-            Addressables.LoadAssetAsync<Sprite>($"Sprites/{path}").WaitForCompletion();
+        public static Sprite LoadSprite(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return null;
+            return Addressables.LoadAssetAsync<Sprite>($"Sprites/{path}").WaitForCompletion();
+        }
     }
 }

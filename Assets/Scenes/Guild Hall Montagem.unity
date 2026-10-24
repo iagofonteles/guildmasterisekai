@@ -572,6 +572,9 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 35
     m_Data: {fileID: 11400000, guid: 8632925c9f2c4504e90a7a3843295b61, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: 01c048e8d246c264ebe9fd281dcf57ff, type: 2}
   m_TileSpriteArray:
   - serializedVersion: 2
     m_RefCount: 1
@@ -597,6 +600,18 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 1
     m_Data: {fileID: -1227161802, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 7841750413799554831, guid: 869bb58663083dd4198a1938f7f166a5, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -1313999996, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -350968697, guid: 8b04612301f651140ab72353553de75b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -1075050461, guid: 8b04612301f651140ab72353553de75b, type: 3}
   m_TileMatrixArray:
   - serializedVersion: 2
     m_RefCount: 35
@@ -621,7 +636,13 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 35
     m_Data: {r: 1, g: 1, b: 1, a: 1}
-  m_TileObjectToInstantiateArray: []
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {r: 0, g: 0, b: 0, a: 0}
+  m_TileObjectToInstantiateArray:
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 3412862174701274230, guid: ac7f48bcddfb7d9468426a88a38c47ad, type: 3}
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
@@ -645,6 +666,103 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &237327996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237327998}
+  - component: {fileID: 237327997}
+  m_Layer: 0
+  m_Name: save
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &237327997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237327996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72d3ed55632bb5f42a0bdb1742f2f89b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.ModelView.GameSaveData
+  overrideGuild: 0
+  guild:
+    rank: 0
+    gold:
+      value: 0
+    adventurers:
+      list: []
+  overrideHall: 1
+  hall:
+    openStatus:
+      value: 0
+    questBoard:
+      list:
+      - id: 0
+        icon: 
+        displayName: Quest Test
+        description: This is a template text here
+        rank: 0
+        fee: 10
+        requisite:
+          power:
+            value: 3
+          knowledge:
+            value: 1
+          vigor:
+            value: 0
+        reward:
+          gold: 220
+          items: []
+      - id: 0
+        icon: 
+        displayName: Super Duper
+        description: This is a template text here
+        rank: 1
+        fee: 15
+        requisite:
+          power:
+            value: 3
+          knowledge:
+            value: 1
+          vigor:
+            value: 0
+        reward:
+          gold: 220
+          items: []
+    costomers:
+      list: []
+    freelancers:
+      list: []
+    requests:
+      list: []
+    problems:
+      list: []
+--- !u!4 &237327998
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237327996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 32.2813, y: 12.46747, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &351349576
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +1041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraMovement
   moveSpeed: 15
-  scrollSpeed: 20
+  scrollSpeed: -20
   scrollLimit: {x: 4, y: 10}
   mouseMovement: 0
 --- !u!114 &464989013
@@ -57439,7 +57557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1119795985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57455,7 +57573,7 @@ MonoBehaviour:
   builder: {fileID: 1923086497}
   panel: {fileID: 1119795988}
   gridTools: {fileID: 11400000, guid: c5ea3131df17ad047a52eb1f1c112bcd, type: 2}
-  paletteMaterial: {fileID: 0}
+  paletteMaterial: {fileID: 2100000, guid: 1cbf51b8330e123408da3fd790ed5e05, type: 2}
 --- !u!114 &1119795986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57648,7 +57766,7 @@ TilemapRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_ChunkCullingBounds: {x: 0.87576985, y: 0.7132776, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -57873,6 +57991,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 2147483650
+  - first: {x: 30, y: 13, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 1
+      m_TileSpriteIndex: 13
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 1
+      m_TileObjectToInstantiateIndex: 0
+      dummyAlignment: 0
+      m_AllTileFlags: 2147483649
   - first: {x: 40, y: 13, z: 0}
     second:
       serializedVersion: 2
@@ -58019,8 +58147,8 @@ Tilemap:
     m_RefCount: 35
     m_Data: {fileID: 11400000, guid: 1a7ec6e38507b4e4f80a1fbfd023b321, type: 2}
   - serializedVersion: 2
-    m_RefCount: 0
-    m_Data: {fileID: 11400000, guid: 8632925c9f2c4504e90a7a3843295b61, type: 2}
+    m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: 01c048e8d246c264ebe9fd281dcf57ff, type: 2}
   m_TileSpriteArray:
   - serializedVersion: 2
     m_RefCount: 3
@@ -58062,14 +58190,14 @@ Tilemap:
     m_RefCount: 0
     m_Data: {fileID: 1213812195, guid: 8b04612301f651140ab72353553de75b, type: 3}
   - serializedVersion: 2
-    m_RefCount: 0
-    m_Data: {fileID: -1313999996, guid: 8b04612301f651140ab72353553de75b, type: 3}
+    m_RefCount: 1
+    m_Data: {fileID: 7841750413799554831, guid: 869bb58663083dd4198a1938f7f166a5, type: 3}
   - serializedVersion: 2
     m_RefCount: 12
     m_Data: {fileID: -6471187932270448383, guid: 54668a1d8955fe948b2d94422c9a4271, type: 3}
   m_TileMatrixArray:
   - serializedVersion: 2
-    m_RefCount: 35
+    m_RefCount: 36
     m_Data:
       e00: 1
       e01: 0
@@ -58091,7 +58219,13 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 35
     m_Data: {r: 1, g: 1, b: 1, a: 1}
-  m_TileObjectToInstantiateArray: []
+  - serializedVersion: 2
+    m_RefCount: 1
+    m_Data: {r: 0, g: 0, b: 0, a: 0}
+  m_TileObjectToInstantiateArray:
+  - serializedVersion: 2
+    m_RefCount: 1
+    m_Data: {fileID: 3412862174701274230, guid: ac7f48bcddfb7d9468426a88a38c47ad, type: 3}
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
@@ -59241,7 +59375,7 @@ Tilemap:
       e33: 1
   m_TileColorArray:
   - serializedVersion: 2
-    m_RefCount: 66
+    m_RefCount: 61
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -59278,6 +59412,7 @@ GameObject:
   - component: {fileID: 1828775919}
   - component: {fileID: 1828775921}
   - component: {fileID: 1828775920}
+  - component: {fileID: 1828775922}
   m_Layer: 0
   m_Name: Navigation
   m_TagString: Untagged
@@ -59347,6 +59482,20 @@ MonoBehaviour:
   m_MinRegionArea: 0
   m_HideEditorLogs: 0
   m_NavMeshData: {fileID: 23800000, guid: a9db071be8221be4b9a19aa2b840ea98, type: 2}
+--- !u!114 &1828775922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828775918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef9dbbbe8fc4cd299a191a8220a8ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GuildMasterIsekai::GuildMasterIsekai.GuildNavigation
+  builder: {fileID: 1923086497}
+  surface: {fileID: 1828775921}
 --- !u!1 &1886873618
 GameObject:
   m_ObjectHideFlags: 0
@@ -59489,3 +59638,4 @@ SceneRoots:
   - {fileID: 464989010}
   - {fileID: 1612116693}
   - {fileID: 1719121144}
+  - {fileID: 237327998}

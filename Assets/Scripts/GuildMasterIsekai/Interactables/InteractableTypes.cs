@@ -11,6 +11,7 @@ namespace GuildMasterIsekai.Interactables
     {
         void IInteractable.__setTransform(Transform t) => Transform = t;
         public Transform Transform { get; private set; }
-        public void SubscribeUI(PanelRenderer ui) => throw new InvalidOperationException();
+        public void BindUI(PanelRenderer panel, VisualElement root) 
+            => throw new InvalidOperationException();
     }
 }

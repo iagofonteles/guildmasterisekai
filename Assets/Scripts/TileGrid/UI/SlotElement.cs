@@ -13,6 +13,7 @@ namespace TileGrid.UI
         private readonly Label _placeholder;
         private ISlot _slot;
         private bool _subscribed;
+        public VisualElement Element => this;
 
         public object Data
         {

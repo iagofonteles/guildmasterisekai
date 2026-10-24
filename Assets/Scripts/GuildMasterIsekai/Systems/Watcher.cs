@@ -3,30 +3,13 @@ using UnityEngine;
 
 namespace GuildMasterIsekai.Systems
 {
-    public interface IWatcher
-    {
-        object Value { get; }
-        event Action<object> OnChanged;
-    }
-
-    public interface IWatcher<out T> : IWatcher
-    {
-        new T Value { get; }
-    }
-
     [Serializable]
-    public class Watcher<T> : IWatcher<T>
+    public class Watcher<T>
     {
         [SerializeField] private T value;
-
+        public event Action<T> OnChanged;
         public Watcher() { }
-
-        public Watcher(T value)
-        {
-            this.value = value;
-        }
-
-        public event Action<object> OnChanged;
+        public Watcher(T value) => this.value = value;
 
         public T Value
         {
@@ -37,7 +20,6 @@ namespace GuildMasterIsekai.Systems
             }
         }
 
-        object IWatcher.Value => value;
         public void SetSilently(T val) => value = val;
         public override string ToString() => $"({typeof(T).Name}) {value}";
     }

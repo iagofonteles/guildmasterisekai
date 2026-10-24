@@ -16,6 +16,7 @@ namespace TileGrid.UI
         private readonly int _colorCount;
         private readonly int _shades;
         private BuildColor _color;
+        public VisualElement Element => this;
 
         public object Data
         {

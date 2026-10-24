@@ -13,9 +13,17 @@ namespace GuildMasterIsekai.Interactables
 
         [SerializeReference, TypeInstance] private IInteractable interactable;
         [SerializeField] private PanelRenderer ui;
+        
+        private void Awake()
+        {
+            ui.enabled = false;
+            if (!ui) return;
+            ui.RegisterUIReloadCallback(interactable.BindUI);
+        }
 
         private void OnEnable()
         {
+            interactable.__setTransform(transform);
             _instances.Add(interactable);
             IInteractable.ClearCache();
         }
@@ -28,7 +36,7 @@ namespace GuildMasterIsekai.Interactables
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            if (ui) interactable.SubscribeUI(ui);
+            ui.enabled = !ui.enabled;
         }
     }
 }

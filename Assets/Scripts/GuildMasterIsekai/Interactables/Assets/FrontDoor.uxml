@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:interactables="GuildMasterIsekai.Interactables">
+    <ui:Style src="FrontDoor.uss" />
+    <interactables:FrontDoorUI />
+</ui:UXML>

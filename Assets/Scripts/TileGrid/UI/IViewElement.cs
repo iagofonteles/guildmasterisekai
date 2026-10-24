@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.UIElements;
 
 namespace TileGrid.UI
@@ -18,7 +19,9 @@ namespace TileGrid.UI
         {
             get => _data;
             set {
+                if (_data != null) Unsubscribe();
                 _data = value;
+                if (_data != null) Subscribe();
                 Refresh();
             }
         }

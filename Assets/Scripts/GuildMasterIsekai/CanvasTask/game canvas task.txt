@@ -1,0 +1,59 @@
+follow insttructions in GameCanvasUi
+
+Execution report - 2026-10-23
+Summary: Finished the canvas conversion to typed ViewElement<T> classes and repaired its list binding and runtime host.
+
+Completed work:
+- GameCanvasUi is now a ViewElement<GuildHall> focused on navigation, pending request validation, searches, and party selection. Removed all references to the deleted UiBinding/UiCollectionBinding helpers.
+- Separated GuildView, CostomerView, AdventurerView, StatsView, ProblemRequestView, ProblemView, QuestStripView, QuestRequestView, and PartyView into individual files.
+- Repaired ListView<T>: added the underlying visual list, bound rows from the actual items source, supported enumerable sources and filtering, observed collection changes, refreshed single replacements directly, and released subscriptions on rebind/detach/recycling. Removed the broken Wrapper.
+- Added GameCanvasHost to create the runtime UIDocument/panel/theme, rebind after save objects/collections change, and clean up on disable. Updated the existing UI Toolkit prefab component to that host while preserving prefab/object identifiers.
+- Updated UXML view placeholders, documentation, live party totals, stale-request checks, and pending-problem expiry cleanup.
+- Added Tools > Canvas Task > Check Game Canvas for focused collection/filter/rebind/recycling/model-event/control/prefab checks.
+
+Problems found:
+- The partially converted VisualElement still referenced missing component fields, MonoBehaviour-only lifecycle behavior, and deleted binding classes.
+- The generic list did not add its inner ListView to the hierarchy, always indexed an uninitialized wrapper even for IList sources, and inspected non-row visual children for selection.
+- The prefab referenced GameCanvasUi as a component although it was no longer a MonoBehaviour. Its component now references GameCanvasHost.
+- The old README described deleted helpers and a missing validation script. It now documents the current views and validation accurately.
+
+Validation results:
+- C# build passed against installed Unity 6000.5.9f1 and project dependencies, including all new scripts and the Editor self-check. Used a temporary MSBuild target to include newly added files without modifying generated project files.
+- Four existing CS0067 warnings remain for unused OnChanged events in Adventurer, Costomer, Problem, and Quest.
+- XML parsing, unique layout names, expected layout targets, prefab host GUID, and task-folder asset GUID uniqueness checks passed.
+- git diff --check passed for this task folder.
+
+Limitations:
+- The Editor self-check was compiled but not executed. Play-mode layout, input, portraits, visitor interactions, and disable/re-enable behavior were not verified in Unity.
+- Existing missing gameplay features (party dispatch, map/options, progression) and model serialization limits remain unchanged.
+- Existing user edits/moves and unrelated scene/model/package changes were preserved. No scene was edited by this task.
+
+Modified assets / files:
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/ListViewT.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/GuildView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/GuildView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/StatsView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/StatsView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/AdventurerView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/AdventurerView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/CostomerView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/CostomerView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/QuestStripView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/QuestStripView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/ProblemRequestView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/ProblemRequestView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/QuestRequestView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/QuestRequestView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/ProblemView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/ProblemView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/PartyView.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/PartyView.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/GameCanvasUi.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/GameCanvasHost.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/GameCanvasHost.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/CanvasTaskCheck.cs
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/CanvasTaskCheck.cs.meta
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/GameCanvasUIToolkit.prefab
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/Resources/CanvasTask/GameCanvas.uxml
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/README.md
+- Assets/Scripts/GuildMasterIsekai/CanvasTask/game canvas task.txt

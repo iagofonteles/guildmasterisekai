@@ -14,6 +14,9 @@ namespace GuildMasterIsekai.Model
         [SerializeField] private int gold;
         [SerializeField] private List<LootSo> items = new();
 
+        public int Gold => gold;
+        public IReadOnlyList<LootSo> Items => items;
+
         public Reward() { }
 
         public Reward(int gold, IEnumerable<LootSo> items)
@@ -21,9 +24,6 @@ namespace GuildMasterIsekai.Model
             this.gold = gold;
             this.items = new(items);
         }
-
-        public int Gold => gold;
-        public IReadOnlyList<LootSo> Items => items;
 
         public void Save(BinaryWriter writer)
         {

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Drafts;
 using Drafts.SaveData;
+using GuildMasterIsekai.Systems;
 using UnityEngine;
 
 namespace GuildMasterIsekai.Model
@@ -9,12 +10,14 @@ namespace GuildMasterIsekai.Model
     [Serializable]
     public class GuildHall : IBinarySave
     {
+        [SerializeField] private Watcher<bool> openStatus = new();
         [SerializeField] private ObservableList<Quest> questBoard = new();
         [SerializeField] private ObservableList<Costomer> costomers = new();
         [SerializeField] private ObservableList<Adventurer> freelancers = new();
         [SerializeField] private ObservableList<QuestRequest> requests = new();
         [SerializeField] private ObservableList<ProblemRequest> problems = new();
 
+        public Watcher<bool> OpenStatus => openStatus;
         public ObservableList<Quest> QuestBoard => questBoard;
         public ObservableList<Costomer> Costomers => costomers;
         public ObservableList<Adventurer> Freelancers => freelancers;

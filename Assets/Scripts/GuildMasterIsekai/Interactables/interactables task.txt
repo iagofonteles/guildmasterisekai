@@ -1,1 +1,43 @@
-read FrontDoor and complete ui behaviour
+read, complete notimplemented methods and follow comments
+FrontDoor
+QuestBoard, questi strip example.png
+
+all output files in this folder
+append report here
+
+Execution report - 2026-10-23
+Summary: Completed the FrontDoor and QuestBoard UI stubs and added the requested quest strip and styling.
+Completed work:
+- FrontDoor binds Guild.OpenStatus, updates its green/red 32x32 status icon and text, and offers a separate open/close button. Model subscriptions are released on detach and rebind.
+- QuestBoard uses a dynamically sized ListView and refreshes on collection changes. QuestStripUI is in its own file and shows rank, icon, name, colored Power/Knowledge/Vigor requirements, fee, and a keyboard-focusable expand button for description, gold, and item rewards.
+- Added UXML layouts, USS, sprite PNGs/import metadata, and an Editor self-check at Tools > Guild Master > Check Interactables UI.
+Problems found:
+- ViewElement<T>.Data only calls Refresh; it does not manage Subscribe/Unsubscribe. These views therefore handle subscription lifetimes locally.
+Setup: Assign FrontDoor.uxml and QuestBoard.uxml to the respective PanelRenderer visualTreeAsset fields, using the project's existing PanelSettings, then assign each renderer to its InteractableComponent.ui field. Existing scene/prefab assignments were not changed. Quest icons use existing Addressables entries.
+Validation results:
+- dotnet build GuildMasterIsekai.csproj --no-restore passed, including project dependencies. A subsequent build explicitly included the new Editor self-check and also passed. Four existing CS0067 unused-event warnings remain.
+- UXML files parsed as XML; both PNGs verified as 32x32; listed output files verified present. This does not validate Unity layout/import behavior.
+- git diff --check passed for the task folder, including this report.
+Limitations: Play mode, visual layout, Unity USS/UXML import, pointer interaction, and the Editor self-check were not run. Initial imports occurred before the PNGs existed and logged missing icon paths; verify their final imports in Unity. No scenes or prefabs were edited. Existing unrelated edits in this folder were preserved.
+Modified assets / files:
+- Assets/Scripts/GuildMasterIsekai/Interactables/FrontDoor.cs
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestBoard.cs
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestStripUI.cs
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestStripUI.cs.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/InteractablesCheck.cs
+- Assets/Scripts/GuildMasterIsekai/Interactables/InteractablesCheck.cs.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/FrontDoor.uss
+- Assets/Scripts/GuildMasterIsekai/Interactables/FrontDoor.uss.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/FrontDoor.uxml
+- Assets/Scripts/GuildMasterIsekai/Interactables/FrontDoor.uxml.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestBoard.uss
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestBoard.uss.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestBoard.uxml
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestBoard.uxml.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestUI.uss
+- Assets/Scripts/GuildMasterIsekai/Interactables/QuestUI.uss.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/guild-open.png
+- Assets/Scripts/GuildMasterIsekai/Interactables/guild-open.png.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/guild-closed.png
+- Assets/Scripts/GuildMasterIsekai/Interactables/guild-closed.png.meta
+- Assets/Scripts/GuildMasterIsekai/Interactables/interactables task.txt

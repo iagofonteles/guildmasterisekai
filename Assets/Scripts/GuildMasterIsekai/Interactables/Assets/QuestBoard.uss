@@ -1,0 +1,2 @@
+.quest-board { flex-grow: 1; min-height: 180px; background-color: #292332; color: #fff4d9; }
+.quest-board > ListView { flex-grow: 1; }

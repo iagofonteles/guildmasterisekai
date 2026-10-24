@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Drafts.SaveData;
+using GuildMasterIsekai.Model;
 using TileGrid.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,6 +24,6 @@ namespace GuildMasterIsekai.Interactables
 
         void __setTransform(Transform t);
         Transform Transform { get; }
-        void SubscribeUI(PanelRenderer ui);
+        void BindUI(PanelRenderer panel, VisualElement root);
     }
 }

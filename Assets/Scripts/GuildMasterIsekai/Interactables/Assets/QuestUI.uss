@@ -1,0 +1,11 @@
+.quest-strip { margin: 4px; padding: 8px; border-width: 2px; border-color: #a74daf; border-radius: 10px; background-color: #292332; color: #fff4d9; }
+.quest-header { flex-direction: row; align-items: center; }
+.quest-header > Label { margin-right: 10px; }
+.quest-icon { width: 32px; height: 32px; margin-right: 8px; }
+.quest-name { flex-grow: 1; white-space: normal; }
+.quest-power { color: #ff8585; }
+.quest-knowledge { color: #939fff; }
+.quest-vigor { color: #79e89c; }
+.quest-details { display: none; padding-top: 8px; }
+.quest-details.expanded { display: flex; }
+.quest-details > Label { white-space: normal; }

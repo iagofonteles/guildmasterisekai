@@ -1,13 +1,7 @@
 fileFormatVersion: 2
-guid: 869bb58663083dd4198a1938f7f166a5
+guid: 9249fd35ddb8dca4c9594dc484758845
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 7841750413799554831
-    second: Board_0
-  - first:
-      213: 792191914532590372
-    second: Board_1
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -50,13 +44,13 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -78,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -99,62 +93,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Board_0
+      name: test floor_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 22
-        width: 48
-        height: 42
-      alignment: 9
-      pivot: {x: 0.5, y: 0.1}
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f0f7bc7347e73dc60800000000000000
-      internalID: 7841750413799554831
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Board_1
-      rect:
-        serializedVersion: 2
-        x: 65
-        y: 6
-        width: 14
-        height: 58
-      alignment: 9
-      pivot: {x: 0.5, y: 0.15}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 423d6ab595e6efa00800000000000000
-      internalID: 792191914532590372
+      spriteID: 05645b31aaae65420800000000000000
+      internalID: 2618538249558509136
       vertices: []
       indices: 
       edges: []
@@ -163,20 +122,19 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 530677e4468c8de469c554fbfe7f15b9
+    spriteID: af7aa9dda1db68348b75c3b346cbd81b
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: aa1104efb3cc6ed458a353d0cb01eebd, type: 3}
+      name: _MaskTex
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Board_0: 7841750413799554831
-      Board_1: 792191914532590372
+      test floor_0: 2618538249558509136
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

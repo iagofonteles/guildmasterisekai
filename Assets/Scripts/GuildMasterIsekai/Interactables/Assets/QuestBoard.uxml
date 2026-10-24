@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:interactables="GuildMasterIsekai.Interactables">
+    <ui:Style src="QuestBoard.uss" />
+    <ui:Style src="QuestUI.uss" />
+    <interactables:QuestBoardUI />
+</ui:UXML>

@@ -20,6 +20,17 @@ namespace GuildMasterIsekai.Model
         [SerializeField] private Stats requisite;
         [SerializeField] private Reward reward;
 
+        public event Action OnChanged;
+
+        public uint Id => id;
+        public Sprite Icon => Game.LoadSprite(icon);
+        public string DisplayName => displayName;
+        public string Description => description;
+        public Rank Rank => rank;
+        public int Fee => fee;
+        public IStats Requisite => requisite;
+        public Reward Reward => reward;
+        
         public Quest()
         {
             requisite = new();
@@ -39,11 +50,6 @@ namespace GuildMasterIsekai.Model
             this.requisite = requisite;
             this.reward = reward;
         }
-
-        public Rank Rank => rank;
-        public int Fee => fee;
-        public IStats Requisite => requisite;
-        public Reward Reward => reward;
 
         public void Save(BinaryWriter writer)
         {
@@ -68,12 +74,5 @@ namespace GuildMasterIsekai.Model
             requisite?.Load(reader);
             reward?.Load(reader);
         }
-
-        public event Action OnChanged;
-
-        public uint Id => id;
-        public Sprite Icon => Game.LoadSprite(icon);
-        public string DisplayName => displayName;
-        public string Description => description;
     }
 }
